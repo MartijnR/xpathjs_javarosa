@@ -963,11 +963,11 @@ XPathJS = (function(){
 							}
 						}
 					}
-					/** 
+					/**
 					 * JavaRosa addition:
 					 * Check whether string is a date object or a datestring. A datestring is converted to an
 					 * instance of DateType. Note that we've already checked for numbers and that DateType is basically
-					 * just the native JavaScript Date object. So any string, except a number string, that can convert to 
+					 * just the native JavaScript Date object. So any string, except a number string, that can convert to
 					 * a valid date is considered a date string. It is safe enough hopefully....
 					 */
 					else if (right instanceof DateType || (right instanceof StringType && right.isDateString()))
@@ -976,7 +976,7 @@ XPathJS = (function(){
 						{
 							//console.debug('found right date string: '+right+' and will convert to a Date object');
 							right = new DateType(right);
-						} 
+						}
 						//console.debug('found right date type: '+right);
 
 						leftValues = left.stringValues();
@@ -1047,16 +1047,16 @@ XPathJS = (function(){
 					/** JavaRosa addition:
 					 * If one object to be compared is a date object or a datestring....etc. A datestring is converted to an
 					 * instance of DateType. Note that we've already checked for numbers and that DateType is basically
-					 * just the native JavaScript Date object. So any string, except a number string, that can convert to 
+					 * just the native JavaScript Date object. So any string, except a number string, that can convert to
 					 * a valid date is considered a date string. It is safe enough hopefully...
 					 */
-					else if (left instanceof DateType || (left instanceof StringType && left.isDateString())) 
+					else if (left instanceof DateType || (left instanceof StringType && left.isDateString()))
 					{
 						if (left instanceof StringType)
 						{
 							//console.debug('found left date string: '+left.value+' and will convert to a Date object');
 							left = new DateType(left);
-						} 
+						}
 						//console.debug('found date type: '+left.value);
 
 						rightValues = right.stringValues();
@@ -1714,7 +1714,11 @@ XPathJS = (function(){
 	 */
 	StringType.prototype.toNumber = function() {
 		var result;
-							
+		
+		if (this.isDateString(this.value)){
+			return new DateType(this.value).toNumber();
+		}
+			
 		// Digits ('.' Digits?)?
 		result = this.value.match(/^[ \t\r\n]*(-?[0-9]+(?:[.][0-9]*)?)[ \t\r\n]*$/)
 		if (result !== null)

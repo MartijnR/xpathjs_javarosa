@@ -172,6 +172,7 @@ if ($serve_xml)
 			<div id="FunctionDateCase1">2012-07-23</div>
 			<div id="FunctionDateCase2">Mon, 20 Aug 2012 00:00:00 GMT</div>
 			<div id="FunctionDateCase3">Wed, 08 Aug 2012 00:00:00 GMT</div>
+			<div id="FunctionDateCase4">2012-06-23</div>
 		</div>
 
 		<div id="FunctionMinCase">
