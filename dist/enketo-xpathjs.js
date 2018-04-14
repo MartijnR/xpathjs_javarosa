@@ -5403,12 +5403,13 @@ var XPathJS = (function(){
 				 * 
 				 */
 				fn: function(nodeset)
-				{;
+				{
 					return new NodeSetType(utils.shuffle(nodeset.toNodeSet()), 'document-order');
 				},
 
 				args: [
-					{t: 'node-set'}
+					{t: 'node-set'},
+					{t: 'number', r: false}
 				],
 				
 				ret: 'node-set'

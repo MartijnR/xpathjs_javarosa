@@ -810,11 +810,6 @@ describe('Custom "OpenRosa" functions', function () {
 
     describe('randomize() shuffles nodesets', function(){
         var SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
-        // TODO: 
-        // - disallowed seed parameters
-        // - no arguments
-        // - 3 arguments
-        // - seeded
 
         it('without a seed', function(){
             var result = documentEvaluate(`randomize(${SELECTOR})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -828,6 +823,36 @@ describe('Custom "OpenRosa" functions', function () {
             expect(nodes.length).to.equal(6);
             expect(text.length).to.equal(6);
             expect(text).not.to.equal('ABCDEF');
+        });
+
+        [
+            [42, 'BAEFDC'],
+            [-42, 'ECFABD'],
+            [1, 'ECABFD'],
+            [11111111,	'BEADFC'],
+        ].forEach(function(t){
+            it('with a seed', function(){
+                var result = documentEvaluate(`randomize(${SELECTOR},${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                var nodes = [];
+                var text = '';
+                for ( var j = 0; j < result.snapshotLength; j++ ) {
+                    text += result.snapshotItem( j ).textContent;
+                }
+                expect(text).to.equal(t[1]);
+            });
+        });
+
+        [ 
+            `randomize()`,
+            `randomize(${SELECTOR}, 'a')`,
+            `randomize(${SELECTOR}, 1, 2)`,
+        ].forEach(function (t) {
+            it(`with invalid args (${t}), throws an error`, function(){
+                var test = function () {
+                    documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                };
+                expect(test).to.throw(win.Error);
+            });
         });
 
     });
