@@ -808,6 +808,30 @@ describe('Custom "OpenRosa" functions', function () {
 
     });
 
+    describe('randomize() shuffles nodesets', function(){
+        var SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
+        // TODO: 
+        // - disallowed seed parameters
+        // - no arguments
+        // - 3 arguments
+        // - seeded
+
+        it('without a seed', function(){
+            var result = documentEvaluate(`randomize(${SELECTOR})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+            var nodes = [];
+            var text = '';
+            for ( var j = 0; j < result.snapshotLength; j++ ) {
+                var node = result.snapshotItem( j );
+                nodes.push( node );
+                text += node.textContent;
+            }
+            expect(nodes.length).to.equal(6);
+            expect(text.length).to.equal(6);
+            expect(text).not.to.equal('ABCDEF');
+        });
+
+    });
+
     /*
      This function is now supported by translating it into regular XPath before passing to this evaluator.
     it('indexed-repeat()', function() {

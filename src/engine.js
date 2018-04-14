@@ -5330,6 +5330,22 @@ var XPathJS = (function(){
 				ret: 'number'
 			},
 
+			randomize: {
+				/**
+				 * 
+				 */
+				fn: function(nodeset)
+				{;
+					return new NodeSetType(utils.shuffle(nodeset.toNodeSet()), 'document-order');
+				},
+
+				args: [
+					{t: 'node-set'}
+				],
+				
+				ret: 'node-set'
+			},
+
 			/**
 			 * MOVED TO ENKETO-CORE WHERE IT TRANSFORMED INTO REGULAR XPATH
 			 *
