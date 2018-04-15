@@ -1,8 +1,9 @@
 /**
  * Performs a Fisher-Yates efficient in-place array shuffle.
  * 
- * @param  {<*>} array the array to shuffle
- * @return {<*>}       the suffled array
+ * @param  {<*>}        array the array to shuffle
+ * @param  {number=}    seed the seed value
+ * @return {<*>}        the suffled array
  */
 function shuffle( array, seed ) {
     var m = array.length;
@@ -10,11 +11,11 @@ function shuffle( array, seed ) {
     var i;
 
     if ( typeof seed !== 'undefined' ){
-        if ( !Number.isInteger(seed) ) {
+        if ( !Number.isInteger( seed ) ) {
             throw new Error('Invalid seed argument. Integer required.');
         }
     } else {
-        seed =  Math.floor( Math.random() * Number.MAX_SAFE_INTEGER );
+        seed = Math.floor( Math.random() * Number.MAX_SAFE_INTEGER );
     }
 
     var rnd = new Random(seed);
