@@ -826,10 +826,11 @@ describe('Custom "OpenRosa" functions', function () {
         });
 
         [
-            [42, 'BAEFDC'],
-            [-42, 'ECFABD'],
-            [1, 'ECABFD'],
-            [11111111,	'BEADFC'],
+            [42, 'BDFECA'],//BAEFDC'],
+            ['42', 'BDFECA'],//BAEFDC'],
+            [-42, 'EDACBF'], //'ECFABD'],
+            [1, 'ECBDFA'], //'ECABFD'],
+            [11111111, 'ADBCEF'],//'BEADFC'],
         ].forEach(function(t){
             it('with a seed', function(){
                 var result = documentEvaluate(`randomize(${SELECTOR},${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);

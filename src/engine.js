@@ -5334,9 +5334,10 @@ var XPathJS = (function(){
 				/**
 				 * 
 				 */
-				fn: function(nodeset)
+				fn: function(nodeset, seed)
 				{
-					return new NodeSetType(utils.shuffle(nodeset.toNodeSet()), 'document-order');
+					var seedValue = seed ? seed.toNumber() : undefined;
+					return new NodeSetType( shuffle( nodeset.toNodeSet(), seedValue ), 'document-order' );
 				},
 
 				args: [
