@@ -1,29 +1,35 @@
+var MAX_INT32 = 2147483647;
+var MINSTD = 16807;
+
 /**
- * Performs a Fisher-Yates efficient in-place array shuffle.
+ * Performs a Fisher-Yates array shuffle.
  * 
  * @param  {<*>}        array the array to shuffle
  * @param  {number=}    seed the seed value
  * @return {<*>}        the suffled array
  */
 function shuffle( array, seed ) {
-    var m = array.length;
-    var t;
-    var i;
+    var rng;
 
     if ( typeof seed !== 'undefined' ){
         if ( !Number.isInteger( seed ) ) {
             throw new Error('Invalid seed argument. Integer required.');
         }
+        var rnd = new Random( seed );
+        rng = rnd.nextFloat.bind(rnd);
     } else {
-        seed = Math.floor( Math.random() * Number.MAX_SAFE_INTEGER );
+        rng = Math.random;
     }
 
-    var rnd = new Random(seed);
-
+    /*
+    Performs a more efficient Fisher-Yates in-place array shuffle.
+    var m = array.length;
+    var t;
+    var i;
     // While there remain elements to shuffle…
     while ( m ) {
         // Pick a remaining element…
-        i = Math.floor( rnd.nextFloat() * m-- );
+        i = Math.floor( rng() * m-- );
         // And swap it with the current element.
         t = array[ m ];
         array[ m ] = array[ i ];
@@ -31,6 +37,21 @@ function shuffle( array, seed ) {
     }
 
     return array;
+    */
+
+    var result = []
+  
+    for ( var i = 0; i < array.length; ++i ) {
+      var j = Math.floor( rng() * ( i + 1 ) );
+  
+      if ( j !== i ) {
+        result[i] = result[j];
+      }
+  
+      result[j] = array[i];
+    }
+  
+    return result
 }
 
 // Polyfill for Internet Explorer
@@ -41,25 +62,23 @@ Number.isInteger = Number.isInteger || function( value ) {
 };
 
 /**
- * Creates a pseudo-random value generator. The seed must be an integer.
+ * Creates a the Park-Miller PRNG pseudo-random value generator. 
+ * The seed must be an integer.
  * 
- * Uses an optimized version of the Park-Miller PRNG.
- * http://www.firstpr.com.au/dsp/rand31/
- * 
- * From: https://gist.github.com/blixt/f17b47c62508be59987b
+ * Adapted from: https://gist.github.com/blixt/f17b47c62508be59987b
  */
 function Random( seed ) {
-    this._seed = seed % 2147483647;
-    if ( this._seed <= 0 ) {
-        this._seed += 2147483646;
-    }
+    this._seed = seed % MAX_INT32;
+	if ( this._seed <= 0 ) {
+		this._seed += ( MAX_INT32 - 1 );
+	}
 }
 
 /**
- * Returns a pseudo-random value between 1 and 2^32 - 2.
+ * Returns a pseudo-random integer value.
  */
 Random.prototype.next = function () {
-    return this._seed = this._seed * 16807 % 2147483647;
+    return this._seed = this._seed * MINSTD % MAX_INT32;
 };
 
 /**
@@ -67,5 +86,5 @@ Random.prototype.next = function () {
  */
 Random.prototype.nextFloat = function () {
     // We know that result of next() will be 1 to 2147483646 (inclusive).
-    return ( this.next() - 1 ) / 2147483646;
+    return ( this.next() - 1 ) / ( MAX_INT32 - 1 );
 }; 
