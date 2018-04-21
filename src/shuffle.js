@@ -10,6 +10,7 @@ var MINSTD = 16807;
  */
 function shuffle( array, seed ) {
     var rng;
+    var result = []
 
     if ( typeof seed !== 'undefined' ){
         if ( !Number.isInteger( seed ) ) {
@@ -21,26 +22,6 @@ function shuffle( array, seed ) {
         rng = Math.random;
     }
 
-    /*
-    Performs a more efficient Fisher-Yates in-place array shuffle.
-    var m = array.length;
-    var t;
-    var i;
-    // While there remain elements to shuffle…
-    while ( m ) {
-        // Pick a remaining element…
-        i = Math.floor( rng() * m-- );
-        // And swap it with the current element.
-        t = array[ m ];
-        array[ m ] = array[ i ];
-        array[ i ] = t;
-    }
-
-    return array;
-    */
-
-    var result = []
-  
     for ( var i = 0; i < array.length; ++i ) {
       var j = Math.floor( rng() * ( i + 1 ) );
   
