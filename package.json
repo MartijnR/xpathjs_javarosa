@@ -9,7 +9,7 @@
   },
   "main": "src/engine",
   "scripts": {
-    "test": "grunt karma:headless"
+    "test": "grunt test-dev"
   },
   "author": "Andrej Pavlovic <andrej.pavlovic@pokret.org>",
   "contributors": [
