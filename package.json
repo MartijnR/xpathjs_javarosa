@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/enketo/enketo-xpathjs"
   },
-  "main": "dist/enketo-xpathjs",
+  "main": "src/engine",
   "scripts": {
     "test": "grunt karma:headless"
   },
