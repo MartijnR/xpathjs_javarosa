@@ -968,4 +968,57 @@ describe('Custom "OpenRosa" functions', function () {
     });
     */
 
+    describe('custom XPath functions', function(){
+
+        afterEach(function(){
+            win.XPathJS.customXPathFunction.remove('comment-status');
+        });
+
+        it('can be added', function(){
+            var obj = { status: 'good' };
+            var node = doc.getElementById('FunctionCustom');
+            node.textContent = JSON.stringify( obj );
+
+            var test = function () {
+                return documentEvaluate( 'comment-status(.)', node, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            };
+
+            // Check the function doesn't exist before.
+            expect( test ).to.throw(/does not exist/);
+
+            // Add custom function
+            win.XPathJS.customXPathFunction.add('comment-status', {
+                fn: function(a){
+                    var curValue = a.toString();
+                    var status = '';
+
+                    try {
+                        status = JSON.parse(curValue).status;
+                    }
+                    catch(e){
+                        console.error('Could not parse JSON from', curValue);
+                    };
+                    
+                    return new win.XPathJS.customXPathFunction.type.StringType( status ); 
+                },
+                args: [
+                    {t: 'string'}
+                ],
+                ret: 'string'
+            });
+        
+            // Check functioning:
+            var result = test();
+            expect( result.stringValue ).to.equal( obj.status );
+
+            // Check parameter errors:
+            var test = function () {
+                documentEvaluate( 'comment-status(., 2)', node, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            };
+            expect( test ).to.throw( win.Error );
+
+        });
+
+    });
+
 });

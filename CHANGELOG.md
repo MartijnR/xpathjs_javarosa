@@ -4,8 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]
 --------------------
+##### Removed
+- Built bundle JS files.
+
 ##### Added
 - Decimal-time() support.
+- Make evaluator extensible with custom XPath functions.
 
 ##### Fixed
 - Decimal-date-time() not spec-compliant.

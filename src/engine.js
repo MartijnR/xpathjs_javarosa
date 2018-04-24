@@ -5762,6 +5762,20 @@ module.exports = (function(){
 		XPathExpression: XPathExpression,
 		XPathResult: XPathResult,
 		XPathNamespace: XPathNamespace,
+		customXPathFunction: {
+			type: {
+				StringType: StringType,
+				NumberType: NumberType,
+				NodeSetType: NodeSetType,
+				BooleanType: BooleanType
+			},
+			add: function(name, fnObj){
+				functions[""][name] = fnObj;
+			},
+			remove: function(name) {
+				delete functions[""][name];
+			}
+		},
 		
 		/**
 		 * Get the current list of DOM Level 3 XPath window and document objects
