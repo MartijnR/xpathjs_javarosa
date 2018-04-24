@@ -15,32 +15,17 @@ module.exports = function(grunt) {
 
         peg: {
             dist: {
-                options: {
-                    exportVar: 'XPathJS._parser'
-                },
                 src: 'src/parser.pegjs',
                 dest: 'dist/parser.js'
             }
         },
 
-        concat: {
+        browserify: {
             dist: {
-                src: [
-                    'src/date-extensions.js',
-                    'src/shuffle.js',
-                    'src/engine.js',
-                    'dist/parser.js',
-                    'src/umd.js'
-                ],
-                dest: 'dist/enketo-xpathjs.js'
-            }
-        },
-
-        uglify: {
-            dist: {
-                src: 'dist/enketo-xpathjs.js',
-                dest: 'dist/enketo-xpathjs.min.js'
-            }
+                files: {
+                    'dist/enketo-xpathjs-bundle.js': [ 'src/XPathJS.js' ]
+                },
+            },
         },
 
         karma: {
@@ -65,16 +50,14 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-peg');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-browserify');
 
     grunt.registerTask('dist', [
         'clean:dist',
         'peg:dist',
-        'concat:dist',
-        'uglify:dist'
+        'browserify:dist'
     ]);
 
     grunt.registerTask('test-dev', ['dist', 'karma:headless']);

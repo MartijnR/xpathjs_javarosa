@@ -1,4 +1,4 @@
-XPathJS._parser = (function() {
+module.exports = (function() {
   "use strict";
 
   /*

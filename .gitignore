@@ -1,4 +1,5 @@
 .project
 node_modules
+dist/enketo-xpathjs-bundle.js
 *.sublime-project
 *.sublime-workspace

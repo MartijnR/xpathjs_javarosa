@@ -71,3 +71,5 @@ Random.prototype.nextFloat = function () {
     // We know that result of next() will be 1 to 2147483646 (inclusive).
     return ( this.next() - 1 ) / ( MAX_INT32 - 1 );
 }; 
+
+module.exports = shuffle;

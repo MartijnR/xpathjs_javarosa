@@ -13,7 +13,7 @@ before(function(done) {
     iframe.onload = function() {
         var script = document.createElement('script');
         // TODO: should load parser and engine separately to facilitate development
-        script.setAttribute('src', '/base/dist/enketo-xpathjs.js');
+        script.setAttribute('src', '/base/dist/enketo-xpathjs-bundle.js');
 
         script.onload = function() {
             win = iframe.contentWindow;

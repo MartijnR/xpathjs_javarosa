@@ -19,8 +19,11 @@
  */
 
 /* global window */
+var parser = require('../dist/parser');
+var shuffle = require('./shuffle');
+require('./date-extensions');
 
-var XPathJS = (function(){
+module.exports = (function(){
 	var XPathException,
 		XPathEvaluator,
 		XPathExpression,
@@ -2001,10 +2004,10 @@ var XPathJS = (function(){
 			
 			// Parse the expression
 			try {
-				tree = XPathJS._parser.parse(expression);
+				tree = parser.parse(expression);
 			} catch(err) {
 				message = 'The expression is not a legal expression.';
-				if (err instanceof XPathJS._parser.SyntaxError)
+				if (err instanceof parser.SyntaxError)
 				{
 					message += ' (line: ' + err.line + ', character: ' + err.column + ')';
 				}
