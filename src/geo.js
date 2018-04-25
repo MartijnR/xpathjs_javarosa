@@ -1,6 +1,5 @@
 var EARTH_EQUATORIAL_RADIUS_METERS = 6378100;
 var PRECISION = 100;
-var D2R = Math.PI / 180; // converts degrees to radians
 
 function _toLatLngs(geopoints) {
     return geopoints.map(function (geopoint) {
@@ -8,8 +7,9 @@ function _toLatLngs(geopoints) {
     });
 }
 
+// converts degrees to radians
 function _toRadians(angle) {
-    return angle * D2R;
+    return angle * Math.PI / 180;
 }
 
 // check if all geopoints are valid (copied from Enketo FormModel)
@@ -22,6 +22,20 @@ function _latLngsValid(latLngs) {
             (typeof coords[3] == 'undefined' || (!isNaN(coords[3]) && coords[3] >= 0))
         );
     });
+}
+
+/**
+ * Adapted from https://www.movable-type.co.uk/scripts/latlong.html
+ * 
+ * @param {{lat:number, lng: number}} p1 
+ * @param {{lat:number, lng: number}} p2 
+ * @returns {number}
+ */
+function _distanceBetween(p1,p2) {
+    var Δλ = _toRadians(p1.lng - p2.lng);
+    var φ1 = _toRadians(p1.lat);
+    var φ2 = _toRadians(p2.lat);
+    return Math.acos(Math.sin(φ1) * Math.sin(φ2) + Math.cos(φ1) * Math.cos(φ2) * Math.cos(Δλ)) * EARTH_EQUATORIAL_RADIUS_METERS;
 }
 
 /**
@@ -47,8 +61,8 @@ function area(geopoints) {
                 lat: latLngs[(i + 1) % pointsCount][0],
                 lng: latLngs[(i + 1) % pointsCount][1]
             };
-            area += ((p2.lng - p1.lng) * D2R) *
-                (2 + Math.sin(p1.lat * D2R) + Math.sin(p2.lat * D2R));
+            area += _toRadians(p2.lng - p1.lng) *
+                (2 + Math.sin(_toRadians(p1.lat)) + Math.sin(_toRadians(p2.lat)));
         }
         area = area * EARTH_EQUATORIAL_RADIUS_METERS * EARTH_EQUATORIAL_RADIUS_METERS / 2.0;
     }
@@ -56,8 +70,6 @@ function area(geopoints) {
 }
 
 /**
- * Adapted from https://www.movable-type.co.uk/scripts/latlong.html
- * 
  * @param {any} geopoints 
  * @returns 
  */
@@ -81,16 +93,8 @@ function distance(geopoints) {
                 lat: latLngs[i][0],
                 lng: latLngs[i][1]
             };
-            var φ1 = p1.lat * D2R;
-            var φ2 = p2.lat * D2R;
-            var Δφ = (p2.lat - p1.lat) * D2R;
-            var Δλ = (p2.lng - p1.lng) * D2R;
 
-            var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            distance += EARTH_EQUATORIAL_RADIUS_METERS * c;
+            distance += _distanceBetween(p1, p2);
         }
     }
     

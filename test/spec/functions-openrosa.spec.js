@@ -697,7 +697,7 @@ describe('Custom "OpenRosa" functions', function () {
         var TRACE3 = '38.252845204059824 21.763313487426785;38.25303055837213 21.755867675201443;38.25072202094234 21.755803302185086;38.25062091543717 21.76294870700076;38.25183417221606 21.75692982997134';
         var LINE = '7.9377 -11.5845 0 0;7.9324 -11.5902 0 0';
         var SAME = '7.9377 -11.5845 0 0;7.9377 -11.5845 0 0';
-        var EARTH_EQUATORIAL_CIRCUMFERENCE_METERS = 2 * 6378100 * Math.PI;
+
         [
             [SHAPE1, 2333220.77, 5724.36 ],
             [TRACE1, 151451.76, 1800.69],
@@ -712,7 +712,6 @@ describe('Custom "OpenRosa" functions', function () {
             ['a', NaN, NaN],
             ['', NaN, NaN],
         ].forEach(function(t, i){
-            //var context =  doc;
             var param = t[0];
             it(`area() works (${i+1})`, function () {
                 var result = documentEvaluate(`area("${param}")`, doc, null, win.XPathResult.NUMBER_TYPE, null);
