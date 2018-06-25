@@ -1149,7 +1149,18 @@ module.exports = (function(){
 							{
 								return new BooleanType(compareFunction(left.toNumber(), right.toNumber()));
 							}
-							
+							/**
+							 * With Dates, we have to fight interal JavaScript Date behavior, because
+							 * new Date(1012,1,1) !== new Date(1012,1,1) (different objects).
+							 * So we convert to number. I'm not sure if should be done elsewhere instead.
+							 */
+							else if (left instanceof DateType || right instanceof DateType 
+								|| (left instanceof StringType && left.isDateString()) 
+								|| (right instanceof StringType && right.isDateString()))
+							{
+								return new BooleanType(compareFunction(left.toNumber(), right.toNumber()));
+							}
+
 							/**
 							 * Otherwise, both objects to be compared are converted to strings
 							 * as if by applying the string function.
@@ -1754,7 +1765,7 @@ module.exports = (function(){
 		return Number.NaN;
 	}
 	StringType.prototype.toDate = function() {
-		return new Date(this.value);
+		return new DateType(this.value).toDate();
 	}
 	/**
 	 * Test whether the value of a String is (probably a date string)
@@ -1830,6 +1841,17 @@ module.exports = (function(){
 	 **/
 	DateType = function(value)
 	{
+		/*
+		 * For dates that are missing time zone information, like '2012-02-03' we can go into different directions here.
+		 * 1. We could assume GMT time.
+		 * 2. We could assume local time.
+		 * Since a date widget would return the format '2012-02-03' and we'd like the constraint ". < today()" to work,
+		 * we have to choose option 2.
+		 */
+		if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value)) {
+			value += 'T00:00:00.000' + (new Date()).getTimezoneOffsetAsTime();
+		} 
+
 		BaseType.call(this, value, 'date', [
 			'date',
 			'string',

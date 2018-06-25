@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.1] - 2018-06-27
+--------------------
+##### Fixed
+- Dates are now considered local to fix constraints such as ". < today()".
+
 [1.8.0] - 2018-04-25
 --------------------
 ##### Removed

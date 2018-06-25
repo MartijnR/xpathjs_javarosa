@@ -2,7 +2,7 @@
 'use strict';
 
 describe('Custom "OpenRosa" functions', function () {
-
+    
     //test only the use of position(node) with an argument
     it('position(node)', function () {
         [
@@ -162,12 +162,13 @@ describe('Custom "OpenRosa" functions', function () {
     it('dates as string', function () {
         [
             ['"2018-01-01"', '2018-01-01'],
-            ['date("2018-01-01")', '2017-12-31T17:00:00.000-07:00'], // America/Phoenix
-            ['"2018-01-01" + 1', '17533'], // converted to Number according to regular XPath rules
-            ['date("2018-01-01" + 1)', '2018-01-01T17:00:00.000-07:00'],
+            ['date("2018-01-01")', '2018-01-01T00:00:00.000-07:00'], // America/Phoenix
+            ['"2018-01-01" + 1', 17533.29167], // converted to Number according to regular XPath rules
+            ['date("2018-01-01" + 1)', '2018-01-02T00:00:00.000-07:00'],
         ].forEach(function (t) {
             var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[1]);
+            var r = typeof t[1] === 'number' ? Math.round(result.stringValue*100000)/100000 : result.stringValue;
+            expect(r).to.equal(t[1]);
         });
 
         [
@@ -183,51 +184,55 @@ describe('Custom "OpenRosa" functions', function () {
 
     it('converts dates to numbers', function () {
         [
-            ["number(date('1970-01-01'))", 0],
-            ["number(date('1970-01-02'))", 1],
-            ["number(date('1969-12-31'))", -1],
-            ["number(date('2008-09-05'))", 14127],
-            ["number(date('1941-12-07'))", -10252],
-            ["number('2008-09-05')", 14127],
-            ["number( 1 div 1000000000 )", 1e-9]
+            ["number(date('1970-01-01'))", 0.29],
+            ["number(date('1970-01-02'))", 1.29],
+            ["number(date('1969-12-31'))", -0.71],
+            ["number(date('2008-09-05'))", 14127.29],
+            ["number(date('1941-12-07'))", -10251.71],
+            ["number('2008-09-05')", 14127.29],
+            ["number( 1 div 1000000000 )", 0]
         ].forEach(function (t) {
             var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            expect(t[1]).to.equal(result.numberValue);
+            var roundedResult = Math.round(result.numberValue * 100 )/100;
+            expect(roundedResult).to.equal(t[1]);
         });
 
         //for nodes (where the date datatype is guessed)
         [
-            [".", doc.getElementById("FunctionDateCase1"), 15544],
+            [".", doc.getElementById("FunctionDateCase1"), 15544.29],
             [".", doc.getElementById("FunctionDateCase2"), 15572]
         ].forEach(function (t) {
             var result = documentEvaluate(t[0], t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            //Y.Assert.areSame(input[i][2], result.numberValue);
-            expect(t[2]).to.equal(result.numberValue);
+            var roundedResult = Math.round(result.numberValue * 100 )/100;
+            expect(roundedResult).to.equal(t[2]);
         });
     });
-
+    
     it('datetype comparisons', function () {
         [
             ["date('2001-12-26') > date('2001-12-25')", true],
             ["date('1969-07-20') < date('1969-07-21')", true],
             ["date('2004-05-01') = date('2004-05-01')", true],
-            ["true() != date('1999-09-09')", false],
-            ["date(0) = date('1970-01-01')", true],
-            //["date(6.5)", "date('1970-01-07')"],
-            ["date(1) = date('1970-01-02')", true],
-            ["date(-1) = date('1969-12-31')", true],
-            ["date(14127) = date('2008-09-05')", true],
-            ["date(-10252) = date('1941-12-07')", true],
+            ["true() != date('1999-09-09T00:00:00.000+00:00')", false],
+            ["date(0) = date('1970-01-01T00:00:00.000+00:00')", true],
+            ["date(1) = date('1970-01-02T00:00:00.000+00:00')", true],
+            ["date(-1) = date('1969-12-31T00:00:00.000+00:00')", true],
+            ["date(14127) = date('2008-09-05T00:00:00.000+00:00')", true],
+            ["date(-10252) = date('1941-12-07T00:00:00.000+00:00')", true],
             ["date(date('1989-11-09')) = date('1989-11-09')", true],
             ["date('2012-01-01') < today()", true],
             ["date('2100-01-02') > today()", true],
             ["date('2012-01-01') < now()", true],
             ["date('2100-01-02') > now()", true],
-            ["now() > today()", true]
+            ["now() > today()", true],
+            //['today() = "2018-06-26"', true],
+            ['"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', true],
+            ['"2018-06-25" < "2018-06-25T00:00:00.000-07:00"', false],
+            ['"2018-06-25" < "2018-06-25T00:00:00.001-07:00"', true],
         ].forEach(function (t) {
             var expr = t[0];
             var result = documentEvaluate(expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[1]).to.equal(result.booleanValue);
+            expect(result.booleanValue).to.equal(t[1]);
             // do the same tests for the alias date-time()
             expr = expr.replace('date(', 'date-time(');
             result = documentEvaluate(expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
@@ -263,23 +268,25 @@ describe('Custom "OpenRosa" functions', function () {
         ].forEach(function (t) {
             var expr = t[0];
             var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
+            expect(result.booleanValue).to.equal(t[2]);
             // do the same tests for the alias date-time()
             expr = expr.replace('date(', 'date-time(');
             result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
+            expect(result.booleanValue).to.equal(t[2]);
         });
 
         [
-            ["10 + date('2012-07-24')", doc, 15555]
+            ["10 + date('2012-07-24')", doc, 15555.29]
         ].forEach(function (t) {
             var expr = t[0];
             var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.equal(t[2]);
+            var roundedResult = Math.round(result.numberValue * 100 )/100;
+            expect(roundedResult).to.equal(t[2]);
             // do the same tests for the alias date-time()
             expr = expr.replace('date(', 'date-time(');
             result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.equal(t[2]);
+            roundedResult = Math.round(result.numberValue * 100 )/100;
+            expect(roundedResult).to.equal(t[2]);
         });
     });
 
