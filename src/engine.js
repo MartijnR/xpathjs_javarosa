@@ -48,6 +48,7 @@ module.exports = (function(){
 		StringType,
 		NumberType,
 		NodeSetType,
+		DateType,
 		
 		// HACK: track expression currently being evaluated
 		currentExpression,
