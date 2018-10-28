@@ -2917,7 +2917,7 @@ module.exports = (function(){
 				argVals.push(val);
 			}
 			
-			result = fnInfo.fn.apply(this, argVals);
+			var result = fnInfo.fn.apply(this, argVals);
 			
 			if (!result instanceof BaseType)
 			{
