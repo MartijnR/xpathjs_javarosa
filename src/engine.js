@@ -37,6 +37,7 @@ module.exports = (function(){
 		functions,
 		Context,
 		namespaceCache = [],
+		supportedChildNodeTypes,
 		
 		NAMESPACE_URI_XML = 'http://www.w3.org/XML/1998/namespace',
 		NAMESPACE_URI_XMLNS = 'http://www.w3.org/2000/xmlns/',
