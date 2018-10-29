@@ -37,7 +37,6 @@ module.exports = (function(){
 		functions,
 		Context,
 		namespaceCache = [],
-		supportedChildNodeTypes,
 		
 		NAMESPACE_URI_XML = 'http://www.w3.org/XML/1998/namespace',
 		NAMESPACE_URI_XMLNS = 'http://www.w3.org/2000/xmlns/',
@@ -53,15 +52,6 @@ module.exports = (function(){
 		
 		// HACK: track expression currently being evaluated
 		currentExpression,
-		
-		/**
-		 * @param {Node} node
-		 * @return {Node}
-		 */
-		nodeOwnerDocument = function(node)
-		{
-			return node.ownerDocument;
-		},
 		
 		/**
 		 * Return all direct children of given node, but only those explicitly
@@ -89,7 +79,7 @@ module.exports = (function(){
 					return filteredNodes;
 				}
 			;
-			
+
 			switch(node.nodeType)
 			{
 				/**
@@ -99,7 +89,7 @@ module.exports = (function(){
 				 * instruction nodes and text nodes for its content.
 				 */
 				case 1: // element,
-					nodes = filterSupportedNodeTypes(node.childNodes, supportedChildNodeTypes = [
+					nodes = filterSupportedNodeTypes(node.childNodes,  [
 						1, // element
 						3, // text
 						4, // CDATASection
@@ -117,7 +107,7 @@ module.exports = (function(){
 				 * after the end of the document element.
 				 */
 				case 9: // document
-					nodes = filterSupportedNodeTypes(node.childNodes, supportedChildNodeTypes = [
+					nodes = filterSupportedNodeTypes(node.childNodes, [
 						1, // element
 						7, // processing instruction
 						8  // comment
@@ -134,7 +124,6 @@ module.exports = (function(){
 				
 				default:
 					throw new Error('Internal Error: nodeChildren - unsupported node type: ' + node.nodeType);
-					break;
 			}
 			
 			return nodes;
@@ -189,7 +178,6 @@ module.exports = (function(){
 				case 8: // comment
 				case 9: // document
 					return node.parentNode;
-					break;
 				
 				case 2: // Node.ATTRIBUTE_NODE
 					// DOM 2 has ownerElement
@@ -206,15 +194,12 @@ module.exports = (function(){
 					});
 					
 					return element;
-					break;
 				
 				case 13: // Node.NAMESPACE_NODE
 					return node.ownerElement;
-					break;
 				
 				default:
 					throw new Error('Internal Error: nodeParent - node type not supported: ' + node.type);
-					break;
 			}
 		},
 		
@@ -231,7 +216,7 @@ module.exports = (function(){
 				nodes = []
 			;
 			
-			while(parent = nodeParent(node))
+			while((parent = nodeParent(node)))
 			{
 				nodes.push(parent);
 				node = parent;
@@ -268,7 +253,7 @@ module.exports = (function(){
 				nodes = []
 			;
 			
-			while (sibling = node[type])
+			while ((sibling = node[type]))
 			{
 				switch(sibling.nodeType)
 				{
@@ -368,7 +353,7 @@ module.exports = (function(){
 					return node;
 					
 				default:
-					return node.ownerDocument
+					return node.ownerDocument;
 			}
 		},
 		
@@ -582,8 +567,7 @@ module.exports = (function(){
 				attributes,
 				namespaces,
 				ns,
-				name,
-				id
+				name
 			;
 			
 			if (node.nodeType === 1)
@@ -633,11 +617,11 @@ module.exports = (function(){
 				j,
 				elements,
 				element,
-				matches = [];
+				matches = []
 			;
 			
 			// TODO: Possibly cache attribute nodes
-			elements = startNode.getElementsByTagName("*");
+			elements = startNode.getElementsByTagName('*');
 			for (i = 0; i < elements.length; i++) {
 				element = elements.item(i);
 				if (element.nodeType != 1 /*Node.ELEMENT_NODE*/)
@@ -706,7 +690,7 @@ module.exports = (function(){
 						qname = {
 							prefix: (node.scopeName == 'HTML') ? '' : node.scopeName,
 							name: node.nodeName
-						}
+						};
 					}
 					else
 					{
@@ -755,7 +739,6 @@ module.exports = (function(){
 					}
 					
 					throw new Error('Internal Error: nodeExpandedName - Failed to expand namespace prefix "' + qname.prefix + '" on element: ' + node.nodeName);
-					break;
 				
 				case 2: // attribute
 					name = node.nodeName.split(':');
@@ -798,27 +781,23 @@ module.exports = (function(){
 					}
 					
 					throw new Error('Internal Error: nodeExpandedName - Failed to expand namespace prefix "' + qname.prefix + '" on attribute: ' + node.nodeName);
-					break;
 					
 				case 13: // namespace
 					return {
 						prefix: null,
 						ns: null,
 						name: ((!this.opts['case-sensitive']) ? node.prefix : node.prefix.toLowerCase())
-					}
-					break;
+					};
 				
 				case 7: // processing instruction
 					return {
 						prefix: null,
 						ns: null,
 						name: ((!this.opts['case-sensitive']) ? node.target : node.target.toLowerCase())
-					}
-					break;
+					};
 				
 				default:
 					return false;
-					break;
 			}
 		},
 		
@@ -865,7 +844,6 @@ module.exports = (function(){
 					}
 					
 					return value;
-					break;
 				
 				/**
 				 * The string-value is the normalized value as specified by the XML Recommendation [XML].
@@ -876,7 +854,6 @@ module.exports = (function(){
 				 */
 				case 2: // attribute
 					return node.nodeValue;
-					break;
 				
 				/**
 				 * The string-value of a namespace node is the namespace URI that is being bound to the
@@ -885,7 +862,6 @@ module.exports = (function(){
 				 */
 				case 13: // namespace
 					return node.namespaceURI;
-					break;
 				
 				/**
 				 * The string-value of a processing instruction node is the part of the processing instruction following
@@ -902,11 +878,9 @@ module.exports = (function(){
 				case 3: // text
 				case 4: // CDATAsection
 					return node.data;
-					break;
 				
 				default:
 					throw new Error('Internal Error: nodeStringValue does not support node type: ' + node.nodeType);
-					break;
 			}
 		},
 		
@@ -1168,8 +1142,6 @@ module.exports = (function(){
 							 * as if by applying the string function.
 							 */
 							return new BooleanType(compareFunction(left.toString(), right.toString()));
-							
-							break;
 						
 						/**
 						 * When neither object to be compared is a node-set and the operator is <=, <, >= or >,
@@ -1178,7 +1150,6 @@ module.exports = (function(){
 						 */
 						default:
 							return new BooleanType(compareFunction(left.toNumber(), right.toNumber()));
-							break;
 					}
 				}
 			}
@@ -1196,18 +1167,15 @@ module.exports = (function(){
 				case 7: // processing instruction
 				case 8: // comment
 					return nodeParent(node);
-					break;
 				
 				case 1: // element
 				case 9: // document
 					// leave as is
 					return node;
-					break;
 				
 				case 13: // namespace
 				default:
 					throw new Error('Internal Error: getComparableNode - Node type not supported: ' + node.nodeType);
-					break;
 			}
 		},
 		
@@ -1332,7 +1300,7 @@ module.exports = (function(){
 					}
 					else
 					{
-						result = 2 + 8 // b2 before a2, b2 contains a2
+						result = 2 + 8; // b2 before a2, b2 contains a2
 					}
 				}
 				else
@@ -1420,7 +1388,7 @@ module.exports = (function(){
 				}
 			}
 			
-			throw new Error('Internal Error: compareDocumentPosition failed to sort nodes.');
+			//throw new Error('Internal Error: compareDocumentPosition failed to sort nodes.');
 		},
 		
 		nodeSupported = function(contextNode)
@@ -1477,8 +1445,8 @@ module.exports = (function(){
 	{
 		this.value = value;
 		this.type = type;
-		this.supports = supports
-	}
+		this.supports = supports;
+	};
 	
 	BaseType.prototype = {
 		value: null,
@@ -1512,7 +1480,7 @@ module.exports = (function(){
 		{
 			return false !== arrayIndexOf(type, this.supports);
 		}
-	}
+	};
 	
 	BooleanType = function(value)
 	{
@@ -1522,27 +1490,27 @@ module.exports = (function(){
 			'number',
 			'date'
 		]);
-	}
+	};
 	BooleanType.prototype = new BaseType;
 	BooleanType.constructor = BooleanType;
 	BooleanType.prototype.toBoolean = function() {
 		return this.value;
-	}
+	};
 	/**
 	 * The boolean false value is converted to the string false. The boolean true value is converted to the string true.
 	 */
 	BooleanType.prototype.toString = function() {
 		return (this.value === true) ? 'true' : 'false';
-	}
+	};
 	/**
 	 * boolean true is converted to 1; boolean false is converted to 0
 	 */
 	BooleanType.prototype.toNumber = function() {
 		return (this.value) ? 1 : 0;
-	}
+	};
 	BooleanType.prototype.toDate = function(){
 		return null;
-	}
+	};
 	
 	NodeSetType = function(value, documentOrder)
 	{
@@ -1555,7 +1523,7 @@ module.exports = (function(){
 		]);
 		
 		this.docOrder = (documentOrder || 'unsorted');
-	}
+	};
 	NodeSetType.prototype = new BaseType;
 	NodeSetType.constructor = NodeSetType;
 	/**
@@ -1563,7 +1531,7 @@ module.exports = (function(){
 	 */
 	NodeSetType.prototype.toBoolean = function() {
 		return (this.value.length > 0) ? true : false;
-	}
+	};
 	/**
 	 * A node-set is converted to a string by returning the string-value of the node
 	 * in the node-set that is first in document order. If the node-set
@@ -1577,20 +1545,20 @@ module.exports = (function(){
 		
 		this.sortDocumentOrder();
 		return nodeStringValue(this.value[0]);
-	}
+	};
 	/**
 	 * a node-set is first converted to a string as if by a call to the string
 	 * function and then converted in the same way as a string argument
 	 */
 	NodeSetType.prototype.toNumber = function() {
 		return (new StringType(this.toString())).toNumber();
-	}
+	};
 	NodeSetType.prototype.toNodeSet = function() {
 		return this.value;
-	}
+	};
 	NodeSetType.prototype.toDate = function(){
 		return (new StringType(this.toString())).toDate();
-	}
+	};
 	NodeSetType.prototype.sortDocumentOrder = function() {
 		switch(this.docOrder)
 		{
@@ -1624,7 +1592,7 @@ module.exports = (function(){
 		}
 		
 		this.docOrder = 'document-order';
-	}
+	};
 	NodeSetType.prototype.sortReverseDocumentOrder = function() {
 		switch(this.docOrder)
 		{
@@ -1644,16 +1612,15 @@ module.exports = (function(){
 		}
 		
 		this.docOrder = 'reverse-document-order';
-	}
+	};
 	
 	NodeSetType.prototype.append = function(nodeset) {
-		var length,
-			i = 0,
+		var i = 0,
 			j = 0,
 			result
 		;
 		
-		if(!nodeset instanceof NodeSetType)
+		if(!(nodeset instanceof NodeSetType))
 		{
 			throw new Error('NodeSetType can be passed into NodeSetType.append method');
 		}
@@ -1669,7 +1636,7 @@ module.exports = (function(){
 			if (result == 0) // same nodes
 			{
 				// ignore duplicates
-				j++
+				j++;
 			}
 			else if ( (result & 4) == 4 ) // a before b
 			{
@@ -1694,7 +1661,7 @@ module.exports = (function(){
 		}
 		
 		this.docOrder = 'document-order';
-	}
+	};
 	
 	NodeSetType.prototype.stringValues = function()
 	{
@@ -1714,7 +1681,7 @@ module.exports = (function(){
 		}
 		
 		return values;
-	}
+	};
 	
 	StringType = function(value)
 	{
@@ -1724,7 +1691,7 @@ module.exports = (function(){
 			'number',
 			'date'
 		]);
-	}
+	};
 	StringType.prototype = new BaseType;
 	StringType.constructor = StringType;
 	/**
@@ -1732,10 +1699,10 @@ module.exports = (function(){
 	 */
 	StringType.prototype.toBoolean = function() {
 		return (this.value.length > 0) ? true : false;
-	}
+	};
 	StringType.prototype.toString = function() {
 		return this.value;
-	}
+	};
 	/**
 	 * a string that consists of optional whitespace followed by an optional minus sign
 	 * followed by a Number followed by whitespace is converted to the IEEE 754 number
@@ -1750,14 +1717,14 @@ module.exports = (function(){
 		}
 			
 		// Digits ('.' Digits?)?
-		result = this.value.match(/^[ \t\r\n]*(-?[0-9]+(?:[.][0-9]*)?)[ \t\r\n]*$/)
+		result = this.value.match(/^[ \t\r\n]*(-?[0-9]+(?:[.][0-9]*)?)[ \t\r\n]*$/);
 		if (result !== null)
 		{
 			return parseFloat(result[1]);
 		}
 		
 		// '.' Digits
-		result = this.value.match(/^[ \t\r\n]*(-?[.][0-9]+)[ \t\r\n]*$/)
+		result = this.value.match(/^[ \t\r\n]*(-?[.][0-9]+)[ \t\r\n]*$/);
 		if (result !== null)
 		{
 			return parseFloat(result[1]);
@@ -1765,10 +1732,10 @@ module.exports = (function(){
 		
 		// Invalid number
 		return Number.NaN;
-	}
+	};
 	StringType.prototype.toDate = function() {
 		return new DateType(this.value).toDate();
-	}
+	};
 	/**
 	 * Test whether the value of a String is (probably a date string)
 	 * It seems like a bit of a hack (and inefficient because it is called for all strings)
@@ -1793,7 +1760,7 @@ module.exports = (function(){
 			return false;
 		}
 		return true;
-	}
+	};
 	
 	NumberType = function(value)
 	{
@@ -1803,7 +1770,7 @@ module.exports = (function(){
 			'number',
 			'date'
 		]);
-	}
+	};
 	NumberType.prototype = new BaseType;
 	NumberType.constructor = NumberType;
 	/**
@@ -1811,7 +1778,7 @@ module.exports = (function(){
 	 */
 	NumberType.prototype.toBoolean = function() {
 		return (this.value !== 0 && !isNaN(this.value)) ? true : false;
-	}
+	};
 	/**
 	 * A number is converted to a string as follows:
 	 *     NaN is converted to the string NaN
@@ -1825,10 +1792,10 @@ module.exports = (function(){
 	 */
 	NumberType.prototype.toString = function() {
 		return this.value.toString();
-	}
+	};
 	NumberType.prototype.toNumber = function() {
 		return this.value;
-	}
+	};
 	/**
 	 * This is where JavaRosa's date object deviates from the built-in 
 	 * javascript Date object. It instantiates a date based on the amount of days since the 
@@ -1837,7 +1804,7 @@ module.exports = (function(){
 	 */
 	NumberType.prototype.toDate = function() {
 		return new Date(this.value * (1000 * 60 * 60 * 24) );
-	}
+	};
 	/** 
 	 * Date type used in JavaRosa functions 
 	 **/
@@ -1859,28 +1826,28 @@ module.exports = (function(){
 			'string',
 			'number',
 			'boolean'
-		])
-	}
+		]);
+	};
 
 	DateType.prototype = new BaseType;
 	DateType.constructor = DateType;
 
 	DateType.prototype.toDate = function() {
 		return new Date(this.value);
-	}
+	};
 	//maybe the string should be build 'manually' with milliseconds appended to it
 	//more in line with JavaRosa
 	DateType.prototype.toString = function(){
 		return new Date(this.value).toISOLocalString();
-	}
+	};
 	// Gets days since epoch
 	DateType.prototype.toNumber = function(){
 		return ( new Date(this.value).getTime() ) / (1000 * 60 * 60 * 24) ;
-	}
+	};
 
 	DateType.prototype.toBoolean = function(){
 		return (!isNaN(new Date(this.value).getTime()));
-	}
+	};
 	
 	/**
 	 * A new exception has been created for exceptions specific to these XPath interfaces.
@@ -1911,18 +1878,17 @@ module.exports = (function(){
 				err = new Error('Unsupported XPathException code: ' + this.code);
 				err.name = 'XPathExceptionInternalError';
 				throw err;
-				break;
 		}
 		
-		this.message = (message || "");
-	}
+		this.message = (message || '');
+	};
 	
 	XPathException.prototype.toString = function() {
 		return 'XPathException: "' + this.message + '"'
 			+ ', code: "' + this.code + '"'
 			+ ', name: "' + this.name + '"'
 		;
-	}
+	};
 	
 	/**
 	 * If the expression has a syntax error or otherwise is not a legal expression
@@ -1982,7 +1948,7 @@ module.exports = (function(){
 		// define unique ids
 		this.opts['unique-ids'][NAMESPACE_URI_XML] = 'id';
 		this.opts['unique-ids'][NAMESPACE_URI_XHTML] = 'id';
-	}
+	};
 	XPathEvaluator.prototype = {
 		opts: {
 			/**
@@ -2052,7 +2018,7 @@ module.exports = (function(){
 					typeof resolver.lookupNamespaceURI === 'undefined')
 				{
 					throw new XPathException(XPathException.INVALID_EXPRESSION_ERR,
-						"No namespace resolver provided or lookupNamespaceURI function not supported."
+						'No namespace resolver provided or lookupNamespaceURI function not supported.'
 					);
 				}
 				
@@ -2123,7 +2089,7 @@ module.exports = (function(){
 		,evaluate: function(expression, contextNode, resolver, type, result)
 		{
 			// create expression
-			var expression = this.createExpression(expression, resolver);
+			expression = this.createExpression(expression, resolver);
 			
 			// evaluate expression
 			return expression.evaluate(contextNode, type, result);
@@ -2139,7 +2105,7 @@ module.exports = (function(){
 		this.parsedExpression = parsedExpression;
 		this.namespaceMapping = namespaceMapping;
 		this.opts = options || {};
-	}
+	};
 	
 	XPathExpression.prototype = {
 		/**
@@ -2203,9 +2169,9 @@ module.exports = (function(){
 				context,
 				type,
 				evaluateExpressionTree(context, this.parsedExpression.tree)
-			)
+			);
 		}
-	}
+	};
 	
 	/**
 	 * Expression evaluation occurs with respect to a context.
@@ -2221,7 +2187,7 @@ module.exports = (function(){
 		this.fns = functions;
 		this.nsMap = namespaceMap;
 		this.opts = options || {};
-	}
+	};
 	
 	Context.prototype = {
 		// a node (the context node)
@@ -2269,7 +2235,7 @@ module.exports = (function(){
 	{
 		nodeSupported(nodeResolver);
 		this.node = nodeResolver;
-	}
+	};
 	
 	XPathNSResolver.prototype = {
 		
@@ -2301,11 +2267,9 @@ module.exports = (function(){
 			{
 				case 'xml': // http://www.w3.org/TR/REC-xml-names/#xmlReserved
 					return NAMESPACE_URI_XML;
-					break;
 				
 				case 'xmlns': // http://www.w3.org/TR/REC-xml-names/#xmlReserved
 					return NAMESPACE_URI_XMLNS;
-					break;
 				
 				default:
 					switch(this.node.nodeType)
@@ -2390,16 +2354,14 @@ module.exports = (function(){
 						}
 					}
 					return null;
-					break;
 			}
 		}
-	}
+	};
 	
 	expressions = {
 		'/': function(left, right)
 		{
-			var type,
-				i,
+			var i,
 				nodeset,
 				nodeset2,
 				resultNodeset,
@@ -2416,7 +2378,7 @@ module.exports = (function(){
 			{
 				nodeset = evaluateExpressionTree(this, left);
 				
-				if (!nodeset instanceof NodeSetType)
+				if (!(nodeset instanceof NodeSetType))
 				{
 					throw new Error('Left side of path separator (/) must be of node-set type. (type: ' + nodeset.type + ')');
 				}
@@ -2442,7 +2404,7 @@ module.exports = (function(){
 					newContext = this.clone(nodeset.value[i]);
 					nodeset2 = evaluateExpressionTree(newContext, right);
 				
-					if (!nodeset2 instanceof NodeSetType)
+					if (!(nodeset2 instanceof NodeSetType))
 					{
 						throw new Error('Right side of path separator (/) must be of node-set type. (type: ' + nodeset2.type + ')');
 					}
@@ -2581,8 +2543,7 @@ module.exports = (function(){
 					break;
 				
 				default:
-					throw new Error("Axis type not supported: " + axis);
-					break;
+					throw new Error('Axis type not supported: ' + axis);
 			}
 			
 			switch(nodeTest.type)
@@ -2694,7 +2655,6 @@ module.exports = (function(){
 					
 				default:
 					throw new Error('NodeTest type not supported in step: ' + nodeTest.type);
-					break;
 			}
 			
 			return nodeset;
@@ -2717,7 +2677,7 @@ module.exports = (function(){
 			nodeset = evaluateExpressionTree(this, expr);
 			
 			// Ensure we get a node-set
-			if (!nodeset instanceof NodeSetType)
+			if (!(nodeset instanceof NodeSetType))
 			{
 				throw new Error('Expected "node-set", got: ' + nodeset.type);
 			}
@@ -2822,7 +2782,7 @@ module.exports = (function(){
 							}
 							else
 							{
-								type += '?' // optional
+								type += '?'; // optional
 							}
 						}
 						
@@ -2919,7 +2879,7 @@ module.exports = (function(){
 			
 			var result = fnInfo.fn.apply(this, argVals);
 			
-			if (!result instanceof BaseType)
+			if (!(result instanceof BaseType))
 			{
 				throw new Error('Function "' + formatName(qname) + '" did not return a value that inherits from BaseType.');
 			}
@@ -2938,8 +2898,8 @@ module.exports = (function(){
 			
 			if (typeof left == 'undefined' ||
 				typeof right == 'undefined' ||
-				!left instanceof NodeSetType ||
-				!right instanceof NodeSetType)
+				!(left instanceof NodeSetType) ||
+				!(right instanceof NodeSetType))
 			{
 				throw new Error('Unable to perform union on non-"node-set" types.');
 			}
@@ -3091,7 +3051,7 @@ module.exports = (function(){
 		
 		'$': function(name)
 		{
-			throw new Error("TODO: Not implemented.16");
+			throw new Error('TODO: Not implemented.16');
 		},
 		
 		/**
@@ -3117,7 +3077,7 @@ module.exports = (function(){
 				name: name
 			};
 		}
-	}
+	};
 	
 	functions = {
 		/**
@@ -3195,7 +3155,6 @@ module.exports = (function(){
 						j,
 						node,
 						nodes = [],
-						value,
 						splitStringByWhitespace = function(str)
 						{
 							var i,
@@ -3945,7 +3904,7 @@ module.exports = (function(){
 				fn: function(nodeset)
 				{
 					var i,
-						sum = 0;
+						sum = 0
 					;
 					
 					nodeset = nodeset.toNodeSet();
@@ -4123,7 +4082,7 @@ module.exports = (function(){
 				 * @param {Object} o1
 				 * @return {StringType}
 				 */
-				fn: function(o1 /*, o2 ... */)
+				fn: function( /*o1, o2 ... */)
 				{
 					var i, add,
 						value = '';
@@ -4190,12 +4149,12 @@ module.exports = (function(){
 				 */
 				fn: function(node, value)
 				{
-					var i, values;
+					var values;
 
 					value = value.toString().trim();
 					values = node.toString();
 					
-					return new BooleanType( (" "+values+" ").indexOf(" "+value+" ") != -1 );
+					return new BooleanType( (' '+values+' ').indexOf(' '+value+' ') != -1 );
 				},
 
 				args: [
@@ -4206,7 +4165,7 @@ module.exports = (function(){
 				ret: 'boolean'
 			},
 
-			"selected-at" : {
+			'selected-at' : {
 
 				fn: function(node, position)
 				{
@@ -4249,7 +4208,7 @@ module.exports = (function(){
 						//only value of first node
 						values = nodeStringValue(nodeset[0]).trim().split(' ');
 						//return new Number(1);
-						return (values.length == 1 && values[0] === "") ? new NumberType(0) : new NumberType(values.length);
+						return (values.length == 1 && values[0] === '') ? new NumberType(0) : new NumberType(values.length);
 					}
 
 					return new NumberType(0);
@@ -4275,7 +4234,7 @@ module.exports = (function(){
 				 * 
 				 */
 
-				fn: function(min, max, oA /*, oB .... */)
+				fn: function(min, max /*,oA , oB .... */)
 				{
 					var i, j, 
 						trues = 0
@@ -4328,9 +4287,9 @@ module.exports = (function(){
 				 * 
 				 */
 
-				fn: function(min, max, vA, wA /*, vB , wB.... */)
+				fn: function(min, max /*,vA , wA, vB , wB.... */)
 				{
-					var i, j, 
+					var i, 
 						values = [], 
 						weights = [], 
 						weightedTrues = 0;
@@ -4340,8 +4299,8 @@ module.exports = (function(){
 
 					for (i=2 ; i < arguments.length ; i=i+2)
 					{
-						v = arguments[i];
-						w = arguments[i+1];
+						var v = arguments[i]; 
+						var w = arguments[i+1];
 						if (v && w)
 						{
 							if (v instanceof NodeSetType)
@@ -4495,7 +4454,7 @@ module.exports = (function(){
 					// There is no Time type, and so far we don't need it so we do all validation 
 					// and conversion here, manually.
 					var	m = time.toString().match( /^(\d\d):(\d\d):(\d\d)(\.\d\d?\d?)?(\+|-)(\d\d):(\d\d)$/ );
-					var ERR = new Error('Invalid time format provided.');
+					//var ERR = new Error('Invalid time format provided.');
 					var PRECISION = 1000;
 					var dec;
 					
@@ -4646,7 +4605,7 @@ module.exports = (function(){
 				fn: function(str, start, end)
 				{
 					str = str.toString();
-					length = str.length;
+					var length = str.length;
 
 					start = Math.round(start.toNumber());
 					end = (end) ? Math.round(end.toNumber()) : length;
@@ -4677,7 +4636,7 @@ module.exports = (function(){
 				fn: function()
 				{
 
-					return new NumberType(Math.random().toFixed(15))
+					return new NumberType(Math.random().toFixed(15));
 				
 				},
 				
@@ -4696,7 +4655,7 @@ module.exports = (function(){
 				 * @param {BaseType} object2
 				 * @return {NumberType}
 				 */
-				fn: function(object1, object2 /*, object3 ... */)
+				fn: function(/*object1, object2, object3 ... */)
 				{
 					var i, j, min, val, nodeset;
 
@@ -4752,7 +4711,7 @@ module.exports = (function(){
 				 * @param {BaseType}  object2
 				 * @return {NumberType}
 				 */
-				fn: function(object1, object2 /* object3 ... */)
+				fn: function(/*object1, object2, object3 ... */)
 				{
 					var i, j, max, val, nodeset;
 					
@@ -4805,7 +4764,7 @@ module.exports = (function(){
 				 * @param {Object} obj1
 				 * @return {StringType}
 				 */
-				fn: function(str1, obj1 /*, obj2 ... */)
+				fn: function(str1/*, obj1, obj2 ... */)
 				{
 					var i, 
 						values = []
@@ -4821,7 +4780,7 @@ module.exports = (function(){
 						} 
 					}
 					
-					value = values[0] || ''; 
+					var value = values[0] || ''; 
 
 					for (i = 1; i < values.length; i++ )
 					{
@@ -4878,11 +4837,11 @@ module.exports = (function(){
 
 				fn: function(dateO, format)
 				{
-					var i,j, 
-						dateO = new DateType(dateO), //not sure why this did not happen automatically
-						date = dateO.toDate(),
-						result = format.toString(),
-						intPad = function(num, l)
+					var j;
+					dateO = new DateType(dateO); //not sure why this did not happen automatically
+					var	date = dateO.toDate();
+					var	result = format.toString();
+					var	intPad = function(num, l)
 						{
 							var str = num.toString(),
 								zeros = l - str.length;
@@ -4899,7 +4858,7 @@ module.exports = (function(){
 						return new StringType(date.toString());
 					}
 
-					props = {
+					var props = {
 						'Y'	: date.getFullYear(),
 						'y'	: date.getFullYear().toString().substring(2,4),
 						'm'	: intPad((date.getMonth()+1), 2),
@@ -4913,9 +4872,9 @@ module.exports = (function(){
 						'S'	: intPad(date.getSeconds(), 2),
 						'3'	: intPad(date.getMilliseconds(), 3),
 						'a'	: date.toLocaleDateString( locale, { weekday: 'short' } )
-					}
+					};
 
-					for (prop in props)
+					for (var prop in props)
 					{
 						result = result.replace('%'+prop, props[prop]);
 					}
@@ -5256,9 +5215,9 @@ module.exports = (function(){
 						newValue = a.toString();
 
 					// disable NaN, Infinity and -Infinity...
-					newValue = (newValue === 'NaN' /*|| newValue === 'Infinity' || newValue === '-Infinity'*/) ? "" : newValue;
+					newValue = (newValue === 'NaN' /*|| newValue === 'Infinity' || newValue === '-Infinity'*/) ? '' : newValue;
 
-					return (curValue !== "") ? new StringType(curValue) : new StringType(newValue); 
+					return (curValue !== '') ? new StringType(curValue) : new StringType(newValue); 
 				},
 
 				args: [
@@ -5458,11 +5417,11 @@ module.exports = (function(){
 
 			}*/
 		}
-	}
+	};
 	/**
 	 * Alias functions
 	 */
-	functions[""]['format-date-time'] = functions[""]['format-date'];
+	functions['']['format-date-time'] = functions['']['format-date'];
 	
 	/**
 	 * Evaluate parsed expression tree.
@@ -5478,8 +5437,8 @@ module.exports = (function(){
 			throw new Error('Internal Error: Expression type does not exist: ' + tree.type);
 		}
 		
-		return expressions[tree.type].apply(context, tree.args)
-	}
+		return expressions[tree.type].apply(context, tree.args);
+	};
 	
 	/**
 	 * The XPathResult interface represents the result of the evaluation of a
@@ -5519,7 +5478,7 @@ module.exports = (function(){
 			case XPathResult.ORDERED_NODE_SNAPSHOT_TYPE:
 			case XPathResult.ANY_UNORDERED_NODE_TYPE:
 			case XPathResult.FIRST_ORDERED_NODE_TYPE:
-				if (!value instanceof NodeSetType)
+				if (!(value instanceof NodeSetType))
 				{
 					throw new Error('Expected result of type "node-set", got: "' + value.type + '"');
 				}
@@ -5557,16 +5516,14 @@ module.exports = (function(){
 					
 					default:
 						throw new XPathException(XPathException.TYPE_ERR, 'XPath result type not supported. (type: ' + type + ')');
-						break;
 				}
 				
 				break;
 			
 			default:
 				throw new XPathException(XPathException.TYPE_ERR, 'XPath result type not supported. (type: ' + type + ')');
-				break;
-		};
-	}
+		}
+	};
 	
 	XPathResult.factory = function(context, type, value)
 	{
@@ -5600,7 +5557,7 @@ module.exports = (function(){
 		}
 		
 		return result;
-	}
+	};
 	
 	XPathResult.prototype = {
 		/**
@@ -5691,7 +5648,7 @@ module.exports = (function(){
 			
 			return this._value[index];
 		}
-	}
+	};
 	
 	/**
 	 * XPathResultType
@@ -5748,7 +5705,7 @@ module.exports = (function(){
 		this.localName = prefix;
 		
 		// nodeType is equal to XPATH_NAMESPACE_NODE.
-		this.nodeType = XPathNamespace.XPATH_NAMESPACE_NODE
+		this.nodeType = XPathNamespace.XPATH_NAMESPACE_NODE;
 		
 		// namespaceURI is the namespace URI of the namespace represented by the node.
 		this.namespaceURI = namespaceURI;
@@ -5761,7 +5718,7 @@ module.exports = (function(){
 		
 		// TODO-FUTURE: find all other attributes of Node not set above, and set the to null or false
 		// see: http://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-1950641247
-	}
+	};
 	
 	/**
 	 * An integer indicating which type of node this is.
@@ -5788,10 +5745,10 @@ module.exports = (function(){
 				BooleanType: BooleanType
 			},
 			add: function(name, fnObj){
-				functions[""][name] = fnObj;
+				functions[''][name] = fnObj;
 			},
 			remove: function(name) {
-				delete functions[""][name];
+				delete functions[''][name];
 			}
 		},
 		
@@ -5817,7 +5774,7 @@ module.exports = (function(){
 					createNSResolver: document.createNSResolver,
 					evaluate: document.evaluate
 				}
-			}
+			};
 		},
 		
 		/**
@@ -5851,7 +5808,7 @@ module.exports = (function(){
 						return evaluator.evaluate.apply(evaluator, arguments);
 					}
 				}
-			}
+			};
 		},
 		
 		/**
@@ -5864,9 +5821,10 @@ module.exports = (function(){
 		{
 			var newBindings = (bindings || module.createDomLevel3XPathBindings()),
 				currentBindings = module.getCurrentDomLevel3XPathBindings(),
-				doc = doc || document,
 				i
 			;
+
+			doc = doc || document;
 			
 			for(i in newBindings['window'])
 			{
@@ -5880,7 +5838,7 @@ module.exports = (function(){
 			
 			return currentBindings;
 		}
-	}
+	};
 	
 	return module;
 	
