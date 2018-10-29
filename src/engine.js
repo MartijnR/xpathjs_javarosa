@@ -2153,7 +2153,7 @@ module.exports = (function(){
 		 *        NOT_SUPPORTED_ERR: The Node is not a type permitted as an XPath context node or the request
 		 *        type is not permitted by this XPathEvaluator.
 		 */
-		evaluate: function(contextNode, type, result)
+		evaluate: function(contextNode, type /*, result*/)
 		{
 			var context;
 			
@@ -3049,7 +3049,7 @@ module.exports = (function(){
 			return new NumberType(number);
 		},
 		
-		'$': function(name)
+		'$': function(/*name*/)
 		{
 			throw new Error('TODO: Not implemented.16');
 		},

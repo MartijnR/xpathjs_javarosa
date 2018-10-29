@@ -12,7 +12,7 @@ var MINSTD = 16807;
  */
 function shuffle( array, seed ) {
     var rng;
-    var result = []
+    var result = [];
 
     if ( typeof seed !== 'undefined' ){
         if ( !Number.isInteger( seed ) ) {
@@ -34,7 +34,7 @@ function shuffle( array, seed ) {
       result[j] = array[i];
     }
   
-    return result
+    return result;
 }
 
 // Polyfill for Internet Explorer

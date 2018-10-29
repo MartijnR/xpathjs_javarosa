@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.2] - 2018-10-29
+--------------------
+##### Fixed
+- 'strict' violations
+
 [1.8.1] - 2018-06-27
 --------------------
 ##### Fixed
