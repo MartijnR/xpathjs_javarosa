@@ -5343,7 +5343,12 @@ module.exports = (function(){
 
 			randomize: {
 				/**
+				 * Randomizes nodesets
 				 * 
+				 * @see https://opendatakit.github.io/xforms-spec/#fn:randomize
+				 * @param {NodesetType}  nodeset
+				 * @param {NumberType}   seed
+				 * @return {NodesetType}
 				 */
 				fn: function(nodeset, seed)
 				{

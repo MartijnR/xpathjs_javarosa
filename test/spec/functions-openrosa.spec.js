@@ -532,9 +532,10 @@ describe('Custom "OpenRosa" functions', function () {
     it('sin()', function () {
         [
             ['sin(2)', doc, 0.9092974268256817],
+            ['sin(//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p[2])', doc, 0.9092974268256817],
             ['sin("a")', doc, NaN]
         ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
+            var result = documentEvaluate(t[0], t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
             expect(result.numberValue).to.deep.equal(t[2]);
         });
     });
@@ -752,10 +753,10 @@ describe('Custom "OpenRosa" functions', function () {
             ['area()', 'distance()'].forEach(function(t){
                 var test = function(){
                     documentEvaluate(`area(${t})`, doc, null, win.XPathResult.NUMBER_TYPE, null);
-                }
+                };
                 expect(test).to.throw(win.Error);
             });
-        })
+        });
     });
 
     it('ends-with', function () {
@@ -856,10 +857,12 @@ describe('Custom "OpenRosa" functions', function () {
             [-42, 'EDAFBC'],
             [1, 'BFEACD'],
             [11111111, 'ACDBFE'],
+            ['int(1)', 'BFEACD'], 
+            ['floor(1.1)', 'BFEACD'],
+            ['//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', 'BFEACD']
         ].forEach(function (t) {
-            it('with a seed', function () {
+            it(`with a seed: ${t[0]}`, function () {
                 var result = documentEvaluate(`randomize(${SELECTOR},${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                var nodes = [];
                 var text = '';
                 for (var j = 0; j < result.snapshotLength; j++) {
                     text += result.snapshotItem(j).textContent;
@@ -869,7 +872,7 @@ describe('Custom "OpenRosa" functions', function () {
         });
 
         [
-            `randomize()`,
+            'randomize()',
             `randomize(${SELECTOR}, 'a')`,
             `randomize(${SELECTOR}, 1, 2)`,
         ].forEach(function (t) {
