@@ -162,9 +162,9 @@ describe('Custom "OpenRosa" functions', function () {
     it('dates as string', function () {
         [
             ['"2018-01-01"', '2018-01-01'],
-            ['date("2018-01-01")', '2018-01-01T00:00:00.000-07:00'], // America/Phoenix
+            ['date("2018-01-01")', '2018-01-01'],//T00:00:00.000-07:00'], // America/Phoenix
             ['"2018-01-01" + 1', 17533.29167], // converted to Number according to regular XPath rules
-            ['date("2018-01-01" + 1)', '2018-01-02T00:00:00.000-07:00'],
+            ['date("2018-01-01" + 1)', '2018-01-02'],//T00:00:00.000-07:00'],
         ].forEach(function (t) {
             var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
             var r = typeof t[1] === 'number' ? Math.round(result.stringValue*100000)/100000 : result.stringValue;
@@ -173,12 +173,21 @@ describe('Custom "OpenRosa" functions', function () {
 
         [
             "today()",
-            "now()",
             "date(today() + 10)",
             "date(10 + today())"
         ].forEach(function (t) {
             var result = documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.match(/([0-9]{4}\-[0-9]{2}\-[0-9]{2})([T]|[\s])([0-9]){2}:([0-9]){2}([0-9:.]*)(\+|\-)([0-9]{2}):([0-9]{2})$/);
+            expect(result.stringValue).to.match(/([0-9]{4}-[0-9]{2}-[0-9]{2})$/);
+        });
+    });
+
+    it('datetimes as string', function () {
+
+        [
+            "now()",
+        ].forEach(function (t) {
+            var result = documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
+            expect(result.stringValue).to.match(/([0-9]{4}-[0-9]{2}-[0-9]{2})([T]|[\s])([0-9]){2}:([0-9]){2}([0-9:.]*)(\+|-)([0-9]{2}):([0-9]{2})$/);
         });
     });
 

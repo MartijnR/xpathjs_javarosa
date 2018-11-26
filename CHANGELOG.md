@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.9.0] - 2018-12-13
+--------------------
+##### Changed
+- When returning datetime at midnight as string, omit the time part.
+
 [1.8.2] - 2018-10-29
 --------------------
 ##### Fixed

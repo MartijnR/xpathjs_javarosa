@@ -10,8 +10,14 @@ Date.prototype.toISOLocalString = function() {
         return this.toString();
     }
 
-    return new Date( this.getTime() - ( this.getTimezoneOffset() * 60 * 1000 ) ).toISOString()
+    var dt = new Date( this.getTime() - ( this.getTimezoneOffset() * 60 * 1000 ) ).toISOString()
         .replace( 'Z', this.getTimezoneOffsetAsTime() );
+
+    if ( dt.indexOf( 'T00:00:00.000' ) > 0 ) {
+        return dt.split( 'T' )[ 0 ];
+    } else {
+        return dt;
+    }
 };
 
 Date.prototype.getTimezoneOffsetAsTime = function() {

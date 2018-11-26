@@ -26,7 +26,7 @@ Getting Started
   
   2. Initialize XPathJS:
      
-     ```javascript
+    ```js
     // bind XPath methods to document and window objects
     // NOTE: This will overwrite native XPath implementation if it exists
     XPathJS.bindDomLevel3XPath();
@@ -34,7 +34,7 @@ Getting Started
      
   3. You can now use XPath expressions to query the DOM:
      
-     ```javascript
+    ```js
     var result = document.evaluate(
         '//ul/li/text()', // XPath expression
         document, // context node
