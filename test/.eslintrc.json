@@ -1,0 +1,37 @@
+{
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": false,
+        "mocha": true
+    },
+    "globals": {
+        "spyOn": true,
+        "doc": true,
+        "win": true,
+        "expect": true,
+       "documentEvaluate": true,
+        "checkNodeResult": true,
+        "checkNodeResultNamespace": true,
+        "filterAttributes":true,
+        "parseNamespacesFromAttributes": true,
+        "helpers": true,
+        "documentCreateNSResolver": true,
+        "documentCreateExpression":true,
+        "snapshotToArray": true,
+        "nodeWithAttributes": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 8
+    },
+    "rules": {
+        "indent": [ "warn", 4, {
+            "SwitchCase": 1
+        } ],
+        "linebreak-style": [ "error", "unix" ],
+        "semi": [ "error", "always" ],
+        "no-console": 0
+    }
+}

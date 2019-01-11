@@ -1,21 +1,18 @@
-/* global define, describe, xdescribe, require, it, xit, before, after, beforeEach, afterEach, expect, Blob, documentEvaluate, window, document, loadXMLFile, helpers, XPathJS*/
-"use strict";
+let doc, win, docEvaluate;
 
-var doc, win, docEvaluate;
+before( done => {
+    console.log( 'running before' );
 
-before(function(done) {
-    console.log('running before');
+    const iframe = document.createElement( 'iframe' );
+    iframe.setAttribute( 'id', 'testdoc' );
+    iframe.setAttribute( 'src', '/base/test/doc.xml' );
 
-    var iframe = document.createElement('iframe');
-    iframe.setAttribute('id', 'testdoc');
-    iframe.setAttribute('src', '/base/test/doc.xml');
-
-    iframe.onload = function() {
-        var script = document.createElement('script');
+    iframe.onload = () => {
+        const script = document.createElement( 'script' );
         // TODO: should load parser and engine separately to facilitate development
-        script.setAttribute('src', '/base/dist/enketo-xpathjs-bundle.js');
+        script.setAttribute( 'src', '/base/dist/enketo-xpathjs-bundle.js' );
 
-        script.onload = function() {
+        script.onload = () => {
             win = iframe.contentWindow;
             doc = win.document;
             win.XPathJS.bindDomLevel3XPath();
@@ -23,9 +20,9 @@ before(function(done) {
             done();
         };
 
-        iframe.contentWindow.document.querySelector('body').appendChild(script);
+        iframe.contentWindow.document.querySelector( 'body' ).appendChild( script );
     };
-    document.body.appendChild(iframe);
+    document.body.appendChild( iframe );
 
     /*
     loadXMLFile('/base/test/doc.xml', function(xmlStr) {
@@ -37,4 +34,4 @@ before(function(done) {
         done();
     });*/
 
-});
+} );

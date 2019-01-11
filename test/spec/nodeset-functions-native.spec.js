@@ -1,60 +1,57 @@
-/* global define, describe, xdescribe, require, it, xit, before, after, beforeEach, afterEach, expect, Blob, doc, win, docEvaluate, documentEvaluate, window, filterAttributes, loadXMLFile, helpers, XPathJS*/
-"use strict";
+describe('native nodeset functions', () => {
 
-describe('native nodeset functions', function() {
-
-    it('last()', function() {
+    it('last()', () => {
         [
             ["last()", 1],
             ["xhtml:p[last()]", 4],
             ["xhtml:p[last()-last()+1]", 1]
-        ].forEach(function(t) {
-            var result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        ].forEach(t => {
+            const result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
             expect(result.numberValue).to.equal(t[1]);
         });
     });
 
-    it('last() fails when too many arguments are provided', function() {
-        var test = function() {
+    it('last() fails when too many arguments are provided', () => {
+        const test = () => {
             documentEvaluate("last(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('position()', function() {
+    it('position()', () => {
         [
             ["position()", 1],
             ["*[position()=last()]", 4],
             ["*[position()=2]", 2],
             ["xhtml:p[position()=2]", 2]
-        ].forEach(function(t) {
-            var result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        ].forEach(t => {
+            const result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
             expect(result.numberValue).to.equal(t[1]);
 
         });
 
         [
             ["*[position()=-1]", ""]
-        ].forEach(function(t) {
-            var result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
+        ].forEach(t => {
+            const result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
             expect(result.stringValue).to.equal(t[1]);
         });
     });
 
-    it('position() fails when too many args are provided', function() {
-        var test = function() {
+    it('position() fails when too many args are provided', () => {
+        const test = () => {
             documentEvaluate("position(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('count()', function() {
+    it('count()', () => {
         [
             ["count(xhtml:p)", 4],
             ["count(p)", 0],
             ["count(//nonexisting)", 0]
-        ].forEach(function(t) {
-            var result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        ].forEach(t => {
+            const result = documentEvaluate(t[0], doc.getElementById('testFunctionNodeset2'), helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
             expect(result.numberValue).to.equal(t[1]);
         });
 
@@ -68,32 +65,35 @@ describe('native nodeset functions', function() {
         */
     });
 
-    it('count() fails when too many arguments are provided', function() {
-        var test = function() {
+    it('count() fails when too many arguments are provided', () => {
+        const test = () => {
             documentEvaluate("count(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('count() fails when too few arguments are provided', function() {
-        var test = function() {
+    it('count() fails when too few arguments are provided', () => {
+        const test = () => {
             documentEvaluate("count()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('count() fails when incorrect argument type is provided', function() {
-        var test = function() {
+    it('count() fails when incorrect argument type is provided', () => {
+        const test = () => {
             documentEvaluate("count(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('local-name()', function() {
-        var result, input, i, node,
-            nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute'),
-            nodeAttributes = filterAttributes(nodeWithAttributes.attributes),
-            nodeAttributesIndex;
+    it('local-name()', () => {
+        let result;
+        let input;
+        let i;
+        let node;
+        const nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute');
+        const nodeAttributes = filterAttributes(nodeWithAttributes.attributes);
+        let nodeAttributesIndex;
 
         for (i = 0; i < nodeAttributes.length; i++) {
             if (nodeAttributes[i].nodeName == 'ev:class') {
@@ -114,7 +114,7 @@ describe('native nodeset functions', function() {
             ["local-name()", doc.getElementById('testFunctionNodesetComment').firstChild, ""], // comment
             ["local-name()", doc.getElementById('testFunctionNodesetText').firstChild, ""], // text
             ["local-name(attribute::node())", nodeWithAttributes, nodeAttributes[0].nodeName], // attribute
-            ["local-name(attribute::node()[" + (nodeAttributesIndex + 1) + "])", nodeWithAttributes, 'class'] // attribute
+            [`local-name(attribute::node()[${nodeAttributesIndex + 1}])`, nodeWithAttributes, 'class'] // attribute
         ];
 
         // Processing Instruction
@@ -135,37 +135,38 @@ describe('native nodeset functions', function() {
         }
     });
 
-    it('local-name() with namespace', function() {
-        var nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute');
-
+    it('local-name() with namespace', () => {
         [
             ["local-name(namespace::node())", doc.getElementById('testFunctionNodesetNamespace'), ""],
             ["local-name(namespace::node()[2])", doc.getElementById('testFunctionNodesetNamespace'), "asdf"]
-        ].forEach(function(t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
+        ].forEach(t => {
+            const result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
             expect(result.stringValue.toLowerCase()).to.equal(t[2]);
         });
     });
 
-    it('local-name() fails when too many arguments are provided', function() {
-        var test = function() {
+    it('local-name() fails when too many arguments are provided', () => {
+        const test = () => {
             documentEvaluate("local-name(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('local-name() fails when the wrong type argument is provided', function() {
-        var test = function() {
+    it('local-name() fails when the wrong type argument is provided', () => {
+        const test = () => {
             documentEvaluate("local-name(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('namespace-uri()', function() {
-        var result, input, i, node,
-            nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute'),
-            nodeAttributes = filterAttributes(nodeWithAttributes.attributes),
-            nodeAttributesIndex;
+    it('namespace-uri()', () => {
+        let result;
+        let input;
+        let i;
+        let node;
+        const nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute');
+        const nodeAttributes = filterAttributes(nodeWithAttributes.attributes);
+        let nodeAttributesIndex;
 
         for (i = 0; i < nodeAttributes.length; i++) {
             if (nodeAttributes[i].nodeName == 'ev:class') {
@@ -186,7 +187,7 @@ describe('native nodeset functions', function() {
             ["namespace-uri()", doc.getElementById('testFunctionNodesetComment').firstChild, ""], // comment
             ["namespace-uri()", doc.getElementById('testFunctionNodesetText').firstChild, ""], // text
             ["namespace-uri(attribute::node())", nodeWithAttributes, ''], // attribute
-            ["namespace-uri(attribute::node()[" + (nodeAttributesIndex + 1) + "])", nodeWithAttributes, 'http://some-namespace.com/nss'], // attribute
+            [`namespace-uri(attribute::node()[${nodeAttributesIndex + 1}])`, nodeWithAttributes, 'http://some-namespace.com/nss'], // attribute
             ["namespace-uri(namespace::node())", doc.getElementById('testFunctionNodesetNamespace'), ""], // namespace
             ["namespace-uri(namespace::node()[2])", doc.getElementById('testFunctionNodesetNamespace'), ""] // namespace
         ];
@@ -209,25 +210,28 @@ describe('native nodeset functions', function() {
         }
     });
 
-    it('namespace-uri() fails when too many arguments are provided', function() {
-        var test = function() {
+    it('namespace-uri() fails when too many arguments are provided', () => {
+        const test = () => {
             documentEvaluate("namespace-uri(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('namespace-uri() fails when wrong type of argument is provided', function() {
-        var test = function() {
+    it('namespace-uri() fails when wrong type of argument is provided', () => {
+        const test = () => {
             documentEvaluate("namespace-uri(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('name()', function() {
-        var result, input, i, node,
-            nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute'),
-            nodeAttributes = filterAttributes(nodeWithAttributes.attributes),
-            nodeAttributesIndex;
+    it('name()', () => {
+        let result;
+        let input;
+        let i;
+        let node;
+        const nodeWithAttributes = doc.getElementById('testFunctionNodesetAttribute');
+        const nodeAttributes = filterAttributes(nodeWithAttributes.attributes);
+        let nodeAttributesIndex;
 
         for (i = 0; i < nodeAttributes.length; i++) {
             if (nodeAttributes[i].nodeName == 'ev:class') {
@@ -248,7 +252,7 @@ describe('native nodeset functions', function() {
             ["name()", doc.getElementById('testFunctionNodesetComment').firstChild, ""], // comment
             ["name()", doc.getElementById('testFunctionNodesetText').firstChild, ""], // text
             ["name(attribute::node())", nodeWithAttributes, nodeAttributes[0].nodeName], // attribute
-            ["name(attribute::node()[" + (nodeAttributesIndex + 1) + "])", nodeWithAttributes, 'ev:class'], // attribute
+            [`name(attribute::node()[${nodeAttributesIndex + 1}])`, nodeWithAttributes, 'ev:class'], // attribute
             ["name(namespace::node())", doc.getElementById('testFunctionNodesetNamespace'), ""], // namespace
             ["name(namespace::node()[2])", doc.getElementById('testFunctionNodesetNamespace'), "asdf"] // namespace
         ];
@@ -271,15 +275,15 @@ describe('native nodeset functions', function() {
         }
     });
 
-    it('name() fails when too many arguments are provided', function() {
-        var test = function() {
+    it('name() fails when too many arguments are provided', () => {
+        const test = () => {
             documentEvaluate("name(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);
     });
 
-    it('name() fails when the wrong argument type is provided', function() {
-        var test = function() {
+    it('name() fails when the wrong argument type is provided', () => {
+        const test = () => {
             documentEvaluate("name(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
         };
         expect(test).to.throw(win.Error);

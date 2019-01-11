@@ -1,969 +1,965 @@
-/* global define, document, describe, xdescribe, require, it, xit, before, after, beforeEach, afterEach, expect, Blob, doc, win, docEvaluate, documentEvaluate, window, loadXMLFile, helpers, XPathJS*/
-'use strict';
+describe( 'Custom "OpenRosa" functions', () => {
 
-describe('Custom "OpenRosa" functions', function () {
-    
     //test only the use of position(node) with an argument
-    it('position(node)', function () {
+    it( 'position(node)', () => {
         [
-            ['position(..)', doc.getElementById('FunctionNumberCaseNumberMultiple'), 6],
-            ['position(.)', doc.getElementById('FunctionNumberCaseNumberMultiple'), 3],
-            ['position(../..)', doc.getElementById('testFunctionNodeset3NodeP'), 2]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(t[2]).to.equal(result.numberValue);
-        });
-    });
+            [ 'position(..)', doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), 6 ],
+            [ 'position(.)', doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), 3 ],
+            [ 'position(../..)', doc.getElementById( 'testFunctionNodeset3NodeP' ), 2 ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.numberValue );
+        } );
+    } );
 
-    it('selected()', function () {
+    it( 'selected()', () => {
         [
-            ["selected(self::node(), '')", doc.getElementById('FunctionSelectedCaseEmpty'), true],
-            ["selected(self::node(), 'ab')", doc.getElementById('FunctionSelectedCaseEmpty'), false],
-            ["selected(self::node(), 'bc')", doc.getElementById('FunctionSelectedCaseSingle'), false],
-            ["selected(self::node(), 'ab')", doc.getElementById('FunctionSelectedCaseSingle'), true],
-            ["selected(self::node(), 'kl')", doc.getElementById('FunctionSelectedCaseMultiple'), false],
-            ["selected(self::node(), 'ab')", doc.getElementById('FunctionSelectedCaseMultiple'), true],
-            ["selected(self::node(), 'cd')", doc.getElementById('FunctionSelectedCaseMultiple'), true],
-            ["selected(self::node(), 'ij')", doc.getElementById('FunctionSelectedCaseMultiple'), false],
-            ["selected('apple baby crimson', 'apple')", doc, true],
-            ["selected('apple baby crimson', 'baby')", doc, true],
-            ["selected('apple baby crimson', 'crimson')", doc, true],
-            ["selected('apple baby crimson', '  baby  ')", doc, true],
-            ["selected('apple baby crimson', 'babby')", doc, false],
-            ["selected('apple baby crimson', 'bab')", doc, false],
-            ["selected('apple', 'apple')", doc, true],
-            ["selected('apple', 'ovoid')", doc, false],
-            ["selected('', 'apple')", doc, false]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            [ "selected(self::node(), '')", doc.getElementById( 'FunctionSelectedCaseEmpty' ), true ],
+            [ "selected(self::node(), 'ab')", doc.getElementById( 'FunctionSelectedCaseEmpty' ), false ],
+            [ "selected(self::node(), 'bc')", doc.getElementById( 'FunctionSelectedCaseSingle' ), false ],
+            [ "selected(self::node(), 'ab')", doc.getElementById( 'FunctionSelectedCaseSingle' ), true ],
+            [ "selected(self::node(), 'kl')", doc.getElementById( 'FunctionSelectedCaseMultiple' ), false ],
+            [ "selected(self::node(), 'ab')", doc.getElementById( 'FunctionSelectedCaseMultiple' ), true ],
+            [ "selected(self::node(), 'cd')", doc.getElementById( 'FunctionSelectedCaseMultiple' ), true ],
+            [ "selected(self::node(), 'ij')", doc.getElementById( 'FunctionSelectedCaseMultiple' ), false ],
+            [ "selected('apple baby crimson', 'apple')", doc, true ],
+            [ "selected('apple baby crimson', 'baby')", doc, true ],
+            [ "selected('apple baby crimson', 'crimson')", doc, true ],
+            [ "selected('apple baby crimson', '  baby  ')", doc, true ],
+            [ "selected('apple baby crimson', 'babby')", doc, false ],
+            [ "selected('apple baby crimson', 'bab')", doc, false ],
+            [ "selected('apple', 'apple')", doc, true ],
+            [ "selected('apple', 'ovoid')", doc, false ],
+            [ "selected('', 'apple')", doc, false ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('selected-at()', function () {
+    it( 'selected-at()', () => {
         [
-            ["selected-at(self::node(), 0)", doc.getElementById('FunctionSelectedCaseEmpty'), ''],
-            ["selected-at(self::node(), 0)", doc.getElementById('FunctionSelectedCaseSingle'), 'ab'],
-            ["selected-at(self::node(), 1)", doc.getElementById('FunctionSelectedCaseSingle'), ''],
-            ["selected-at(self::node(), 2)", doc.getElementById('FunctionSelectedCaseMultiple'), 'ef'],
-            ["selected-at(self::node(), -1)", doc.getElementById('FunctionSelectedCaseMultiple'), ''],
-            ["selected-at('apple baby crimson', 2)", doc, 'crimson'],
-            ["selected-at('apple baby crimson', -1)", doc, ''],
-            ["selected-at('', 1)", doc, '']
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
-            expect(t[2]).to.equal(result.stringValue);
-        });
-    });
+            [ "selected-at(self::node(), 0)", doc.getElementById( 'FunctionSelectedCaseEmpty' ), '' ],
+            [ "selected-at(self::node(), 0)", doc.getElementById( 'FunctionSelectedCaseSingle' ), 'ab' ],
+            [ "selected-at(self::node(), 1)", doc.getElementById( 'FunctionSelectedCaseSingle' ), '' ],
+            [ "selected-at(self::node(), 2)", doc.getElementById( 'FunctionSelectedCaseMultiple' ), 'ef' ],
+            [ "selected-at(self::node(), -1)", doc.getElementById( 'FunctionSelectedCaseMultiple' ), '' ],
+            [ "selected-at('apple baby crimson', 2)", doc, 'crimson' ],
+            [ "selected-at('apple baby crimson', -1)", doc, '' ],
+            [ "selected-at('', 1)", doc, '' ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.STRING_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.stringValue );
+        } );
+    } );
 
-    it('count-selected()', function () {
+    it( 'count-selected()', () => {
         [
-            ["count-selected(self::node())", doc.getElementById('FunctionSelectedCaseEmpty'), 0],
-            ["count-selected(self::node())", doc.getElementById('FunctionSelectedCaseSingle'), 1],
-            ["count-selected(self::node())", doc.getElementById('FunctionSelectedCaseMultiple'), 4]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(t[2]).to.equal(result.numberValue);
-        });
-    });
+            [ "count-selected(self::node())", doc.getElementById( 'FunctionSelectedCaseEmpty' ), 0 ],
+            [ "count-selected(self::node())", doc.getElementById( 'FunctionSelectedCaseSingle' ), 1 ],
+            [ "count-selected(self::node())", doc.getElementById( 'FunctionSelectedCaseMultiple' ), 4 ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.numberValue );
+        } );
+    } );
 
-    it('checklist()', function () {
+    it( 'checklist()', () => {
         [
-            ["checklist(-1, 2, 2>1)", doc, true],
-            ["checklist(-1, 2, 1=1, 2=2, 3=3)", doc, false],
-            ["checklist(1, 2, 1=1, 2=2, 3=3)", doc, false],
-            ["checklist(1, 1, 1=1)", doc, true],
-            ["checklist(2, 2, * )", doc.getElementById('FunctionChecklistCase'), true],
-            ["checklist(-1, 2, self::node())", doc.getElementById('FunctionChecklistCaseEmpty'), true],
-            ["checklist(1, 2, self::node())", doc.getElementById('FunctionChecklistCaseEmpty'), false],
-            ["checklist(1, 1, true(), false(), false())", doc, true]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            [ "checklist(-1, 2, 2>1)", doc, true ],
+            [ "checklist(-1, 2, 1=1, 2=2, 3=3)", doc, false ],
+            [ "checklist(1, 2, 1=1, 2=2, 3=3)", doc, false ],
+            [ "checklist(1, 1, 1=1)", doc, true ],
+            [ "checklist(2, 2, * )", doc.getElementById( 'FunctionChecklistCase' ), true ],
+            [ "checklist(-1, 2, self::node())", doc.getElementById( 'FunctionChecklistCaseEmpty' ), true ],
+            [ "checklist(1, 2, self::node())", doc.getElementById( 'FunctionChecklistCaseEmpty' ), false ],
+            [ "checklist(1, 1, true(), false(), false())", doc, true ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('weighted-checklist()', function () {
+    it( 'weighted-checklist()', () => {
         // Note: test for two node-set arguments done elsewhere
         [
-            ["weighted-checklist(-1, 2, 2>1, 2)", doc, true],
-            ["weighted-checklist(-1, 2, 2>1, 3)", doc, false],
-            ["weighted-checklist(-1, 2, 1=1, 1, 2=2, 1, 3=3, 1)", doc, false],
-            ["weighted-checklist(1, 2, 1=1, 1, 2=2, 1, 3=3, 1)", doc, false],
-            ["weighted-checklist(1, 1, 1=1, 1)", doc, true],
-            ["weighted-checklist(1, 1, 1=1, 0)", doc, false],
-            ["weighted-checklist(5, 5, self::* ,5)", doc.getElementById('FunctionChecklistCase0'), true],
-            ["weighted-checklist(-1, 2, self::node(), 0)", doc.getElementById('FunctionChecklistCaseEmpty'), true],
-            ["weighted-checklist(1, 2, self::node(), 1)", doc.getElementById('FunctionChecklistCaseEmpty'), false],
-            ["weighted-checklist(3, 3, 1=1, self::node())", doc.getElementById('FunctionWeightedChecklist'), true],
-            ["weighted-checklist(2, 2, true(), 2, false(), 5, false(), 6)", doc, true],
-            ["weighted-checklist(2, -1, true(), 999, false(), 5, false(), 6)", doc, true]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            [ "weighted-checklist(-1, 2, 2>1, 2)", doc, true ],
+            [ "weighted-checklist(-1, 2, 2>1, 3)", doc, false ],
+            [ "weighted-checklist(-1, 2, 1=1, 1, 2=2, 1, 3=3, 1)", doc, false ],
+            [ "weighted-checklist(1, 2, 1=1, 1, 2=2, 1, 3=3, 1)", doc, false ],
+            [ "weighted-checklist(1, 1, 1=1, 1)", doc, true ],
+            [ "weighted-checklist(1, 1, 1=1, 0)", doc, false ],
+            [ "weighted-checklist(5, 5, self::* ,5)", doc.getElementById( 'FunctionChecklistCase0' ), true ],
+            [ "weighted-checklist(-1, 2, self::node(), 0)", doc.getElementById( 'FunctionChecklistCaseEmpty' ), true ],
+            [ "weighted-checklist(1, 2, self::node(), 1)", doc.getElementById( 'FunctionChecklistCaseEmpty' ), false ],
+            [ "weighted-checklist(3, 3, 1=1, self::node())", doc.getElementById( 'FunctionWeightedChecklist' ), true ],
+            [ "weighted-checklist(2, 2, true(), 2, false(), 5, false(), 6)", doc, true ],
+            [ "weighted-checklist(2, -1, true(), 999, false(), 5, false(), 6)", doc, true ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('boolean-from-string()', function () {
+    it( 'boolean-from-string()', () => {
         [
-            ["boolean-from-string(1)", doc, true],
-            ["boolean-from-string(0)", doc, false],
-            ["boolean-from-string('1')", doc, true],
-            ["boolean-from-string('2')", doc, false],
-            ["boolean-from-string('0')", doc, false],
-            ["boolean-from-string('true')", doc, true],
-            ["boolean-from-string('false')", doc, false],
-            ["boolean-from-string('whatever')", doc, false],
-            ["boolean-from-string(1.0)", doc, true],
-            ["boolean-from-string(1.0001)", doc, false],
-            ["boolean-from-string(true())", doc, true]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, null, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            [ "boolean-from-string(1)", doc, true ],
+            [ "boolean-from-string(0)", doc, false ],
+            [ "boolean-from-string('1')", doc, true ],
+            [ "boolean-from-string('2')", doc, false ],
+            [ "boolean-from-string('0')", doc, false ],
+            [ "boolean-from-string('true')", doc, true ],
+            [ "boolean-from-string('false')", doc, false ],
+            [ "boolean-from-string('whatever')", doc, false ],
+            [ "boolean-from-string(1.0)", doc, true ],
+            [ "boolean-from-string(1.0001)", doc, false ],
+            [ "boolean-from-string(true())", doc, true ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('if()', function () {
+    it( 'if()', () => {
         [
-            ["if(true(), 5, 'abc')", doc, "5"],
-            ["if(false(), 5, 'abc')", doc, "abc"],
-            ["if(6 > 7, 5, 'abc')", doc, "abc"],
-            ["if('', 5, 'abc')", doc, "abc"],
-            ["if(self::node(), 'exists', 'does not exist')", doc.getElementById('FunctionChecklistCaseEmpty'), 'exists']
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
-            expect(t[2]).to.equal(result.stringValue);
-        });
-    });
+            [ "if(true(), 5, 'abc')", doc, "5" ],
+            [ "if(false(), 5, 'abc')", doc, "abc" ],
+            [ "if(6 > 7, 5, 'abc')", doc, "abc" ],
+            [ "if('', 5, 'abc')", doc, "abc" ],
+            [ "if(self::node(), 'exists', 'does not exist')", doc.getElementById( 'FunctionChecklistCaseEmpty' ), 'exists' ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.STRING_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.stringValue );
+        } );
+    } );
 
-    it('regex()', function () {
+    it( 'regex()', () => {
         [
-            ["regex('12345','[0-9]+')", doc, true],
-            ["regex('abcde','[0-9]+')", doc, false]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            [ "regex('12345','[0-9]+')", doc, true ],
+            [ "regex('abcde','[0-9]+')", doc, false ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
     // THIS IS NOT A CUSTOM FUNCTION
-    it('contextual and absolute', function () {
+    it( 'contextual and absolute', () => {
         [
-            ["(. >= 122)", doc.getElementById('FunctionNumberCaseNumber'), true],
-            ["(. < //xhtml:div[@id='FunctionNumberCaseNumber'])", doc.getElementById('FunctionChecklistCase0'), true],
-            ["(. > /xhtml:html/xhtml:body/xhtml:div[@id='FunctionNumberCase']/xhtml:div[@id='FunctionNumberCaseNumber'])", doc.getElementById('FunctionChecklistCase0'), false],
-            ["(//xhtml:div[@id='FunctionNumberCaseNumber'] >= 122)", doc.getElementById('XPathExpressionEvaluateCase'), true]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            [ "(. >= 122)", doc.getElementById( 'FunctionNumberCaseNumber' ), true ],
+            [ "(. < //xhtml:div[@id='FunctionNumberCaseNumber'])", doc.getElementById( 'FunctionChecklistCase0' ), true ],
+            [ "(. > /xhtml:html/xhtml:body/xhtml:div[@id='FunctionNumberCase']/xhtml:div[@id='FunctionNumberCaseNumber'])", doc.getElementById( 'FunctionChecklistCase0' ), false ],
+            [ "(//xhtml:div[@id='FunctionNumberCaseNumber'] >= 122)", doc.getElementById( 'XPathExpressionEvaluateCase' ), true ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('dates as string', function () {
+    it( 'dates as string', () => {
         [
-            ['"2018-01-01"', '2018-01-01'],
-            ['date("2018-01-01")', '2018-01-01'],//T00:00:00.000-07:00'], // America/Phoenix
-            ['"2018-01-01" + 1', 17533.29167], // converted to Number according to regular XPath rules
-            ['date("2018-01-01" + 1)', '2018-01-02'],//T00:00:00.000-07:00'],
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            var r = typeof t[1] === 'number' ? Math.round(result.stringValue*100000)/100000 : result.stringValue;
-            expect(r).to.equal(t[1]);
-        });
+            [ '"2018-01-01"', '2018-01-01' ],
+            [ 'date("2018-01-01")', '2018-01-01' ], //T00:00:00.000-07:00'], // America/Phoenix
+            [ '"2018-01-01" + 1', 17533.29167 ], // converted to Number according to regular XPath rules
+            [ 'date("2018-01-01" + 1)', '2018-01-02' ], //T00:00:00.000-07:00'],
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            const r = typeof t[ 1 ] === 'number' ? Math.round( result.stringValue * 100000 ) / 100000 : result.stringValue;
+            expect( r ).to.equal( t[ 1 ] );
+        } );
 
         [
             "today()",
             "date(today() + 10)",
             "date(10 + today())"
-        ].forEach(function (t) {
-            var result = documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.match(/([0-9]{4}-[0-9]{2}-[0-9]{2})$/);
-        });
-    });
+        ].forEach( t => {
+            const result = documentEvaluate( t, doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.match( /([0-9]{4}-[0-9]{2}-[0-9]{2})$/ );
+        } );
+    } );
 
-    it('datetimes as string', function () {
+    it( 'datetimes as string', () => {
 
         [
             "now()",
-        ].forEach(function (t) {
-            var result = documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.match(/([0-9]{4}-[0-9]{2}-[0-9]{2})([T]|[\s])([0-9]){2}:([0-9]){2}([0-9:.]*)(\+|-)([0-9]{2}):([0-9]{2})$/);
-        });
-    });
+        ].forEach( t => {
+            const result = documentEvaluate( t, doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.match( /([0-9]{4}-[0-9]{2}-[0-9]{2})([T]|[\s])([0-9]){2}:([0-9]){2}([0-9:.]*)(\+|-)([0-9]{2}):([0-9]{2})$/ );
+        } );
+    } );
 
-    it('converts dates to numbers', function () {
+    it( 'converts dates to numbers', () => {
         [
-            ["number(date('1970-01-01'))", 0.29],
-            ["number(date('1970-01-02'))", 1.29],
-            ["number(date('1969-12-31'))", -0.71],
-            ["number(date('2008-09-05'))", 14127.29],
-            ["number(date('1941-12-07'))", -10251.71],
-            ["number('2008-09-05')", 14127.29],
-            ["number( 1 div 1000000000 )", 0]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            var roundedResult = Math.round(result.numberValue * 100 )/100;
-            expect(roundedResult).to.equal(t[1]);
-        });
+            [ "number(date('1970-01-01'))", 0.29 ],
+            [ "number(date('1970-01-02'))", 1.29 ],
+            [ "number(date('1969-12-31'))", -0.71 ],
+            [ "number(date('2008-09-05'))", 14127.29 ],
+            [ "number(date('1941-12-07'))", -10251.71 ],
+            [ "number('2008-09-05')", 14127.29 ],
+            [ "number( 1 div 1000000000 )", 0 ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            const roundedResult = Math.round( result.numberValue * 100 ) / 100;
+            expect( roundedResult ).to.equal( t[ 1 ] );
+        } );
 
         //for nodes (where the date datatype is guessed)
         [
-            [".", doc.getElementById("FunctionDateCase1"), 15544.29],
-            [".", doc.getElementById("FunctionDateCase2"), 15572]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            var roundedResult = Math.round(result.numberValue * 100 )/100;
-            expect(roundedResult).to.equal(t[2]);
-        });
-    });
-    
-    it('datetype comparisons', function () {
+            [ ".", doc.getElementById( "FunctionDateCase1" ), 15544.29 ],
+            [ ".", doc.getElementById( "FunctionDateCase2" ), 15572 ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            const roundedResult = Math.round( result.numberValue * 100 ) / 100;
+            expect( roundedResult ).to.equal( t[ 2 ] );
+        } );
+    } );
+
+    it( 'datetype comparisons', () => {
         [
-            ["date('2001-12-26') > date('2001-12-25')", true],
-            ["date('1969-07-20') < date('1969-07-21')", true],
-            ["date('2004-05-01') = date('2004-05-01')", true],
-            ["true() != date('1999-09-09T00:00:00.000+00:00')", false],
-            ["date(0) = date('1970-01-01T00:00:00.000+00:00')", true],
-            ["date(1) = date('1970-01-02T00:00:00.000+00:00')", true],
-            ["date(-1) = date('1969-12-31T00:00:00.000+00:00')", true],
-            ["date(14127) = date('2008-09-05T00:00:00.000+00:00')", true],
-            ["date(-10252) = date('1941-12-07T00:00:00.000+00:00')", true],
-            ["date(date('1989-11-09')) = date('1989-11-09')", true],
-            ["date('2012-01-01') < today()", true],
-            ["date('2100-01-02') > today()", true],
-            ["date('2012-01-01') < now()", true],
-            ["date('2100-01-02') > now()", true],
-            ["now() > today()", true],
+            [ "date('2001-12-26') > date('2001-12-25')", true ],
+            [ "date('1969-07-20') < date('1969-07-21')", true ],
+            [ "date('2004-05-01') = date('2004-05-01')", true ],
+            [ "true() != date('1999-09-09T00:00:00.000+00:00')", false ],
+            [ "date(0) = date('1970-01-01T00:00:00.000+00:00')", true ],
+            [ "date(1) = date('1970-01-02T00:00:00.000+00:00')", true ],
+            [ "date(-1) = date('1969-12-31T00:00:00.000+00:00')", true ],
+            [ "date(14127) = date('2008-09-05T00:00:00.000+00:00')", true ],
+            [ "date(-10252) = date('1941-12-07T00:00:00.000+00:00')", true ],
+            [ "date(date('1989-11-09')) = date('1989-11-09')", true ],
+            [ "date('2012-01-01') < today()", true ],
+            [ "date('2100-01-02') > today()", true ],
+            [ "date('2012-01-01') < now()", true ],
+            [ "date('2100-01-02') > now()", true ],
+            [ "now() > today()", true ],
             //['today() = "2018-06-26"', true],
-            ['"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', true],
-            ['"2018-06-25" < "2018-06-25T00:00:00.000-07:00"', false],
-            ['"2018-06-25" < "2018-06-25T00:00:00.001-07:00"', true],
-        ].forEach(function (t) {
-            var expr = t[0];
-            var result = documentEvaluate(expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(result.booleanValue).to.equal(t[1]);
+            [ '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', true ],
+            [ '"2018-06-25" < "2018-06-25T00:00:00.000-07:00"', false ],
+            [ '"2018-06-25" < "2018-06-25T00:00:00.001-07:00"', true ],
+        ].forEach( t => {
+            let expr = t[ 0 ];
+            let result = documentEvaluate( expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( result.booleanValue ).to.equal( t[ 1 ] );
             // do the same tests for the alias date-time()
-            expr = expr.replace('date(', 'date-time(');
-            result = documentEvaluate(expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[1]).to.equal(result.booleanValue);
-        });
-    });
+            expr = expr.replace( 'date(', 'date-time(' );
+            result = documentEvaluate( expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 1 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('datestring comparisons (date detection)', function () {
+    it( 'datestring comparisons (date detection)', () => {
         [
-            [". < date('2012-07-24')", doc.getElementById("FunctionDateCase1"), true],
+            [ ". < date('2012-07-24')", doc.getElementById( "FunctionDateCase1" ), true ],
             //returns false if strings are compared but true if dates are compared
-            ["../node()[@id='FunctionDateCase2'] > ../node()[@id='FunctionDateCase3']", doc.getElementById("FunctionDateCase1"), true]
-        ].forEach(function (t) {
-            var expr = t[0]; //
-            var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
+            [ "../node()[@id='FunctionDateCase2'] > ../node()[@id='FunctionDateCase3']", doc.getElementById( "FunctionDateCase1" ), true ]
+        ].forEach( t => {
+            let expr = t[ 0 ]; //
+            let result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
             // do the same tests for the alias date-time()
-            expr = expr.replace('date(', 'date-time(');
-            result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(t[2]).to.equal(result.booleanValue);
-        });
-    });
+            expr = expr.replace( 'date(', 'date-time(' );
+            result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( t[ 2 ] ).to.equal( result.booleanValue );
+        } );
+    } );
 
-    it('date calculations', function () {
+    it( 'date calculations', () => {
         [
-            ["today() > ('2012-01-01' + 10)", doc, true],
-            ["10 + date('2012-07-24') = date('2012-08-03')", doc, true],
-            [". = date('2012-07-24') - 1", doc.getElementById("FunctionDateCase1"), true],
-            [". > date('2012-07-24') - 2", doc.getElementById("FunctionDateCase1"), true],
-            [". < date('2012-07-25') - 1", doc.getElementById("FunctionDateCase1"), true],
-            [". = 30 + /xhtml:html/xhtml:body/xhtml:div[@id='FunctionDate']/xhtml:div[@id='FunctionDateCase4']", doc.getElementById("FunctionDateCase1"), true],
-            ["10 + '2012-07-24' = '2012-08-03'", doc, true]
-        ].forEach(function (t) {
-            var expr = t[0];
-            var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(result.booleanValue).to.equal(t[2]);
+            [ "today() > ('2012-01-01' + 10)", doc, true ],
+            [ "10 + date('2012-07-24') = date('2012-08-03')", doc, true ],
+            [ ". = date('2012-07-24') - 1", doc.getElementById( "FunctionDateCase1" ), true ],
+            [ ". > date('2012-07-24') - 2", doc.getElementById( "FunctionDateCase1" ), true ],
+            [ ". < date('2012-07-25') - 1", doc.getElementById( "FunctionDateCase1" ), true ],
+            [ ". = 30 + /xhtml:html/xhtml:body/xhtml:div[@id='FunctionDate']/xhtml:div[@id='FunctionDateCase4']", doc.getElementById( "FunctionDateCase1" ), true ],
+            [ "10 + '2012-07-24' = '2012-08-03'", doc, true ]
+        ].forEach( t => {
+            let expr = t[ 0 ];
+            let result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( result.booleanValue ).to.equal( t[ 2 ] );
             // do the same tests for the alias date-time()
-            expr = expr.replace('date(', 'date-time(');
-            result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(result.booleanValue).to.equal(t[2]);
-        });
+            expr = expr.replace( 'date(', 'date-time(' );
+            result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( result.booleanValue ).to.equal( t[ 2 ] );
+        } );
 
         [
-            ["10 + date('2012-07-24')", doc, 15555.29]
-        ].forEach(function (t) {
-            var expr = t[0];
-            var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            var roundedResult = Math.round(result.numberValue * 100 )/100;
-            expect(roundedResult).to.equal(t[2]);
+            [ "10 + date('2012-07-24')", doc, 15555.29 ]
+        ].forEach( t => {
+            let expr = t[ 0 ];
+            let result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            let roundedResult = Math.round( result.numberValue * 100 ) / 100;
+            expect( roundedResult ).to.equal( t[ 2 ] );
             // do the same tests for the alias date-time()
-            expr = expr.replace('date(', 'date-time(');
-            result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            roundedResult = Math.round(result.numberValue * 100 )/100;
-            expect(roundedResult).to.equal(t[2]);
-        });
-    });
+            expr = expr.replace( 'date(', 'date-time(' );
+            result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            roundedResult = Math.round( result.numberValue * 100 ) / 100;
+            expect( roundedResult ).to.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('invalid dates', function () {
+    it( 'invalid dates', () => {
         [
             "date('1983-09-31')",
             "date('not a date')",
             "date('opv_3')",
             "date(true())"
             //"date(convertible())"
-        ].forEach(function (t) {
-            var expr = t[0];
-            var result = documentEvaluate(expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(result.booleanValue).to.equal(false);
+        ].forEach( t => {
+            let expr = t[ 0 ];
+            let result = documentEvaluate( expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( result.booleanValue ).to.equal( false );
             // do the same tests for the alias date-time()
-            expr = expr.replace('date(', 'date-time(');
-            result = documentEvaluate(expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(result.booleanValue).to.equal(false);
-        });
-    });
+            expr = expr.replace( 'date(', 'date-time(' );
+            result = documentEvaluate( expr, doc, helpers.xhtmlResolver, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( result.booleanValue ).to.equal( false );
+        } );
+    } );
 
     // Karma config is setting timezone to America/Denver
-    it('format-date()', function () {
-        var
-            date = new Date();
+    it( 'format-date()', () => {
+        const date = new Date();
         [
-            ["format-date(.,  '%Y/%n | %y/%m | %b' )", doc.getElementById("FunctionDateCase1"), '2012/7 | 12/07 | Jul'],
-            ["format-date(., '%Y/%n | %y/%m | %b')", doc.getElementById("FunctionDateCase2"), '2012/8 | 12/08 | Aug'],
-            ["format-date(., '%M | %S | %3')", doc.getElementById("FunctionDateCase2"), '00 | 00 | 000'],
-            ["format-date('" + date.toString() + "', '%e | %a' )", doc,
-                date.getDate() + ' | ' + ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()]
+            [ "format-date(.,  '%Y/%n | %y/%m | %b' )", doc.getElementById( "FunctionDateCase1" ), '2012/7 | 12/07 | Jul' ],
+            [ "format-date(., '%Y/%n | %y/%m | %b')", doc.getElementById( "FunctionDateCase2" ), '2012/8 | 12/08 | Aug' ],
+            [ "format-date(., '%M | %S | %3')", doc.getElementById( "FunctionDateCase2" ), '00 | 00 | 000' ],
+            [ `format-date('${date.toString()}', '%e | %a' )`, doc,
+                `${date.getDate()} | ${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()]}`
             ],
-            ["format-date('not a date', '%M')", doc, 'Invalid Date'],
+            [ "format-date('not a date', '%M')", doc, 'Invalid Date' ],
             //["format-date('Mon, 02 Jul 2012 00:00:00 GMT', )", doc, '']
             // the test below probably only works in the GMT -6 timezone...
-            ["format-date(., '%Y | %y | %m | %n | %b | %d | %e | %H | %h | %M | %S | %3 | %a')", doc.getElementById("FunctionDateCase5"),
+            [ "format-date(., '%Y | %y | %m | %n | %b | %d | %e | %H | %h | %M | %S | %3 | %a')", doc.getElementById( "FunctionDateCase5" ),
                 '2012 | 12 | 08 | 8 | Aug | 08 | 8 | 06 | 6 | 07 | 08 | 123 | Wed'
             ],
-        ].forEach(function (t) {
-            var expr = t[0];
-            var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[2]);
+        ].forEach( t => {
+            let expr = t[ 0 ];
+            let result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 2 ] );
             // do the same tests for the alias format-date-time()
-            expr = expr.replace('format-date', 'format-date-time');
-            result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[2]);
-        });
-    });
+            expr = expr.replace( 'format-date', 'format-date-time' );
+            result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 2 ] );
+        } );
+    } );
 
     // Karma config is setting timezone to America/Denver
-    it('format-date() - locale dependent', function () {
+    it( 'format-date() - locale dependent', () => {
         [
-            ["format-date('2017-05-26T00:00:01-07:00', '%a %b')", doc, 'Fri May'],
-            ["format-date('2017-05-26T23:59:59-07:00', '%a %b')", doc, 'Fri May'],
-            ["format-date('2017-05-26T01:00:00-07:00', '%a %b')", doc, 'Fri May', 'en'],
-            ["format-date('2017-05-26T01:00:00-07:00', '%a %b')", doc, 'ven. mai', 'fr'],
-            ["format-date('2017-05-26T01:00:00-07:00', '%a %b')", doc, 'vr mei', 'nl'],
-        ].forEach(function (t) {
-            document.querySelector('iframe').contentWindow.enketoFormLocale = t[3];
-            var expr = t[0];
-            var result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[2]);
+            [ "format-date('2017-05-26T00:00:01-07:00', '%a %b')", doc, 'Fri May' ],
+            [ "format-date('2017-05-26T23:59:59-07:00', '%a %b')", doc, 'Fri May' ],
+            [ "format-date('2017-05-26T01:00:00-07:00', '%a %b')", doc, 'Fri May', 'en' ],
+            [ "format-date('2017-05-26T01:00:00-07:00', '%a %b')", doc, 'ven. mai', 'fr' ],
+            [ "format-date('2017-05-26T01:00:00-07:00', '%a %b')", doc, 'vr mei', 'nl' ],
+        ].forEach( t => {
+            document.querySelector( 'iframe' ).contentWindow.enketoFormLocale = t[ 3 ];
+            let expr = t[ 0 ];
+            let result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 2 ] );
             // do the same tests for the alias format-date-time()
-            expr = expr.replace('format-date', 'format-date-time');
-            result = documentEvaluate(expr, t[1], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[2]);
-        });
-    });
+            expr = expr.replace( 'format-date', 'format-date-time' );
+            result = documentEvaluate( expr, t[ 1 ], helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('uuid()', function () {
-        var result = documentEvaluate('uuid()', doc, null, win.XPathResult.STRING_TYPE);
-        expect(result.stringValue).to.have.length(36);
-    });
+    it( 'uuid()', () => {
+        const result = documentEvaluate( 'uuid()', doc, null, win.XPathResult.STRING_TYPE );
+        expect( result.stringValue ).to.have.length( 36 );
+    } );
 
-    it('int()', function () {
-        var result;
+    it( 'int()', () => {
+        let result;
         [
-            ["int(2.1)", 2],
-            ["int(2.51)", 2],
-            ["int(2)", 2],
-            ["int('2.1')", 2],
-            ["int('2.51')", 2],
-            ["int(1 div 47999799999)", 0], //(2.08e-11)
-            ["int(-1.4)", -1],
-            ["int(-1.51)", -1]
-        ].forEach(function (t) {
-            result = documentEvaluate(t[0], doc, null, win.XPathResult.NUMBER_TYPE);
-            expect(result.numberValue).to.equal(t[1]);
-        });
+            [ "int(2.1)", 2 ],
+            [ "int(2.51)", 2 ],
+            [ "int(2)", 2 ],
+            [ "int('2.1')", 2 ],
+            [ "int('2.51')", 2 ],
+            [ "int(1 div 47999799999)", 0 ], //(2.08e-11)
+            [ "int(-1.4)", -1 ],
+            [ "int(-1.51)", -1 ]
+        ].forEach( t => {
+            result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE );
+            expect( result.numberValue ).to.equal( t[ 1 ] );
+        } );
 
-        result = documentEvaluate('int("a")', doc, null, win.XPathResult.NUMBER_TYPE);
-        expect(result.numberValue).to.deep.equal(NaN);
+        result = documentEvaluate( 'int("a")', doc, null, win.XPathResult.NUMBER_TYPE );
+        expect( result.numberValue ).to.deep.equal( NaN );
 
         // XPath 1.0 does not deal with scientific notation
-        result = documentEvaluate('int("7.922021953507237e-12")', doc, null, win.XPathResult.NUMBER_TYPE);
-        expect(result.numberValue).to.deep.equal(NaN);
-    });
+        result = documentEvaluate( 'int("7.922021953507237e-12")', doc, null, win.XPathResult.NUMBER_TYPE );
+        expect( result.numberValue ).to.deep.equal( NaN );
+    } );
 
-    it('substr()', function () {
+    it( 'substr()', () => {
         [
-            ["substr('hello',0)", "hello"],
-            ["substr('hello',0,5)", "hello"],
-            ["substr('hello',1)", "ello"],
-            ["substr('hello',1,5)", "ello"],
-            ["substr('hello',1,4)", "ell"],
-            ["substr('hello',-2)", "lo"],
-            ["substr('hello',0,-1)", "hell"]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, null, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[1]);
-        });
-    });
+            [ "substr('hello',0)", "hello" ],
+            [ "substr('hello',0,5)", "hello" ],
+            [ "substr('hello',1)", "ello" ],
+            [ "substr('hello',1,5)", "ello" ],
+            [ "substr('hello',1,4)", "ell" ],
+            [ "substr('hello',-2)", "lo" ],
+            [ "substr('hello',0,-1)", "hell" ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 1 ] );
+        } );
+    } );
 
-    it('random()', function () {
-        var result = documentEvaluate('random()', doc, null, win.XPathResult.NUMBER_TYPE, null);
-        expect(result.numberValue).to.match(/0\.[0-9]{15}/);
-    });
+    it( 'random()', () => {
+        const result = documentEvaluate( 'random()', doc, null, win.XPathResult.NUMBER_TYPE, null );
+        expect( result.numberValue ).to.match( /0\.[0-9]{15}/ );
+    } );
 
-    it('min()', function () {
+    it( 'min()', () => {
         [
-            ["min(self::*)", doc.getElementById('FunctionNumberCaseNumber'), 123],
-            ["min(self::*)", doc.getElementById('FunctionMaxMinCaseEmpty'), NaN],
-            ["min(*)", doc.getElementById('FunctionNumberCaseNumberMultiple'), -10],
-            ["min(*)", doc.getElementById('FunctionMinCase'), 0],
-            ["min(//*[@id='FunctionMinCase']/*[position()=1], //*[@id='FunctionMinCase']/*[position()=2], //*[@id='FunctionMinCase']/*[position()=3])", doc, 0],
-            ["min(*)", doc.getElementById('FunctionMaxMinWithEmpty'), NaN],
-            ["min(1, 2, 3)", doc, 1],
-            ["min(1, 2, 0)", doc, 0],
-            ["min(0, 2, 3)", doc, 0],
-            ["min(-1, 2, 3)", doc, -1],
-            ["min('')", doc, NaN],
-            ["min(node())", doc.getElementById('FunctionNumberCaseNotNumberMultiple'), NaN],
-            ["min(//nonexisting)", doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.be.a('number');
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ "min(self::*)", doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ],
+            [ "min(self::*)", doc.getElementById( 'FunctionMaxMinCaseEmpty' ), NaN ],
+            [ "min(*)", doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), -10 ],
+            [ "min(*)", doc.getElementById( 'FunctionMinCase' ), 0 ],
+            [ "min(//*[@id='FunctionMinCase']/*[position()=1], //*[@id='FunctionMinCase']/*[position()=2], //*[@id='FunctionMinCase']/*[position()=3])", doc, 0 ],
+            [ "min(*)", doc.getElementById( 'FunctionMaxMinWithEmpty' ), NaN ],
+            [ "min(1, 2, 3)", doc, 1 ],
+            [ "min(1, 2, 0)", doc, 0 ],
+            [ "min(0, 2, 3)", doc, 0 ],
+            [ "min(-1, 2, 3)", doc, -1 ],
+            [ "min('')", doc, NaN ],
+            [ "min(node())", doc.getElementById( 'FunctionNumberCaseNotNumberMultiple' ), NaN ],
+            [ "min(//nonexisting)", doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.be.a( 'number' );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('max()', function () {
+    it( 'max()', () => {
         [
-            ["max(self::*)", doc.getElementById('FunctionNumberCaseNumber'), 123],
-            ["max(self::*)", doc.getElementById('FunctionMaxMinCaseEmpty'), NaN],
-            ["max(*)", doc.getElementById('FunctionNumberCaseNumberMultiple'), 99],
-            ["max(*)", doc.getElementById('FunctionMaxCase'), 0],
-            ["max(//*[@id='FunctionMaxCase']/*[position()=1], //*[@id='FunctionMaxCase']/*[position()=2], //*[@id='FunctionMaxCase']/*[position()=3])", doc, 0],
-            ["max(*)", doc.getElementById('FunctionMaxMinWithEmpty'), NaN],
-            ["max(1, 2, 3)", doc, 3],
-            ["max(-1, -3, 0)", doc, 0],
-            ["max(-1, 0, -3)", doc, 0],
-            ["max(-4, -1, -3)", doc, -1],
-            ["max('')", doc, NaN],
-            ["max(node())", doc.getElementById('FunctionNumberCaseNotNumberMultiple'), NaN],
-            ["max(//nonexisting)", doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.be.a('number');
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ "max(self::*)", doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ],
+            [ "max(self::*)", doc.getElementById( 'FunctionMaxMinCaseEmpty' ), NaN ],
+            [ "max(*)", doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), 99 ],
+            [ "max(*)", doc.getElementById( 'FunctionMaxCase' ), 0 ],
+            [ "max(//*[@id='FunctionMaxCase']/*[position()=1], //*[@id='FunctionMaxCase']/*[position()=2], //*[@id='FunctionMaxCase']/*[position()=3])", doc, 0 ],
+            [ "max(*)", doc.getElementById( 'FunctionMaxMinWithEmpty' ), NaN ],
+            [ "max(1, 2, 3)", doc, 3 ],
+            [ "max(-1, -3, 0)", doc, 0 ],
+            [ "max(-1, 0, -3)", doc, 0 ],
+            [ "max(-4, -1, -3)", doc, -1 ],
+            [ "max('')", doc, NaN ],
+            [ "max(node())", doc.getElementById( 'FunctionNumberCaseNotNumberMultiple' ), NaN ],
+            [ "max(//nonexisting)", doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.be.a( 'number' );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('round()', function () {
-        var result;
+    it( 'round()', () => {
+        let result;
         [
-            ["round(1.234)", 1],
-            ["round(1.234, 2)", 1.23],
-            ["round(1.234, 5)", 1.234],
-            ["round(1.234, 0)", 1],
-            ["round(33.33, -1)", 30],
-            ["round(1 div 47999799999)", 0], //(2.08e-11)
-        ].forEach(function (t) {
-            result = documentEvaluate(t[0], doc, null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.equal(t[1]);
-        });
+            [ "round(1.234)", 1 ],
+            [ "round(1.234, 2)", 1.23 ],
+            [ "round(1.234, 5)", 1.234 ],
+            [ "round(1.234, 0)", 1 ],
+            [ "round(33.33, -1)", 30 ],
+            [ "round(1 div 47999799999)", 0 ], //(2.08e-11)
+        ].forEach( t => {
+            result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.equal( t[ 1 ] );
+        } );
 
-        result = documentEvaluate("round('a')", doc, null, win.XPathResult.NUMBER_TYPE, null);
-        expect(result.numberValue).to.deep.equal(NaN);
-    });
+        result = documentEvaluate( "round('a')", doc, null, win.XPathResult.NUMBER_TYPE, null );
+        expect( result.numberValue ).to.deep.equal( NaN );
+    } );
 
-    it('round() with too many args throws exception', function () {
-        var test = function () {
-            documentEvaluate("round(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+    it( 'round() with too many args throws exception', () => {
+        const test = () => {
+            documentEvaluate( "round(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
         };
-        expect(test).to.throw(win.Error);
-    });
+        expect( test ).to.throw( win.Error );
+    } );
 
-    it('join()', function () {
+    it( 'join()', () => {
         [
-            ["join(', ', *)", doc.getElementById('testFunctionNodeset2'), "1, 2, 3, 4"],
-            ["join(' ', 'This', 'is', 'a', 'sentence.')", doc, "This is a sentence."],
-            ["join(' ## ')", doc, ""]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[2]);
-        });
-    });
+            [ "join(', ', *)", doc.getElementById( 'testFunctionNodeset2' ), "1, 2, 3, 4" ],
+            [ "join(' ', 'This', 'is', 'a', 'sentence.')", doc, "This is a sentence." ],
+            [ "join(' ## ')", doc, "" ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 2 ] );
+        } );
+    } );
 
     // Javarosa accepts an optional node-set argument for concat which deviates from native XPath. It also accepts no arguments.
-    it('concat()', function () {
+    it( 'concat()', () => {
         [
-            ["concat(*, 'a')", doc.getElementById('testFunctionNodeset2'), '1234a'],
-            ["concat(*)", doc.getElementById('testFunctionNodeset2'), '1234'],
-            ["concat('a')", doc, 'a'],
-            ["concat('a','b', '')", doc, 'ab'],
-            ["concat()", doc.getElementById('testFunctionNodeset2'), '']
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
-            expect(result.stringValue).to.equal(t[2]);
-        });
-    });
+            [ "concat(*, 'a')", doc.getElementById( 'testFunctionNodeset2' ), '1234a' ],
+            [ "concat(*)", doc.getElementById( 'testFunctionNodeset2' ), '1234' ],
+            [ "concat('a')", doc, 'a' ],
+            [ "concat('a','b', '')", doc, 'ab' ],
+            [ "concat()", doc.getElementById( 'testFunctionNodeset2' ), '' ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.STRING_TYPE, null );
+            expect( result.stringValue ).to.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('coalesce()', function () {
+    it( 'coalesce()', () => {
         [
-            ["coalesce('', 'ab')", doc, 'ab'],
-            ["coalesce(self::*, 'ab')", doc.getElementById('FunctionSelectedCaseEmpty'), 'ab'],
-            ["coalesce(self::*, 'cd')", doc.getElementById('FunctionSelectedCaseSingle'), 'ab']
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.STRING_TYPE, null);
+            [ "coalesce('', 'ab')", doc, 'ab' ],
+            [ "coalesce(self::*, 'ab')", doc.getElementById( 'FunctionSelectedCaseEmpty' ), 'ab' ],
+            [ "coalesce(self::*, 'cd')", doc.getElementById( 'FunctionSelectedCaseSingle' ), 'ab' ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.STRING_TYPE, null );
             //Y.Assert.areSame(input[i][2], result.stringValue);
-            expect(result.stringValue).to.equal(t[2]);
-        });
-    });
+            expect( result.stringValue ).to.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('pow()', function () {
+    it( 'pow()', () => {
         [
-            ['pow(2, 2)', doc, 4],
-            ['pow(2, 0)', doc, 1],
-            ['pow(0,4)', doc, 0],
-            ['pow(2.5, 2)', doc, 6.25],
-            ['pow(0.5, 2)', doc, 0.25],
-            ['pow(-1, 2)', doc, 1],
-            ['pow(-1, 3)', doc, -1],
-            ['pow(4, 0.5)', doc, 2],
-            ['pow(16, 0.25)', doc, 2]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'pow(2, 2)', doc, 4 ],
+            [ 'pow(2, 0)', doc, 1 ],
+            [ 'pow(0,4)', doc, 0 ],
+            [ 'pow(2.5, 2)', doc, 6.25 ],
+            [ 'pow(0.5, 2)', doc, 0.25 ],
+            [ 'pow(-1, 2)', doc, 1 ],
+            [ 'pow(-1, 3)', doc, -1 ],
+            [ 'pow(4, 0.5)', doc, 2 ],
+            [ 'pow(16, 0.25)', doc, 2 ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
 
-    it('sin()', function () {
+    it( 'sin()', () => {
         [
-            ['sin(2)', doc, 0.9092974268256817],
-            ['sin(//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p[2])', doc, 0.9092974268256817],
-            ['sin("a")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'sin(2)', doc, 0.9092974268256817 ],
+            [ 'sin(//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p[2])', doc, 0.9092974268256817 ],
+            [ 'sin("a")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('cos()', function () {
+    it( 'cos()', () => {
         [
-            ['cos(2)', doc, -0.4161468365471424],
+            [ 'cos(2)', doc, -0.4161468365471424 ],
             //['cos("a")', doc, NaN],
-            ['cos("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'cos("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('tan()', function () {
+    it( 'tan()', () => {
         [
-            ['tan(2)', doc, -2.185039863261519],
-            ['tan("a")', doc, NaN],
-            ['tan("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'tan(2)', doc, -2.185039863261519 ],
+            [ 'tan("a")', doc, NaN ],
+            [ 'tan("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('acos()', function () {
+    it( 'acos()', () => {
         [
-            ['acos(0.5)', doc, 1.047197551196598],
-            ['acos(-1)', doc, 3.141592653589793],
-            ['acos(2)', doc, NaN],
-            ['acos("a")', doc, NaN],
-            ['acos("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
+            [ 'acos(0.5)', doc, 1.047197551196598 ],
+            [ 'acos(-1)', doc, 3.141592653589793 ],
+            [ 'acos(2)', doc, NaN ],
+            [ 'acos("a")', doc, NaN ],
+            [ 'acos("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
             // rounding error on Travis
-            expect(Math.round(result.numberValue * Math.pow(10, 15)) / Math.pow(10, 15)).to.deep.equal(t[2]);
-        });
-    });
+            expect( Math.round( result.numberValue * ( 10 ** 15 ) ) / ( 10 ** 15 ) ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('asin()', function () {
+    it( 'asin()', () => {
         [
-            ['asin(0.5)', doc, 0.523598775598299],
-            ['asin(-1)', doc, -1.570796326794896],
-            ['asin(2)', doc, NaN],
-            ['asin("a")', doc, NaN],
-            ['asin("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
+            [ 'asin(0.5)', doc, 0.523598775598299 ],
+            [ 'asin(-1)', doc, -1.570796326794896 ],
+            [ 'asin(2)', doc, NaN ],
+            [ 'asin("a")', doc, NaN ],
+            [ 'asin("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
             // rounding error on Travis
-            expect(Math.round(result.numberValue * Math.pow(10, 15)) / Math.pow(10, 15)).to.deep.equal(t[2]);
-        });
-    });
+            expect( Math.round( result.numberValue * ( 10 ** 15 ) ) / ( 10 ** 15 ) ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('atan()', function () {
+    it( 'atan()', () => {
         [
-            ['atan(0.5)', doc, 0.463647609000806],
-            ['atan(-1)', doc, -0.785398163397448],
-            ['atan("a")', doc, NaN],
-            ['atan("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
+            [ 'atan(0.5)', doc, 0.463647609000806 ],
+            [ 'atan(-1)', doc, -0.785398163397448 ],
+            [ 'atan("a")', doc, NaN ],
+            [ 'atan("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
             // rounding error on Travis
-            expect(Math.round(result.numberValue * Math.pow(10, 15)) / Math.pow(10, 15)).to.deep.equal(t[2]);
-        });
-    });
+            expect( Math.round( result.numberValue * ( 10 ** 15 ) ) / ( 10 ** 15 ) ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('atan2()', function () {
+    it( 'atan2()', () => {
         [
-            ['atan2(2,3)', doc, 0.5880026035475675],
-            ['atan2(2, "NaN")', doc, NaN],
-            ['atan2(2, "a")', doc, NaN],
-            ['atan2("NaN", 2)', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'atan2(2,3)', doc, 0.5880026035475675 ],
+            [ 'atan2(2, "NaN")', doc, NaN ],
+            [ 'atan2(2, "a")', doc, NaN ],
+            [ 'atan2("NaN", 2)', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('log()', function () {
+    it( 'log()', () => {
         [
-            ['log(2)', doc, 0.6931471805599453],
-            ['log("NaN")', doc, NaN],
-            ['log("a")', doc, NaN],
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'log(2)', doc, 0.6931471805599453 ],
+            [ 'log("NaN")', doc, NaN ],
+            [ 'log("a")', doc, NaN ],
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('log10()', function () {
+    it( 'log10()', () => {
         [
-            ['log10(2)', doc, 0.3010299956639812],
-            ['log10("NaN")', doc, NaN],
-            ['log10("a")', doc, NaN],
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'log10(2)', doc, 0.3010299956639812 ],
+            [ 'log10("NaN")', doc, NaN ],
+            [ 'log10("a")', doc, NaN ],
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('pi()', function () {
+    it( 'pi()', () => {
         [
-            ['pi()', doc, 3.141592653589793],
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'pi()', doc, 3.141592653589793 ],
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('exp()', function () {
+    it( 'exp()', () => {
         [
-            ['exp(2)', doc, 7.38905609893065],
-            ['exp("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'exp(2)', doc, 7.38905609893065 ],
+            [ 'exp("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('exp10()', function () {
+    it( 'exp10()', () => {
         [
-            ['exp10(2)', doc, 100],
-            ['exp10(-2)', doc, 0.01],
-            ['exp10("NaN")', doc, NaN],
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'exp10(2)', doc, 100 ],
+            [ 'exp10(-2)', doc, 0.01 ],
+            [ 'exp10("NaN")', doc, NaN ],
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('sqrt()', function () {
+    it( 'sqrt()', () => {
         [
-            ['sqrt(4)', doc, 2],
-            ['sqrt(-2)', doc, NaN],
-            ['sqrt("NaN")', doc, NaN]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], t[1], null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[2]);
-        });
-    });
+            [ 'sqrt(4)', doc, 2 ],
+            [ 'sqrt(-2)', doc, NaN ],
+            [ 'sqrt("NaN")', doc, NaN ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+        } );
+    } );
 
-    it('once()', function () {
-        var result;
+    it( 'once()', () => {
+        let result;
 
         // attempt to change value of empty node
-        result = documentEvaluate("once('aa')", doc.getElementById('FunctionSelectedCaseEmpty'), null, win.XPathResult.STRING_TYPE, null);
-        expect(result.stringValue).to.equal("aa");
+        result = documentEvaluate( "once('aa')", doc.getElementById( 'FunctionSelectedCaseEmpty' ), null, win.XPathResult.STRING_TYPE, null );
+        expect( result.stringValue ).to.equal( "aa" );
 
         // attempt to change value of node with existing value
-        result = documentEvaluate("once('aa')", doc.getElementById('FunctionSelectedCaseSingle'), null, win.XPathResult.STRING_TYPE, null);
-        expect(result.stringValue).to.equal("ab");
+        result = documentEvaluate( "once('aa')", doc.getElementById( 'FunctionSelectedCaseSingle' ), null, win.XPathResult.STRING_TYPE, null );
+        expect( result.stringValue ).to.equal( "ab" );
 
         // controversial: attempt to change value to NaN of empty node
-        result = documentEvaluate("once(. * 10)", doc.getElementById('FunctionSelectedCaseEmpty'), null, win.XPathResult.STRING_TYPE, null);
-        expect(result.stringValue).to.equal("");
+        result = documentEvaluate( "once(. * 10)", doc.getElementById( 'FunctionSelectedCaseEmpty' ), null, win.XPathResult.STRING_TYPE, null );
+        expect( result.stringValue ).to.equal( "" );
 
         // controversial: attempt to change value to Infinity of empty node
         // result = documentEvaluate("once( 1 div 0)", doc.getElementById('FunctionSelectedCaseEmpty'), null, win.XPathResult.STRING_TYPE, null);
         // expect(result.stringValue).to.equal("");
-    });
+    } );
 
-    describe('distance() and area() functions', function () {
-        var SHAPE1 = '7.9377 -11.5845 0 0;7.9324 -11.5902 0 0;7.927 -11.5857 0 0;7.925 -11.578 0 0;7.9267 -11.5722 0 0;7.9325 -11.5708 0 0;7.9372 -11.5737 0 0;7.9393 -11.579 0 0;7.9377 -11.5845 0 0';
-        var TRACE1 = '38.253094215699576 21.756382658677467;38.25021274773806 21.756382658677467;38.25007793942195 21.763892843919166;38.25290886154963 21.763935759263404;38.25146813817506 21.758421137528785';
-        var TRACE2 = '38.25304740874071 21.75644703234866;38.25308110946615 21.763377860443143;38.25078942453431 21.763399318115262;38.25090738066984 21.756640151397733;38.25197740258244 21.75892539347842';
-        var TRACE3 = '38.252845204059824 21.763313487426785;38.25303055837213 21.755867675201443;38.25072202094234 21.755803302185086;38.25062091543717 21.76294870700076;38.25183417221606 21.75692982997134';
-        var LINE = '7.9377 -11.5845 0 0;7.9324 -11.5902 0 0';
-        var SAME = '7.9377 -11.5845 0 0;7.9377 -11.5845 0 0';
-
-        [
-            [SHAPE1, 2333220.77, 5724.36 ],
-            [TRACE1, 151451.76, 1800.69],
-            [TRACE2, 122754.94, 1684.62],
-            [TRACE3, 93911.49, 2076.24],
-            [LINE, 0.0, 861.99],
-            [SAME, 0.0, 0.0],
-            ['0 0;0 1', 0.0, 111318.85],
-            ['0 0;0 90', 0.0, 10018696.05],
-            ['90 0;90 1', 0.0, 0.0],
-            ['5000 5000; 5000 5000', NaN, NaN],
-            ['a', NaN, NaN],
-            ['', NaN, NaN],
-        ].forEach(function(t, i){
-            var param = t[0];
-            it(`area() works (${i+1})`, function () {
-                var result = documentEvaluate(`area("${param}")`, doc, null, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[1]);
-            });
-            it(`distance() works (${i+1})`, function () {
-                var result = documentEvaluate(`distance("${param}")`, doc, null, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[2]);
-            });
-        });
+    describe( 'distance() and area() functions', () => {
+        const SHAPE1 = '7.9377 -11.5845 0 0;7.9324 -11.5902 0 0;7.927 -11.5857 0 0;7.925 -11.578 0 0;7.9267 -11.5722 0 0;7.9325 -11.5708 0 0;7.9372 -11.5737 0 0;7.9393 -11.579 0 0;7.9377 -11.5845 0 0';
+        const TRACE1 = '38.253094215699576 21.756382658677467;38.25021274773806 21.756382658677467;38.25007793942195 21.763892843919166;38.25290886154963 21.763935759263404;38.25146813817506 21.758421137528785';
+        const TRACE2 = '38.25304740874071 21.75644703234866;38.25308110946615 21.763377860443143;38.25078942453431 21.763399318115262;38.25090738066984 21.756640151397733;38.25197740258244 21.75892539347842';
+        const TRACE3 = '38.252845204059824 21.763313487426785;38.25303055837213 21.755867675201443;38.25072202094234 21.755803302185086;38.25062091543717 21.76294870700076;38.25183417221606 21.75692982997134';
+        const LINE = '7.9377 -11.5845 0 0;7.9324 -11.5902 0 0';
+        const SAME = '7.9377 -11.5845 0 0;7.9377 -11.5845 0 0';
 
         [
-            ['FunctionArea1', './*', 2333220.77, 5724.36],
-            ['FunctionArea4', '.', 2333220.77, 5724.36],
-            ['FunctionArea2', './*', 122754.94, 1684.62],
-            ['FunctionArea3', './*', 93911.49, 2076.24],
-        ].forEach(function(t, i){
-            var id = t[0];
-            var param = t[1];
-            it(`area() works (${i+1})`, function () {
-                var result = documentEvaluate(`area(${param})`, doc.getElementById(id), null, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[2]);
-            });
-            it(`distance() works (${i+1})`, function () {
-                var result = documentEvaluate(`distance(${param})`, doc.getElementById(id), null, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[3]);
-            });
-        });
+            [ SHAPE1, 2333220.77, 5724.36 ],
+            [ TRACE1, 151451.76, 1800.69 ],
+            [ TRACE2, 122754.94, 1684.62 ],
+            [ TRACE3, 93911.49, 2076.24 ],
+            [ LINE, 0.0, 861.99 ],
+            [ SAME, 0.0, 0.0 ],
+            [ '0 0;0 1', 0.0, 111318.85 ],
+            [ '0 0;0 90', 0.0, 10018696.05 ],
+            [ '90 0;90 1', 0.0, 0.0 ],
+            [ '5000 5000; 5000 5000', NaN, NaN ],
+            [ 'a', NaN, NaN ],
+            [ '', NaN, NaN ],
+        ].forEach( ( t, i ) => {
+            const param = t[ 0 ];
+            it( `area() works (${i+1})`, () => {
+                const result = documentEvaluate( `area("${param}")`, doc, null, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 1 ] );
+            } );
+            it( `distance() works (${i+1})`, () => {
+                const result = documentEvaluate( `distance("${param}")`, doc, null, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+            } );
+        } );
 
-        it('throws error when no parameters are provided', function(){
-            ['area()', 'distance()'].forEach(function(t){
-                var test = function(){
-                    documentEvaluate(`area(${t})`, doc, null, win.XPathResult.NUMBER_TYPE, null);
+        [
+            [ 'FunctionArea1', './*', 2333220.77, 5724.36 ],
+            [ 'FunctionArea4', '.', 2333220.77, 5724.36 ],
+            [ 'FunctionArea2', './*', 122754.94, 1684.62 ],
+            [ 'FunctionArea3', './*', 93911.49, 2076.24 ],
+        ].forEach( ( t, i ) => {
+            const id = t[ 0 ];
+            const param = t[ 1 ];
+            it( `area() works (${i+1})`, () => {
+                const result = documentEvaluate( `area(${param})`, doc.getElementById( id ), null, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 2 ] );
+            } );
+            it( `distance() works (${i+1})`, () => {
+                const result = documentEvaluate( `distance(${param})`, doc.getElementById( id ), null, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 3 ] );
+            } );
+        } );
+
+        it( 'throws error when no parameters are provided', () => {
+            [ 'area()', 'distance()' ].forEach( t => {
+                const test = () => {
+                    documentEvaluate( `area(${t})`, doc, null, win.XPathResult.NUMBER_TYPE, null );
                 };
-                expect(test).to.throw(win.Error);
-            });
-        });
-    });
+                expect( test ).to.throw( win.Error );
+            } );
+        } );
+    } );
 
-    it('ends-with', function () {
+    it( 'ends-with', () => {
         [
-            ["ends-with('', '')", true],
-            ["ends-with('a', '')", true],
-            ["ends-with('a', 'a')", true],
-            ["ends-with('a', 'b')", false],
-            ["ends-with('ba', 'a')", true],
-            ["ends-with('', 'b')", false]
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, null, win.XPathResult.BOOLEAN_TYPE, null);
-            expect(result.booleanValue).to.equal(t[1]);
-        });
-    });
+            [ "ends-with('', '')", true ],
+            [ "ends-with('a', '')", true ],
+            [ "ends-with('a', 'a')", true ],
+            [ "ends-with('a', 'b')", false ],
+            [ "ends-with('ba', 'a')", true ],
+            [ "ends-with('', 'b')", false ]
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            expect( result.booleanValue ).to.equal( t[ 1 ] );
+        } );
+    } );
 
-    it('ends-with() fails when too many arguments are provided', function () {
-        var test = function () {
-            documentEvaluate("ends-with(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+    it( 'ends-with() fails when too many arguments are provided', () => {
+        const test = () => {
+            documentEvaluate( "ends-with(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
         };
-        expect(test).to.throw(win.Error);
-    });
+        expect( test ).to.throw( win.Error );
+    } );
 
-    it('ends-with() fails when not enough arguments are provided', function () {
-        var test = function () {
-            documentEvaluate("ends-with()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+    it( 'ends-with() fails when not enough arguments are provided', () => {
+        let test = () => {
+            documentEvaluate( "ends-with()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
         };
-        expect(test).to.throw(win.Error);
+        expect( test ).to.throw( win.Error );
 
-        test = function () {
-            documentEvaluate("ends-with(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        test = () => {
+            documentEvaluate( "ends-with(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
         };
-        expect(test).to.throw(win.Error);
-    });
+        expect( test ).to.throw( win.Error );
+    } );
 
-    it('abs', function () {
+    it( 'abs', () => {
         [
-            ['abs(10.5)', 10.5],
-            ['abs(-10.5)', 10.5],
-            ['abs("-10.5")', 10.5],
-            ['abs("a")', NaN],
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, null, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[1]);
-        });
-    });
+            [ 'abs(10.5)', 10.5 ],
+            [ 'abs(-10.5)', 10.5 ],
+            [ 'abs("-10.5")', 10.5 ],
+            [ 'abs("a")', NaN ],
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 1 ] );
+        } );
+    } );
 
-    it('count-non-empty', function () {
+    it( 'count-non-empty', () => {
         [
-            ['count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:div)', 2],
-            ['count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:p)', 1],
-            ['count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:p/xhtml:div)', 0],
-            ['count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:p/xhtml:span)', 2],
-            ['count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]//*)', 5],
-            ['count-non-empty(//xhtml:div[@id="NoExist"]/xhtml:div)', 0],
+            [ 'count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:div)', 2 ],
+            [ 'count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:p)', 1 ],
+            [ 'count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:p/xhtml:div)', 0 ],
+            [ 'count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]/xhtml:p/xhtml:span)', 2 ],
+            [ 'count-non-empty(//xhtml:div[@id="FunctionCountNonEmpty"]//*)', 5 ],
+            [ 'count-non-empty(//xhtml:div[@id="NoExist"]/xhtml:div)', 0 ],
 
-        ].forEach(function (t) {
-            var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-            expect(result.numberValue).to.deep.equal(t[1]);
-        });
-    });
+        ].forEach( t => {
+            const result = documentEvaluate( t[ 0 ], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            expect( result.numberValue ).to.deep.equal( t[ 1 ] );
+        } );
+    } );
 
-    it('count-non-empty fails when too few, too many, or incorrect arguments are provided', function () {
+    it( 'count-non-empty fails when too few, too many, or incorrect arguments are provided', () => {
         [
             'count-non-empty()',
             'count-non-empty(2)',
             'count-non-empty(0)',
             'count-non-empty("a")',
-        ].forEach(function (t) {
-            var test = function () {
-                documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        ].forEach( t => {
+            const test = () => {
+                documentEvaluate( t, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
             };
-            expect(test).to.throw(win.Error);
-        });
+            expect( test ).to.throw( win.Error );
+        } );
 
-    });
+    } );
 
-    describe('randomize() shuffles nodesets', function () {
-        var SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
+    describe( 'randomize() shuffles nodesets', () => {
+        const SELECTOR = '//xhtml:div[@id="FunctionRandomize"]/xhtml:div';
 
-        it('without a seed', function () {
-            var result = documentEvaluate(`randomize(${SELECTOR})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-            var nodes = [];
-            var text = '';
-            for (var j = 0; j < result.snapshotLength; j++) {
-                var node = result.snapshotItem(j);
-                nodes.push(node);
+        it( 'without a seed', () => {
+            const result = documentEvaluate( `randomize(${SELECTOR})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
+            const nodes = [];
+            let text = '';
+            for ( let j = 0; j < result.snapshotLength; j++ ) {
+                const node = result.snapshotItem( j );
+                nodes.push( node );
                 text += node.textContent;
             }
-            expect(nodes.length).to.equal(6);
-            expect(text.length).to.equal(6);
-            expect(text).not.to.equal('ABCDEF');
-        });
+            expect( nodes.length ).to.equal( 6 );
+            expect( text.length ).to.equal( 6 );
+            expect( text ).not.to.equal( 'ABCDEF' );
+        } );
 
         [
-            [42, 'AFCBDE'],
-            ['42', 'AFCBDE'],
-            [-42, 'EDAFBC'],
-            [1, 'BFEACD'],
-            [11111111, 'ACDBFE'],
-            ['int(1)', 'BFEACD'], 
-            ['floor(1.1)', 'BFEACD'],
-            ['//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', 'BFEACD']
-        ].forEach(function (t) {
-            it(`with a seed: ${t[0]}`, function () {
-                var result = documentEvaluate(`randomize(${SELECTOR},${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                var text = '';
-                for (var j = 0; j < result.snapshotLength; j++) {
-                    text += result.snapshotItem(j).textContent;
+            [ 42, 'AFCBDE' ],
+            [ '42', 'AFCBDE' ],
+            [ -42, 'EDAFBC' ],
+            [ 1, 'BFEACD' ],
+            [ 11111111, 'ACDBFE' ],
+            [ 'int(1)', 'BFEACD' ],
+            [ 'floor(1.1)', 'BFEACD' ],
+            [ '//xhtml:div[@id="testFunctionNodeset2"]/xhtml:p', 'BFEACD' ]
+        ].forEach( t => {
+            it( `with a seed: ${t[0]}`, () => {
+                const result = documentEvaluate( `randomize(${SELECTOR},${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
+                let text = '';
+                for ( let j = 0; j < result.snapshotLength; j++ ) {
+                    text += result.snapshotItem( j ).textContent;
                 }
-                expect(text).to.equal(t[1]);
-            });
-        });
+                expect( text ).to.equal( t[ 1 ] );
+            } );
+        } );
 
         [
             'randomize()',
             `randomize(${SELECTOR}, 'a')`,
             `randomize(${SELECTOR}, 1, 2)`,
-        ].forEach(function (t) {
-            it(`with invalid args (${t}), throws an error`, function () {
-                var test = function () {
-                    documentEvaluate(t, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+        ].forEach( t => {
+            it( `with invalid args (${t}), throws an error`, () => {
+                const test = () => {
+                    documentEvaluate( t, doc, helpers.xhtmlResolver, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
                 };
-                expect(test).to.throw(win.Error);
-            });
-        });
+                expect( test ).to.throw( win.Error );
+            } );
+        } );
 
-    });
+    } );
 
-    describe('decimal-date()', function () {
+    describe( 'decimal-date()', () => {
         [
-            ['"1970-01-01T00:00:00.000Z"', 0.000],
-            ['"1970-01-02T00:00:00.000Z"', 1.000],
-            ['"2018-04-24T15:30:00.000+06:00"', 17645.396],
-        ].forEach(function (t) {
-            it(`decimates dates ${t[0]} to ${t[1]}`, function () {
-                var result = documentEvaluate(`decimal-date-time(${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[1]);
-            });
-        });
+            [ '"1970-01-01T00:00:00.000Z"', 0.000 ],
+            [ '"1970-01-02T00:00:00.000Z"', 1.000 ],
+            [ '"2018-04-24T15:30:00.000+06:00"', 17645.396 ],
+        ].forEach( t => {
+            it( `decimates dates ${t[0]} to ${t[1]}`, () => {
+                const result = documentEvaluate( `decimal-date-time(${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 1 ] );
+            } );
+        } );
 
         [
             '',
             '"1970-01-01T00:00:00.000Z", 2',
-        ].forEach(function (t) {
-            it(`with invalid args (${t}), throws an error`, function () {
-                var test = function () {
-                    documentEvaluate(`decimal-date-time(${t})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        ].forEach( t => {
+            it( `with invalid args (${t}), throws an error`, () => {
+                const test = () => {
+                    documentEvaluate( `decimal-date-time(${t})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
                 };
-                expect(test).to.throw(win.Error);
-            });
-        });
-    });
+                expect( test ).to.throw( win.Error );
+            } );
+        } );
+    } );
 
-    describe('decimal-time()', function () {
+    describe( 'decimal-time()', () => {
         [
-            ['"06:00:00.000-07:00"', 0.250],
-            ['"06:00:00.000-01:00"', 0.000],
-            ['"06:30:00.000-07:00"', 0.271],
-            ['"06:00:59.000-07:00"', 0.251],
-            ['"23:59:00.000-07:00"', 0.999],
-            ['"23:59:00.000-13:00"', 0.249],
-            ['"a"', NaN],
-            ['2', NaN],
-            ['"24:00:00.000-07:00"', NaN],
-            ['"06:00:00.000-24:00"', NaN],
-            ['"06:60:00.000-07:00"', NaN],
-            ['"06:00:60.000-07:00"', NaN],
-            ['"23:59:00.000-07:60"', NaN],
-            ['now()', NaN],
-        ].forEach(function (t) {
-            it(`decimates time ${t[0]} to ${t[1]}`, function () {
-                var result = documentEvaluate(`decimal-time(${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[1]);
-            });
-        });
+            [ '"06:00:00.000-07:00"', 0.250 ],
+            [ '"06:00:00.000-01:00"', 0.000 ],
+            [ '"06:30:00.000-07:00"', 0.271 ],
+            [ '"06:00:59.000-07:00"', 0.251 ],
+            [ '"23:59:00.000-07:00"', 0.999 ],
+            [ '"23:59:00.000-13:00"', 0.249 ],
+            [ '"a"', NaN ],
+            [ '2', NaN ],
+            [ '"24:00:00.000-07:00"', NaN ],
+            [ '"06:00:00.000-24:00"', NaN ],
+            [ '"06:60:00.000-07:00"', NaN ],
+            [ '"06:00:60.000-07:00"', NaN ],
+            [ '"23:59:00.000-07:60"', NaN ],
+            [ 'now()', NaN ],
+        ].forEach( t => {
+            it( `decimates time ${t[0]} to ${t[1]}`, () => {
+                const result = documentEvaluate( `decimal-time(${t[0]})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 1 ] );
+            } );
+        } );
 
         [
-            ['decimal-time("12:00:00.000-07:00") - decimal-time("06:00:00.000-07:00")', 0.250],
-        ].forEach(function (t) {
-            it(`facilitates time calculations and evaluates ${t[0]} to ${t[1]}`, function () {
-                var result = documentEvaluate(t[0], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
-                expect(result.numberValue).to.deep.equal(t[1]);
-            });
-        });
+            [ 'decimal-time("12:00:00.000-07:00") - decimal-time("06:00:00.000-07:00")', 0.250 ],
+        ].forEach( t => {
+            it( `facilitates time calculations and evaluates ${t[0]} to ${t[1]}`, () => {
+                const result = documentEvaluate( t[ 0 ], doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+                expect( result.numberValue ).to.deep.equal( t[ 1 ] );
+            } );
+        } );
 
         [
             '',
             '"06:00:00.000-07:00", 2',
-        ].forEach(function (t) {
-            it(`with invalid args (${t}), throws an error`, function () {
-                var test = function () {
-                    documentEvaluate(`decimal-time(${t})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null);
+        ].forEach( t => {
+            it( `with invalid args (${t}), throws an error`, () => {
+                const test = () => {
+                    documentEvaluate( `decimal-time(${t})`, doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
                 };
-                expect(test).to.throw(win.Error);
-            });
-        });
-    });
+                expect( test ).to.throw( win.Error );
+            } );
+        } );
+    } );
 
     /*
      This function is now supported by translating it into regular XPath before passing to this evaluator.
@@ -1015,58 +1011,56 @@ describe('Custom "OpenRosa" functions', function () {
     });
     */
 
-    describe('custom XPath functions', function () {
+    describe( 'custom XPath functions', () => {
 
-        afterEach(function () {
-            win.XPathJS.customXPathFunction.remove('comment-status');
-        });
+        afterEach( () => {
+            win.XPathJS.customXPathFunction.remove( 'comment-status' );
+        } );
 
-        it('can be added', function () {
-            var obj = {
+        it( 'can be added', () => {
+            const obj = {
                 status: 'good'
             };
-            var node = doc.getElementById('FunctionCustom');
-            node.textContent = JSON.stringify(obj);
+            const node = doc.getElementById( 'FunctionCustom' );
+            node.textContent = JSON.stringify( obj );
 
-            var test = function () {
-                return documentEvaluate('comment-status(.)', node, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
-            };
+            const test1 = () => documentEvaluate( 'comment-status(.)', node, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
 
             // Check the function doesn't exist before.
-            expect(test).to.throw(/does not exist/);
+            expect( test1 ).to.throw( /does not exist/ );
 
             // Add custom function
-            win.XPathJS.customXPathFunction.add('comment-status', {
-                fn: function (a) {
-                    var curValue = a.toString();
-                    var status = '';
+            win.XPathJS.customXPathFunction.add( 'comment-status', {
+                fn( a ) {
+                    const curValue = a.toString();
+                    let status = '';
 
                     try {
-                        status = JSON.parse(curValue).status;
-                    } catch (e) {
-                        console.error('Could not parse JSON from', curValue);
-                    };
+                        status = JSON.parse( curValue ).status;
+                    } catch ( e ) {
+                        console.error( 'Could not parse JSON from', curValue );
+                    }
 
-                    return new win.XPathJS.customXPathFunction.type.StringType(status);
+                    return new win.XPathJS.customXPathFunction.type.StringType( status );
                 },
-                args: [{
+                args: [ {
                     t: 'string'
-                }],
+                } ],
                 ret: 'string'
-            });
+            } );
 
             // Check functioning:
-            var result = test();
-            expect(result.stringValue).to.equal(obj.status);
+            const result = test1();
+            expect( result.stringValue ).to.equal( obj.status );
 
             // Check parameter errors:
-            var test = function () {
-                documentEvaluate('comment-status(., 2)', node, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null);
+            const test2 = () => {
+                documentEvaluate( 'comment-status(., 2)', node, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
             };
-            expect(test).to.throw(win.Error);
+            expect( test2 ).to.throw( win.Error );
 
-        });
+        } );
 
-    });
+    } );
 
-});
+} );
