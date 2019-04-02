@@ -1,36 +1,38 @@
+import { g } from '../docwin';
+
 describe( 'and/or operators', () => {
 
     /**
      * These absent-spacing tests seem weird to me. Am surprised that this works and that this is required to work.
      */
     it( 'and works without spacing', () => {
-        const result = documentEvaluate( "1and1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1and1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'and works without spacing AFTER and', () => {
-        const result = documentEvaluate( "1 and1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1 and1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'and works with linebreak/tab spacing', () => {
-        const result = documentEvaluate( "1 and\r\n\t1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1 and\r\n\t1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'and works without spacing BEFORE and', () => {
-        const result = documentEvaluate( "1and 1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1and 1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'and works with numbers-as-string', () => {
-        const result = documentEvaluate( "'1'and'1'", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "'1'and'1'", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'And (capitalized) fails miserably', () => {
         const test = () => {
-            documentEvaluate( "1 And 1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            g.doc.evaluate( "1 And 1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         };
         // does not throw instance of Error
         expect( test ).to.throw();
@@ -55,7 +57,7 @@ describe( 'and/or operators', () => {
             [ "1 and 1 and true()", true ],
             [ "false() and 1 and true()", false ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );
@@ -66,39 +68,39 @@ describe( 'and/or operators', () => {
             [ "false() and $some-made-up-var and true()", false ],
             [ "true() and false() and $some-made-up-var", false ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'or works without spacing', () => {
-        const result = documentEvaluate( "1or1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1or1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'or works without spacing AFTER or', () => {
-        const result = documentEvaluate( "1 or1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1 or1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'or works with newline/tab spacing', () => {
-        const result = documentEvaluate( "1 or\r\n\t1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1 or\r\n\t1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'or works without spacing BEFORE or', () => {
-        const result = documentEvaluate( "1or 1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "1or 1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'or works with numbers-as-string', () => {
-        const result = documentEvaluate( "'1'or'1'", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+        const result = g.doc.evaluate( "'1'or'1'", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         expect( result.booleanValue ).to.equal( true );
     } );
 
     it( 'And (capitalized) fails miserably', () => {
         const test = () => {
-            documentEvaluate( "1 OR 1", doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            g.doc.evaluate( "1 OR 1", g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
         };
         // does not throw instance of Error
         expect( test ).to.throw();
@@ -123,7 +125,7 @@ describe( 'and/or operators', () => {
             [ "1 or 1 or true()", true ],
             [ "false() or 0 or 0", false ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );
@@ -134,7 +136,7 @@ describe( 'and/or operators', () => {
             [ "true() or $some-made-up-var and true()", true ],
             [ "false() or true() or $some-made-up-var", true ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );
@@ -147,7 +149,7 @@ describe( 'and/or operators', () => {
             [ "0 or 1 and 0", false ],
             [ "0 or 1 and 0+1", true ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );

@@ -7,19 +7,7 @@
     },
     "globals": {
         "spyOn": true,
-        "doc": true,
-        "win": true,
-        "expect": true,
-       "documentEvaluate": true,
-        "checkNodeResult": true,
-        "checkNodeResultNamespace": true,
-        "filterAttributes":true,
-        "parseNamespacesFromAttributes": true,
-        "helpers": true,
-        "documentCreateNSResolver": true,
-        "documentCreateExpression":true,
-        "snapshotToArray": true,
-        "nodeWithAttributes": true
+        "expect": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {

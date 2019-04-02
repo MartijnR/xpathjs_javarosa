@@ -1,9 +1,13 @@
+import { g } from '../docwin';
+import helpers from '../helpers';
+
+
 describe( 'native string functions', () => {
 
     describe( 'string() conversion of strings, numbers, booleans', () => {
         const test = t => {
             it( `works for ${t[0]}`, () => {
-                const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+                const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.STRING_TYPE, null );
                 expect( result.stringValue ).to.equal( t[ 1 ] );
             } );
         };
@@ -47,48 +51,48 @@ describe( 'native string functions', () => {
         let input;
         let i;
         let node;
-        const nodeWithAttributes = doc.getElementById( 'FunctionStringCaseStringNodesetAttribute' );
+        const nodeWithAttributes = g.doc.getElementById( 'FunctionStringCaseStringNodesetAttribute' );
 
         input = [
-            [ "string(/htmlnot)", doc, "" ], // empty
-            [ "string(self::node())", doc.getElementById( 'FunctionStringCaseStringNodesetElement' ), "aaa" ], // element
-            [ "string()", doc.getElementById( 'FunctionStringCaseStringNodesetElement' ), "aaa" ], // element
-            [ "string(node())", doc.getElementById( 'FunctionStringCaseStringNodesetElementNested' ), "bbb" ], // element nested
-            [ "string(self::node())", doc.getElementById( 'FunctionStringCaseStringNodesetElementNested' ), "bbbssscccddd" ], // element nested
-            [ "string()", doc.getElementById( 'FunctionStringCaseStringNodesetElementNested' ), "bbbssscccddd" ], // element nested
-            [ "string()", doc.getElementById( 'FunctionStringCaseStringNodesetComment' ).firstChild, " hello world " ], // comment
-            [ "string()", doc.getElementById( 'FunctionStringCaseStringNodesetText' ).firstChild, "here is some text" ], // text
-            [ "string(attribute::node()[1])", nodeWithAttributes, filterAttributes( nodeWithAttributes.attributes )[ 0 ].nodeValue ], // attribute
-            [ "string(attribute::node()[3])", nodeWithAttributes, filterAttributes( nodeWithAttributes.attributes )[ 2 ].nodeValue ] // attribute
+            [ "string(/htmlnot)", g.doc, "" ], // empty
+            [ "string(self::node())", g.doc.getElementById( 'FunctionStringCaseStringNodesetElement' ), "aaa" ], // element
+            [ "string()", g.doc.getElementById( 'FunctionStringCaseStringNodesetElement' ), "aaa" ], // element
+            [ "string(node())", g.doc.getElementById( 'FunctionStringCaseStringNodesetElementNested' ), "bbb" ], // element nested
+            [ "string(self::node())", g.doc.getElementById( 'FunctionStringCaseStringNodesetElementNested' ), "bbbssscccddd" ], // element nested
+            [ "string()", g.doc.getElementById( 'FunctionStringCaseStringNodesetElementNested' ), "bbbssscccddd" ], // element nested
+            [ "string()", g.doc.getElementById( 'FunctionStringCaseStringNodesetComment' ).firstChild, " hello world " ], // comment
+            [ "string()", g.doc.getElementById( 'FunctionStringCaseStringNodesetText' ).firstChild, "here is some text" ], // text
+            [ "string(attribute::node()[1])", nodeWithAttributes, helpers.filterAttributes( nodeWithAttributes.attributes )[ 0 ].nodeValue ], // attribute
+            [ "string(attribute::node()[3])", nodeWithAttributes, helpers.filterAttributes( nodeWithAttributes.attributes )[ 2 ].nodeValue ] // attribute
         ];
 
         // Processing Instruction
-        node = doc.getElementById( 'FunctionStringCaseStringNodesetProcessingInstruction' ).firstChild;
+        node = g.doc.getElementById( 'FunctionStringCaseStringNodesetProcessingInstruction' ).firstChild;
         if ( node && node.nodeType == 7 ) {
             input.push( [ "string()", node, 'type="text/xml" href="test.xsl"' ] );
         }
         // CDATASection
-        node = doc.getElementById( 'FunctionStringCaseStringNodesetCData' ).firstChild;
+        node = g.doc.getElementById( 'FunctionStringCaseStringNodesetCData' ).firstChild;
         if ( node && node.nodeType == 4 ) {
             input.push( [ "string()", node, 'some cdata' ] );
         }
 
         for ( i = 0; i < input.length; i++ ) {
-            result = documentEvaluate( input[ i ][ 0 ], input[ i ][ 1 ], null, win.XPathResult.STRING_TYPE, null );
+            result = g.doc.evaluate( input[ i ][ 0 ], input[ i ][ 1 ], null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( input[ i ][ 2 ] );
         }
     } );
 
     it( 'string conversion of nodeset with namepace', () => {
-        const result = documentEvaluate( "string(namespace::node())", doc.getElementById( 'FunctionStringCaseStringNodesetNamespace' ), null, win.XPathResult.STRING_TYPE, null );
+        const result = g.doc.evaluate( "string(namespace::node())", g.doc.getElementById( 'FunctionStringCaseStringNodesetNamespace' ), null, g.win.XPathResult.STRING_TYPE, null );
         expect( result.stringValue ).to.equal( "http://www.w3.org/1999/xhtml" );
     } );
 
     it( 'string conversion fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "string(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "string(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'concat()', () => {
@@ -98,7 +102,7 @@ describe( 'native string functions', () => {
             [ "concat('a', '', 'c')", "ac" ],
             [ "concat('a', 'b', 'c', 'd', 'e')", "abcde" ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( t[ 1 ] );
         } );
     } );
@@ -106,14 +110,14 @@ describe( 'native string functions', () => {
     //in javarosa this needs to return ''
     xit( 'concat() fails when not enough arguments provided', () => {
         let test = () => {
-            documentEvaluate( "concat()", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "concat()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "concat(1)", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "concat(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'starts-with', () => {
@@ -125,28 +129,28 @@ describe( 'native string functions', () => {
             [ "starts-with('ba', 'b')", true ],
             [ "starts-with('', 'b')", false ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'starts-with() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "starts-with(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "starts-with(1, 2, 3)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'start-with() fails when not enough arguments are provided', () => {
         let test = () => {
-            documentEvaluate( "starts-with()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "starts-with()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "starts-with(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "starts-with(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'contains()', () => {
@@ -158,28 +162,28 @@ describe( 'native string functions', () => {
             [ "contains('asdf', 'sd')", true ],
             [ "contains('asdf', 'af')", false ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.BOOLEAN_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.BOOLEAN_TYPE, null );
             expect( result.booleanValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'contains() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "contains(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "contains(1, 2, 3)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'contains() fails when too few arguments are provided', () => {
         let test = () => {
-            documentEvaluate( "contains()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "contains()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "contains(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "contains(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'substring-before()', () => {
@@ -193,27 +197,27 @@ describe( 'native string functions', () => {
             [ "substring-before('abb', 'b')", 'a' ],
             [ "substring-before('ab', 'c')", '' ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'substring-before() fails with too many arguments', () => {
         const test = () => {
-            documentEvaluate( "substring-before(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring-before(1, 2, 3)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'substring-before() with too few arguments', () => {
         let test = () => {
-            documentEvaluate( "substring-before()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring-before()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
         test = () => {
-            documentEvaluate( "substring-before(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring-before(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'substring-after()', () => {
@@ -227,28 +231,28 @@ describe( 'native string functions', () => {
             [ "substring-after('ab', 'b')", '' ],
             [ "substring-after('ab', 'c')", '' ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'substring-after() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "substring-after(1, 2, 3)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring-after(1, 2, 3)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'substring-after() fails when too few arguments are provided', () => {
         let test = () => {
-            documentEvaluate( "substring-after()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring-after()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "substring-after(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring-after(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'substring()', () => {
@@ -268,77 +272,77 @@ describe( 'native string functions', () => {
             [ "substring('12345', -42, 1 div 0)", '12345' ],
             [ "substring('12345', -1 div 0, 1 div 0)", '' ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'substring() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "substring(1, 2, 3, 4)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring(1, 2, 3, 4)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'substring() fails when too few arguments are provided', () => {
         let test = () => {
-            documentEvaluate( "substring()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "substring(1)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "substring(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'string-length()', () => {
         [
-            [ "string-length('')", 0, doc ],
-            [ "string-length(' ')", 1, doc ],
-            [ "string-length('\r\n')", 2, doc ],
-            [ "string-length('a')", 1, doc ],
-            [ "string-length()", 0, doc.getElementById( 'FunctionStringCaseStringLength1' ) ],
-            [ "string-length()", 4, doc.getElementById( 'FunctionStringCaseStringLength2' ) ]
+            [ "string-length('')", 0, g.doc ],
+            [ "string-length(' ')", 1, g.doc ],
+            [ "string-length('\r\n')", 2, g.doc ],
+            [ "string-length('a')", 1, g.doc ],
+            [ "string-length()", 0, g.doc.getElementById( 'FunctionStringCaseStringLength1' ) ],
+            [ "string-length()", 4, g.doc.getElementById( 'FunctionStringCaseStringLength2' ) ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], t[ 2 ], null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], t[ 2 ], null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'string-length() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "string-length(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "string-length(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'normalize-space', () => {
         [
-            [ "normalize-space('')", '', doc ],
-            [ "normalize-space('    ')", '', doc ],
-            [ "normalize-space('  a')", 'a', doc ],
-            [ "normalize-space('  a  ')", 'a', doc ],
-            [ "normalize-space('  a b  ')", 'a b', doc ],
-            [ "normalize-space('  a  b  ')", 'a b', doc ],
-            [ "normalize-space(' \r\n\t')", '', doc ],
-            [ "normalize-space(' \f\v ')", '\f\v', doc ],
-            [ "normalize-space('\na  \f \r\v  b\r\n  ')", 'a \f \v b', doc ],
-            [ "normalize-space()", '', doc.getElementById( 'FunctionStringCaseStringNormalizeSpace1' ) ],
-            [ "normalize-space()", '', doc.getElementById( 'FunctionStringCaseStringNormalizeSpace2' ) ],
-            [ "normalize-space()", 'a b', doc.getElementById( 'FunctionStringCaseStringNormalizeSpace3' ) ],
-            [ "normalize-space()", 'a bc c', doc.getElementById( 'FunctionStringCaseStringNormalizeSpace4' ) ]
+            [ "normalize-space('')", '', g.doc ],
+            [ "normalize-space('    ')", '', g.doc ],
+            [ "normalize-space('  a')", 'a', g.doc ],
+            [ "normalize-space('  a  ')", 'a', g.doc ],
+            [ "normalize-space('  a b  ')", 'a b', g.doc ],
+            [ "normalize-space('  a  b  ')", 'a b', g.doc ],
+            [ "normalize-space(' \r\n\t')", '', g.doc ],
+            [ "normalize-space(' \f\v ')", '\f\v', g.doc ],
+            [ "normalize-space('\na  \f \r\v  b\r\n  ')", 'a \f \v b', g.doc ],
+            [ "normalize-space()", '', g.doc.getElementById( 'FunctionStringCaseStringNormalizeSpace1' ) ],
+            [ "normalize-space()", '', g.doc.getElementById( 'FunctionStringCaseStringNormalizeSpace2' ) ],
+            [ "normalize-space()", 'a b', g.doc.getElementById( 'FunctionStringCaseStringNormalizeSpace3' ) ],
+            [ "normalize-space()", 'a bc c', g.doc.getElementById( 'FunctionStringCaseStringNormalizeSpace4' ) ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], t[ 2 ], null, win.XPathResult.STRING_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], t[ 2 ], null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'normalize-space() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "normalize-space(1,2)", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "normalize-space(1,2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'translate()', () => {
@@ -352,32 +356,32 @@ describe( 'native string functions', () => {
             [ "translate('aabb', 'ab', 'ba')", 'bbaa' ],
             [ "translate('aa', 'aa', 'bc')", 'bb' ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.STRING_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'translate() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "translate(1, 2, 3, 4)", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "translate(1, 2, 3, 4)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'translate() fails when too few arguments are provided', () => {
         let test = () => {
-            documentEvaluate( "translate()", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "translate()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "translate(1)", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "translate(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
 
         test = () => {
-            documentEvaluate( "translate(1,2)", doc, helpers.xhtmlResolver, win.XPathResult.STRING_TYPE, null );
+            g.doc.evaluate( "translate(1,2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 } );

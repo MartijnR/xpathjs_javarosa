@@ -1,7 +1,4 @@
 // Karma configuration
-// Generated on Wed Mar 04 2015 15:02:33 GMT-0700 (MST)
-
-'use strict';
 
 module.exports = function( config ) {
 
@@ -13,14 +10,15 @@ module.exports = function( config ) {
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '..',
 
-
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: [ 'mocha', 'chai' ],
 
-
         // list of files / patterns to load in the browser
-        files: [{
+        files: [ {
+            pattern: 'test/**/*.spec.js',
+            included: true
+        }, {
             pattern: 'dist/**/*.js',
             included: false
         }, {
@@ -28,20 +26,30 @@ module.exports = function( config ) {
             watched: true,
             served: true,
             included: false
-        },
-            'test/helpers.js',
-            'test/**/*.spec.js',
-        ],
+        }, {
+            pattern: 'test/helpers.js',
+            included: false
+        }, {
+            pattern: 'test/docwin.js',
+            included: false
+        } ],
 
 
         // list of files to exclude
         exclude: [],
 
-
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-        preprocessors: {},
+        preprocessors: {
+            'test/**/*.spec.js': [ 'rollup' ],
+        },
 
+        rollupPreprocessor: {
+            output: {
+                format: 'iife',
+                name: 'test'
+            },
+        },
 
         // test results reporter to use
         // possible values: 'dots', 'progress'

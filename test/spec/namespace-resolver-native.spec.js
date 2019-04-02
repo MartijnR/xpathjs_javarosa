@@ -1,11 +1,14 @@
+import { g } from '../docwin';
+import helpers from '../helpers';
+
 describe( 'namespace resolver', () => {
 
     it( 'looks up the namespaceURIElement', () => {
-        const node = doc.getElementById( "testXPathNSResolverNode" );
-        let resolver = documentCreateNSResolver( node );
+        const node = g.doc.getElementById( "testXPathNSResolverNode" );
+        let resolver = g.doc.createNSResolver( node );
 
         // check type
-        expect( resolver ).to.be.an.instanceOf( win.XPathNSResolver );
+        expect( resolver ).to.be.an.instanceOf( g.win.XPathNSResolver );
         expect( resolver.lookupNamespaceURI ).to.be.a( 'function' );
 
         // check preconfigured namespaces
@@ -17,15 +20,15 @@ describe( 'namespace resolver', () => {
         expect( resolver.lookupNamespaceURI( 'nsnotexists' ) ).to.equal( null );
 
         // check default namespace
-        resolver = documentCreateNSResolver( helpers.getNextChildElementNode( node ) );
+        resolver = g.doc.createNSResolver( helpers.getNextChildElementNode( node ) );
         expect( resolver.lookupNamespaceURI( '' ) ).to.equal( 'http://www.w3.org/TR/REC-html40' );
         //Y.Assert.areSame('http://www.w3.org/TR/REC-html40', resolver.lookupNamespaceURI(''));
     } );
 
     it( 'looks up the namespaceURIDocument', () => {
-        const resolver = documentCreateNSResolver( doc );
+        const resolver = g.doc.createNSResolver( g.doc );
 
-        expect( resolver ).to.be.an.instanceOf( win.XPathNSResolver );
+        expect( resolver ).to.be.an.instanceof( g.win.XPathNSResolver );
 
         expect( resolver.lookupNamespaceURI ).to.be.a( 'function' );
 
@@ -33,10 +36,10 @@ describe( 'namespace resolver', () => {
     } );
 
     it( 'looks up the namespaceURIDocumentElement', () => {
-        const node = doc.documentElement;
-        const resolver = documentCreateNSResolver( node );
+        const node = g.doc.documentElement;
+        const resolver = g.doc.createNSResolver( node );
 
-        expect( resolver ).to.be.an.instanceOf( win.XPathNSResolver );
+        expect( resolver ).to.be.an.instanceOf( g.win.XPathNSResolver );
         expect( resolver.lookupNamespaceURI ).to.be.a( 'function' );
 
         expect( resolver.lookupNamespaceURI( 'ev' ) ).to.equal( 'http://some-namespace.com/nss' );
@@ -56,7 +59,7 @@ describe( 'namespace resolver', () => {
     } );
 
     it( 'looks up the namespaceURIAttribute', () => {
-        let attribute, i, resolver, node = doc.documentElement;
+        let attribute, i, resolver, node = g.doc.documentElement;
 
         // Check parent nodes for namespace prefix declarations
         for ( i = 0; i < node.attributes.length; i++ ) {
@@ -66,14 +69,14 @@ describe( 'namespace resolver', () => {
             }
         }
 
-        expect( attribute ).to.be.an( 'object' );
+        expect( typeof attribute ).to.equal( 'object' );
 
-        resolver = documentCreateNSResolver( attribute );
+        resolver = g.doc.createNSResolver( attribute );
         expect( resolver.lookupNamespaceURI( 'ev' ) ).to.equal( 'http://some-namespace.com/nss' );
 
         // Check parent nodes for default namespace declaration
         attribute = null;
-        node = doc.getElementById( "testXPathNSResolverNode" );
+        node = g.doc.getElementById( "testXPathNSResolverNode" );
 
         for ( i = 0; i < node.attributes.length; i++ ) {
             if ( node.attributes[ i ].specified ) {
@@ -82,15 +85,15 @@ describe( 'namespace resolver', () => {
             }
         }
 
-        expect( attribute ).to.be.an( 'object' );
+        expect( typeof attribute ).to.equal( 'object' );
 
-        resolver = documentCreateNSResolver( attribute );
+        resolver = g.doc.createNSResolver( attribute );
         expect( resolver.lookupNamespaceURI( 'xforms' ) ).to.equal( 'http://www.w3.org/2002/xforms' );
     } );
 
     it( 'looks up namespaceURIs that have changed', () => {
-        const node = helpers.getNextChildElementNode( doc.getElementById( "testXPathNSResolverNode" ) );
-        const resolver = documentCreateNSResolver( node );
+        const node = helpers.getNextChildElementNode( g.doc.getElementById( "testXPathNSResolverNode" ) );
+        const resolver = g.doc.createNSResolver( node );
 
         expect( resolver.lookupNamespaceURI( '' ) ).to.equal( 'http://www.w3.org/TR/REC-html40' );
 
@@ -112,8 +115,8 @@ describe( 'namespace resolver', () => {
     } );
 
     it( 'looks up a hierarchical namespaceURI', () => {
-        const node = doc.getElementById( "testXPathNSResolverNode" );
-        let resolver = documentCreateNSResolver( node );
+        const node = g.doc.getElementById( "testXPathNSResolverNode" );
+        let resolver = g.doc.createNSResolver( node );
 
         // check prefix in parents
         expect( resolver.lookupNamespaceURI( 'ev' ) ).to.equal( 'http://some-namespace.com/nss' );
@@ -121,7 +124,7 @@ describe( 'namespace resolver', () => {
         // check default prefix in parents
         expect( resolver.lookupNamespaceURI( '' ) ).to.equal( 'http://www.w3.org/1999/xhtml' );
 
-        resolver = documentCreateNSResolver(
+        resolver = g.doc.createNSResolver(
             helpers.getNextChildElementNode( helpers.getNextChildElementNode( node ) )
         );
         expect( resolver.lookupNamespaceURI( '' ) ).to.equal( 'http://www.w3.org/TR/REC-html40' );

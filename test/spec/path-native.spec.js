@@ -1,12 +1,16 @@
+import { g } from '../docwin';
+import helpers from '../helpers';
+
 describe( 'location path', () => {
     let h;
 
     before( () => {
+
         h = {
             oneNamespaceNode( node ) {
                 let result, item;
 
-                result = documentEvaluate( "namespace::node()", node, null, win.XPathResult.ANY_UNORDERED_NODE_TYPE, null );
+                result = g.doc.evaluate( "namespace::node()", node, null, g.win.XPathResult.ANY_UNORDERED_NODE_TYPE, null );
                 item = result.singleNodeValue;
                 expect( item ).to.not.equal( null );
                 expect( item.nodeType ).to.equal( 13 );
@@ -21,71 +25,71 @@ describe( 'location path', () => {
         let node;
 
         const input = [
-            [ doc, [ doc ] ], // Document
-            [ doc.documentElement, [ doc ] ], // Element
-            [ doc.getElementById( 'LocationPathCase' ), [ doc ] ], // Element
-            [ doc.getElementById( 'LocationPathCaseText' ).firstChild, [ doc ] ], // Text
-            [ doc.getElementById( 'LocationPathCaseComment' ).firstChild, [ doc ] ], // Comment
-            [ filterAttributes( doc.getElementById( 'LocationPathCaseAttribute' ).attributes )[ 0 ],
-                [ doc ]
+            [ g.doc, [ g.doc ] ], // Document
+            [ g.doc.documentElement, [ g.doc ] ], // Element
+            [ g.doc.getElementById( 'LocationPathCase' ), [ g.doc ] ], // Element
+            [ g.doc.getElementById( 'LocationPathCaseText' ).firstChild, [ g.doc ] ], // Text
+            [ g.doc.getElementById( 'LocationPathCaseComment' ).firstChild, [ g.doc ] ], // Comment
+            [ helpers.filterAttributes( g.doc.getElementById( 'LocationPathCaseAttribute' ).attributes )[ 0 ],
+                [ g.doc ]
             ] // Attribute
         ];
 
         // ProcessingInstruction
-        node = doc.getElementById( 'LocationPathCaseProcessingInstruction' ).firstChild;
+        node = g.doc.getElementById( 'LocationPathCaseProcessingInstruction' ).firstChild;
         if ( node && node.nodeType == 7 ) {
-            input.push( [ node, [ doc ] ] );
+            input.push( [ node, [ g.doc ] ] );
         }
 
         // CDATASection
-        node = doc.getElementById( 'LocationPathCaseCData' ).firstChild;
+        node = g.doc.getElementById( 'LocationPathCaseCData' ).firstChild;
         if ( node && node.nodeType == 4 ) {
-            input.push( [ node, [ doc ] ] );
+            input.push( [ node, [ g.doc ] ] );
         }
 
         for ( i = 0; i < input.length; i++ ) {
-            checkNodeResult( "/", input[ i ][ 0 ], input[ i ][ 1 ] );
+            helpers.checkNodeResult( "/", input[ i ][ 0 ], input[ i ][ 1 ] );
         }
     } );
 
     it( 'root namespace', () => {
-        const input = [ h.oneNamespaceNode( doc.getElementById( 'LocationPathCaseNamespace' ) ), [ doc ] ]; // XPathNamespace
-        checkNodeResult( "/", input[ 0 ], input[ 1 ] );
+        const input = [ h.oneNamespaceNode( g.doc.getElementById( 'LocationPathCaseNamespace' ) ), [ g.doc ] ]; // XPathNamespace
+        helpers.checkNodeResult( "/", input[ 0 ], input[ 1 ] );
     } );
 
     it( 'root node', () => {
-        checkNodeResult( "/html", doc, [], helpers.xhtmlResolver );
-        checkNodeResult( "/xhtml:html", doc, [ doc.documentElement ], helpers.xhtmlResolver );
-        checkNodeResult( "/xhtml:html", doc.getElementById( 'LocationPathCase' ), [ doc.documentElement ], helpers.xhtmlResolver );
-        checkNodeResult( "/htmlnot", doc.getElementById( 'LocationPathCase' ), [], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "/html", g.doc, [], helpers.getXhtmlResolver( g.doc ) );
+        helpers.checkNodeResult( "/xhtml:html", g.doc, [ g.doc.documentElement ], helpers.getXhtmlResolver( g.doc ) );
+        helpers.checkNodeResult( "/xhtml:html", g.doc.getElementById( 'LocationPathCase' ), [ g.doc.documentElement ], helpers.getXhtmlResolver( g.doc ) );
+        helpers.checkNodeResult( "/htmlnot", g.doc.getElementById( 'LocationPathCase' ), [], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'root node node', () => {
-        checkNodeResult( "/xhtml:html/xhtml:body", doc.getElementById( 'LocationPathCase' ), [ doc.querySelector( 'body' ) ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "/xhtml:html/xhtml:body", g.doc.getElementById( 'LocationPathCase' ), [ g.doc.querySelector( 'body' ) ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'node (node)', () => {
-        checkNodeResult( "html", doc, [], helpers.xhtmlResolver );
-        checkNodeResult( "xhtml:html", doc, [ doc.documentElement ], helpers.xhtmlResolver );
-        checkNodeResult( "xhtml:html/xhtml:body", doc, [ doc.querySelector( 'body' ) ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "html", g.doc, [], helpers.getXhtmlResolver( g.doc ) );
+        helpers.checkNodeResult( "xhtml:html", g.doc, [ g.doc.documentElement ], helpers.getXhtmlResolver( g.doc ) );
+        helpers.checkNodeResult( "xhtml:html/xhtml:body", g.doc, [ g.doc.querySelector( 'body' ) ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     xit( 'node attribute', () => {
-        const node = doc.getElementById( 'LocationPathCaseAttributeParent' );
+        const node = g.doc.getElementById( 'LocationPathCaseAttributeParent' );
 
-        checkNodeResult( "child::*/attribute::*", node, [
-            filterAttributes( node.childNodes[ 0 ].attributes )[ 0 ],
-            filterAttributes( node.childNodes[ 1 ].attributes )[ 0 ],
-            filterAttributes( node.childNodes[ 1 ].attributes )[ 1 ],
-            filterAttributes( node.childNodes[ 2 ].attributes )[ 0 ],
-            filterAttributes( node.childNodes[ 3 ].attributes )[ 0 ]
-        ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "child::*/attribute::*", node, [
+            helpers.filterAttributes( node.childNodes[ 0 ].attributes )[ 0 ],
+            helpers.filterAttributes( node.childNodes[ 1 ].attributes )[ 0 ],
+            helpers.filterAttributes( node.childNodes[ 1 ].attributes )[ 1 ],
+            helpers.filterAttributes( node.childNodes[ 2 ].attributes )[ 0 ],
+            helpers.filterAttributes( node.childNodes[ 3 ].attributes )[ 0 ]
+        ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     xit( 'node namespace', () => {
-        const node = doc.getElementById( 'LocationPathCaseNamespaceParent' ); //
+        const node = g.doc.getElementById( 'LocationPathCaseNamespaceParent' ); //
 
-        checkNodeResultNamespace( "child::* /namespace::*", node, [
+        helpers.checkNodeResultNamespace( "child::* /namespace::*", node, [
             [ '', 'http://asdss/' ],
             [ 'ev', 'http://some-namespace.com/nss' ],
             [ 'xml', 'http://www.w3.org/XML/1998/namespace' ],
@@ -102,15 +106,15 @@ describe( 'location path', () => {
             [ 'aa', 'http://saa/' ],
             [ 'ev', 'http://some-namespace.com/nss' ],
             [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
-        ], helpers.xhtmlResolver );
+        ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'duplicates handled correctly', () => {
-        checkNodeResult( "ancestor-or-self::* /ancestor-or-self::*", doc.getElementById( 'LocationPathCaseDuplicates' ), [
-            doc.documentElement,
-            doc.querySelector( 'body' ),
-            doc.getElementById( 'LocationPathCase' ),
-            doc.getElementById( 'LocationPathCaseDuplicates' )
-        ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "ancestor-or-self::* /ancestor-or-self::*", g.doc.getElementById( 'LocationPathCaseDuplicates' ), [
+            g.doc.documentElement,
+            g.doc.querySelector( 'body' ),
+            g.doc.getElementById( 'LocationPathCase' ),
+            g.doc.getElementById( 'LocationPathCaseDuplicates' )
+        ], helpers.getXhtmlResolver( g.doc ) );
     } );
 } );

@@ -1,13 +1,15 @@
+import helpers from '../helpers';
+import { g } from '../docwin';
+
 describe( 'axes', () => {
 
     let h;
 
     before( () => {
-
         h = {
             getNodeAttribute() {
                 let attribute;
-                const node = doc.getElementById( 'testStepAxisNodeAttribute' );
+                const node = g.doc.getElementById( 'testStepAxisNodeAttribute' );
                 let i;
 
                 for ( i = 0; i < node.attributes.length; i++ ) {
@@ -16,35 +18,35 @@ describe( 'axes', () => {
                         break;
                     }
                 }
-
-                expect( attribute ).is.an( 'object' );
+                expect( typeof attribute ).to.equal( 'object' );
+                //expect( attribute ).to.be.an( 'object' ); // why does this fail?
 
                 return attribute;
             },
 
             getNodeComment() {
-                return doc.getElementById( 'testStepAxisNodeComment' ).firstChild;
+                return g.doc.getElementById( 'testStepAxisNodeComment' ).firstChild;
             },
 
             getNodeCData() {
-                return doc.getElementById( 'testStepAxisNodeCData' ).firstChild;
+                return g.doc.getElementById( 'testStepAxisNodeCData' ).firstChild;
             },
 
             getNodeProcessingInstruction() {
-                return doc.getElementById( 'testStepAxisNodeProcessingInstruction' ).firstChild;
+                return g.doc.getElementById( 'testStepAxisNodeProcessingInstruction' ).firstChild;
             },
 
             getNodeNamespace() {
                 let result;
 
-                result = documentEvaluate( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace' ), null, win.XPathResult.ANY_UNORDERED_NODE_TYPE, null );
+                result = g.doc.evaluate( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace' ), null, g.win.XPathResult.ANY_UNORDERED_NODE_TYPE, null );
                 return result.singleNodeValue;
             },
 
             followingSiblingNodes( node ) {
                 const nodes = [];
 
-                while ( (node = node.nextSibling) ) {
+                while ( ( node = node.nextSibling ) ) {
                     nodes.push( node );
                 }
 
@@ -54,7 +56,7 @@ describe( 'axes', () => {
             precedingSiblingNodes( node ) {
                 const nodes = [];
 
-                while ( (node = node.previousSibling) ) {
+                while ( ( node = node.previousSibling ) ) {
                     if ( node.nodeType == 10 )
                         continue;
                     nodes.push( node );
@@ -72,7 +74,7 @@ describe( 'axes', () => {
                 let result;
                 let node2;
 
-                nodesAll = helpers.getAllNodes();
+                nodesAll = helpers.getAllNodes( g.doc );
 
                 for ( i = 0; i < nodesAll.length; i++ ) {
                     node2 = nodesAll[ i ]; //
@@ -94,7 +96,7 @@ describe( 'axes', () => {
                 let result;
                 let node2;
 
-                nodesAll = helpers.getAllNodes();
+                nodesAll = helpers.getAllNodes( g.doc );
 
                 for ( i = 0; i < nodesAll.length; i++ ) {
                     node2 = nodesAll[ i ];
@@ -112,48 +114,49 @@ describe( 'axes', () => {
             }
 
         };
+
     } );
 
     describe( 'self axis', () => {
 
         it( 'works with document context', () => {
-            checkNodeResult( "self::node()", doc, [ doc ] );
+            helpers.checkNodeResult( "self::node()", g.doc, [ g.doc ] );
         } );
 
         it( 'works with documentElement context', () => {
-            checkNodeResult( "self::node()", doc.documentElement, [ doc.documentElement ] );
+            helpers.checkNodeResult( "self::node()", g.doc.documentElement, [ g.doc.documentElement ] );
         } );
 
         it( 'works with element context', () => {
-            checkNodeResult( "self::node()", doc.getElementById( 'testStepAxisChild' ), [ doc.getElementById( 'testStepAxisChild' ) ] );
+            helpers.checkNodeResult( "self::node()", g.doc.getElementById( 'testStepAxisChild' ), [ g.doc.getElementById( 'testStepAxisChild' ) ] );
         } );
 
         it( 'works with element attribute context', () => {
-            checkNodeResult( "self::node()", h.getNodeAttribute(), [ h.getNodeAttribute() ] );
+            helpers.checkNodeResult( "self::node()", h.getNodeAttribute(), [ h.getNodeAttribute() ] );
         } );
 
         it( 'works with CData context', () => {
-            checkNodeResult( "self::node()", h.getNodeCData(), [ h.getNodeCData() ] );
+            helpers.checkNodeResult( "self::node()", h.getNodeCData(), [ h.getNodeCData() ] );
         } );
 
         it( 'works with comment context', () => {
-            checkNodeResult( "self::node()", h.getNodeComment(), [ h.getNodeComment() ] );
+            helpers.checkNodeResult( "self::node()", h.getNodeComment(), [ h.getNodeComment() ] );
         } );
 
         it( 'works with node processing instruction context', () => {
-            checkNodeResult( "self::node()", h.getNodeProcessingInstruction(), [ h.getNodeProcessingInstruction() ] );
+            helpers.checkNodeResult( "self::node()", h.getNodeProcessingInstruction(), [ h.getNodeProcessingInstruction() ] );
         } );
 
         xit( 'works with node namespace context', () => {
-            checkNodeResult( "self::node()", h.getNodeNamespace(), [ h.getNodeNamespace() ] );
+            helpers.checkNodeResult( "self::node()", h.getNodeNamespace(), [ h.getNodeNamespace() ] );
         } );
 
         it( 'works with document fragment context', () => {
-            const fragment = doc.createDocumentFragment();
+            const fragment = g.doc.createDocumentFragment();
             const test = () => {
-                checkNodeResult( "self::node()", fragment, [ fragment ] );
+                helpers.checkNodeResult( "self::node()", fragment, [ fragment ] );
             };
-            expect( test ).to.throw( win.Error );
+            expect( test ).to.throw( g.win.Error );
         } );
 
     } );
@@ -164,43 +167,43 @@ describe( 'axes', () => {
             let i;
             const expectedResult = [];
 
-            for ( i = 0; i < doc.childNodes.length; i++ ) {
-                if ( doc.childNodes.item( i ).nodeType == 1 ||
-                    doc.childNodes.item( i ).nodeType == 8 ) {
-                    expectedResult.push( doc.childNodes.item( i ) );
+            for ( i = 0; i < g.doc.childNodes.length; i++ ) {
+                if ( g.doc.childNodes.item( i ).nodeType == 1 ||
+                    g.doc.childNodes.item( i ).nodeType == 8 ) {
+                    expectedResult.push( g.doc.childNodes.item( i ) );
                 }
             }
 
-            checkNodeResult( "child::node()", doc, expectedResult );
+            helpers.checkNodeResult( "child::node()", g.doc, expectedResult );
         } );
 
         it( 'works with documentElement context', () => {
-            checkNodeResult( "child::node()", doc.documentElement, doc.documentElement.childNodes );
+            helpers.checkNodeResult( "child::node()", g.doc.documentElement, g.doc.documentElement.childNodes );
         } );
 
         it( 'works with element context', () => {
-            checkNodeResult( "child::node()", doc.getElementById( 'testStepAxisChild' ),
-                doc.getElementById( 'testStepAxisChild' ).childNodes );
+            helpers.checkNodeResult( "child::node()", g.doc.getElementById( 'testStepAxisChild' ),
+                g.doc.getElementById( 'testStepAxisChild' ).childNodes );
         } );
 
         it( 'works with attribute context', () => {
-            checkNodeResult( "child::node()", h.getNodeAttribute(), [] );
+            helpers.checkNodeResult( "child::node()", h.getNodeAttribute(), [] );
         } );
 
         it( 'works with CData context', () => {
-            checkNodeResult( "child::node()", h.getNodeCData(), [] );
+            helpers.checkNodeResult( "child::node()", h.getNodeCData(), [] );
         } );
 
         it( 'works with a comment context', () => {
-            checkNodeResult( "child::node()", h.getNodeComment(), [] );
+            helpers.checkNodeResult( "child::node()", h.getNodeComment(), [] );
         } );
 
         it( 'works with a processing instruction context', () => {
-            checkNodeResult( "child::node()", h.getNodeProcessingInstruction(), [] );
+            helpers.checkNodeResult( "child::node()", h.getNodeProcessingInstruction(), [] );
         } );
 
         xit( 'works with a namespace context', function() {
-            checkNodeResult( "child::node()", this.getNodeNamespace(), [] );
+            helpers.checkNodeResult( "child::node()", this.getNodeNamespace(), [] );
         } );
 
     } );
@@ -220,28 +223,28 @@ describe( 'axes', () => {
                 return nodes;
             };
 
-            checkNodeResult( "descendant::node()", doc.getElementById( 'testStepAxisDescendant' ),
-                descendantNodes( doc.getElementById( 'testStepAxisDescendant' ) ) );
+            helpers.checkNodeResult( "descendant::node()", g.doc.getElementById( 'testStepAxisDescendant' ),
+                descendantNodes( g.doc.getElementById( 'testStepAxisDescendant' ) ) );
         } );
 
         it( 'works with attribute context', () => {
-            checkNodeResult( "descendant::node()", h.getNodeAttribute(), [] );
+            helpers.checkNodeResult( "descendant::node()", h.getNodeAttribute(), [] );
         } );
 
         it( 'works with CData context', () => {
-            checkNodeResult( "descendant::node()", h.getNodeCData(), [] );
+            helpers.checkNodeResult( "descendant::node()", h.getNodeCData(), [] );
         } );
 
         it( 'works with a comment context', () => {
-            checkNodeResult( "descendant::node()", h.getNodeComment(), [] );
+            helpers.checkNodeResult( "descendant::node()", h.getNodeComment(), [] );
         } );
 
         it( 'works with a processing instruction context', () => {
-            checkNodeResult( "descendant::node()", h.getNodeProcessingInstruction(), [] );
+            helpers.checkNodeResult( "descendant::node()", h.getNodeProcessingInstruction(), [] );
         } );
 
         xit( 'works with namespace context', () => {
-            checkNodeResult( "descendant::node()", h.getNodeNamespace(), [] );
+            helpers.checkNodeResult( "descendant::node()", h.getNodeNamespace(), [] );
         } );
 
     } );
@@ -261,37 +264,37 @@ describe( 'axes', () => {
                 return nodes;
             };
 
-            nodes = descendantNodes( doc.getElementById( 'testStepAxisDescendant' ) );
-            nodes.unshift( doc.getElementById( 'testStepAxisDescendant' ) );
-            checkNodeResult( "descendant-or-self::node()", doc.getElementById( 'testStepAxisDescendant' ), nodes );
+            nodes = descendantNodes( g.doc.getElementById( 'testStepAxisDescendant' ) );
+            nodes.unshift( g.doc.getElementById( 'testStepAxisDescendant' ) );
+            helpers.checkNodeResult( "descendant-or-self::node()", g.doc.getElementById( 'testStepAxisDescendant' ), nodes );
         } );
 
         it( 'works with attribute context', () => {
-            checkNodeResult( "descendant-or-self::node()", h.getNodeAttribute(), [
+            helpers.checkNodeResult( "descendant-or-self::node()", h.getNodeAttribute(), [
                 h.getNodeAttribute()
             ] );
         } );
 
         it( 'works with CDATA context', () => {
-            checkNodeResult( "descendant-or-self::node()", h.getNodeCData(), [
+            helpers.checkNodeResult( "descendant-or-self::node()", h.getNodeCData(), [
                 h.getNodeCData()
             ] );
         } );
 
         it( 'works with a comment context', () => {
-            checkNodeResult( "descendant-or-self::node()", h.getNodeComment(), [
+            helpers.checkNodeResult( "descendant-or-self::node()", h.getNodeComment(), [
                 h.getNodeComment()
             ] );
         } );
 
         it( 'works with element context', () => {
-            checkNodeResult( "descendant-or-self::node()", h.getNodeProcessingInstruction(), [
+            helpers.checkNodeResult( "descendant-or-self::node()", h.getNodeProcessingInstruction(), [
                 h.getNodeProcessingInstruction()
             ] );
         } );
 
         xit( 'works with a namspace context', () => {
-            checkNodeResult( "descendant-or-self::node()", h.getNodeNamespace(), [
+            helpers.checkNodeResult( "descendant-or-self::node()", h.getNodeNamespace(), [
                 h.getNodeNamespace()
             ] );
         } );
@@ -301,35 +304,35 @@ describe( 'axes', () => {
     describe( 'parent axis', () => {
 
         it( 'works with a document context', () => {
-            checkNodeResult( "parent::node()", doc, [] );
+            helpers.checkNodeResult( "parent::node()", g.doc, [] );
         } );
 
         it( 'works with a documentElement context', () => {
-            checkNodeResult( "parent::node()", doc.documentElement, [ doc ] );
+            helpers.checkNodeResult( "parent::node()", g.doc.documentElement, [ g.doc ] );
         } );
 
         it( 'works with an element context', () => {
-            checkNodeResult( "parent::node()", doc.getElementById( 'testStepAxisNodeElement' ), [ doc.getElementById( 'StepAxisCase' ) ] );
+            helpers.checkNodeResult( "parent::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), [ g.doc.getElementById( 'StepAxisCase' ) ] );
         } );
 
         it( 'works with an attribute context', () => {
-            checkNodeResult( "parent::node()", h.getNodeAttribute(), [ doc.getElementById( 'testStepAxisNodeAttribute' ) ] );
+            helpers.checkNodeResult( "parent::node()", h.getNodeAttribute(), [ g.doc.getElementById( 'testStepAxisNodeAttribute' ) ] );
         } );
 
         it( 'works with a CData context', () => {
-            checkNodeResult( "parent::node()", h.getNodeCData(), [ doc.getElementById( 'testStepAxisNodeCData' ) ] );
+            helpers.checkNodeResult( "parent::node()", h.getNodeCData(), [ g.doc.getElementById( 'testStepAxisNodeCData' ) ] );
         } );
 
         it( 'works with a comment context', () => {
-            checkNodeResult( "parent::node()", h.getNodeComment(), [ doc.getElementById( 'testStepAxisNodeComment' ) ] );
+            helpers.checkNodeResult( "parent::node()", h.getNodeComment(), [ g.doc.getElementById( 'testStepAxisNodeComment' ) ] );
         } );
 
         it( 'works with a processing instruction', () => {
-            checkNodeResult( "parent::node()", h.getNodeProcessingInstruction(), [ doc.getElementById( 'testStepAxisNodeProcessingInstruction' ) ] );
+            helpers.checkNodeResult( "parent::node()", h.getNodeProcessingInstruction(), [ g.doc.getElementById( 'testStepAxisNodeProcessingInstruction' ) ] );
         } );
 
         xit( 'works with a namespace', () => {
-            checkNodeResult( "parent::node()", h.getNodeNamespace(), [ doc.getElementById( 'testStepAxisNodeNamespace' ) ] );
+            helpers.checkNodeResult( "parent::node()", h.getNodeNamespace(), [ g.doc.getElementById( 'testStepAxisNodeNamespace' ) ] );
         } );
 
     } );
@@ -337,71 +340,69 @@ describe( 'axes', () => {
     describe( 'ancestor axis', () => {
 
         it( 'works for a cocument context', () => {
-            checkNodeResult( "ancestor::node()", doc, [] );
+            helpers.checkNodeResult( "ancestor::node()", g.doc, [] );
         } );
 
         it( 'works for a documentElement context', () => {
-            checkNodeResult( "ancestor::node()", doc.documentElement, [
-                doc
-            ] );
+            helpers.checkNodeResult( "ancestor::node()", g.doc.documentElement, [ g.doc ] );
         } );
 
         it( 'works for an element context', () => {
-            checkNodeResult( "ancestor::node()", doc.getElementById( 'testStepAxisNodeElement' ), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' )
+            helpers.checkNodeResult( "ancestor::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' )
             ] );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResult( "ancestor::node()", h.getNodeAttribute(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeAttribute' )
+            helpers.checkNodeResult( "ancestor::node()", h.getNodeAttribute(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeAttribute' )
             ] );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResult( "ancestor::node()", h.getNodeCData(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeCData' )
+            helpers.checkNodeResult( "ancestor::node()", h.getNodeCData(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeCData' )
             ] );
         } );
 
         it( 'works for a comment context', () => {
-            checkNodeResult( "ancestor::node()", h.getNodeComment(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeComment' )
+            helpers.checkNodeResult( "ancestor::node()", h.getNodeComment(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeComment' )
             ] );
         } );
 
         it( 'works for a processing instruction context', () => {
-            checkNodeResult( "ancestor::node()", h.getNodeProcessingInstruction(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeProcessingInstruction' )
+            helpers.checkNodeResult( "ancestor::node()", h.getNodeProcessingInstruction(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeProcessingInstruction' )
             ] );
         } );
 
         xit( 'works for a namespace context ', () => {
-            checkNodeResult( "ancestor::node()", h.getNodeNamespace(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeNamespace' )
+            helpers.checkNodeResult( "ancestor::node()", h.getNodeNamespace(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeNamespace' )
             ] );
         } );
 
@@ -410,79 +411,77 @@ describe( 'axes', () => {
     describe( 'ancestor-or-self axis', () => {
 
         it( 'works for document context', () => {
-            checkNodeResult( "ancestor-or-self::node()", doc, [
-                doc
-            ] );
+            helpers.checkNodeResult( "ancestor-or-self::node()", g.doc, [ g.doc ] );
         } );
 
         it( 'works for documentElement context', () => {
-            checkNodeResult( "ancestor-or-self::node()", doc.documentElement, [
-                doc,
-                doc.documentElement
+            helpers.checkNodeResult( "ancestor-or-self::node()", g.doc.documentElement, [
+                g.doc,
+                g.doc.documentElement
             ] );
         } );
 
         it( 'works for an element context', () => {
-            checkNodeResult( "ancestor-or-self::node()", doc.getElementById( 'testStepAxisNodeElement' ), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeElement' )
+            helpers.checkNodeResult( "ancestor-or-self::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeElement' )
             ] );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResult( "ancestor-or-self::node()", h.getNodeAttribute(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeAttribute' ),
+            helpers.checkNodeResult( "ancestor-or-self::node()", h.getNodeAttribute(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeAttribute' ),
                 h.getNodeAttribute()
             ] );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResult( "ancestor-or-self::node()", h.getNodeCData(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeCData' ),
+            helpers.checkNodeResult( "ancestor-or-self::node()", h.getNodeCData(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeCData' ),
                 h.getNodeCData()
             ] );
         } );
 
         it( 'works for a comment context', () => {
-            checkNodeResult( "ancestor-or-self::node()", h.getNodeComment(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeComment' ),
+            helpers.checkNodeResult( "ancestor-or-self::node()", h.getNodeComment(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeComment' ),
                 h.getNodeComment()
             ] );
         } );
 
         it( 'works for processingInstruction context', () => {
-            checkNodeResult( "ancestor-or-self::node()", h.getNodeProcessingInstruction(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeProcessingInstruction' ),
+            helpers.checkNodeResult( "ancestor-or-self::node()", h.getNodeProcessingInstruction(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeProcessingInstruction' ),
                 h.getNodeProcessingInstruction()
             ] );
         } );
 
         xit( 'works for namespace context', () => {
-            checkNodeResult( "ancestor-or-self::node()", h.getNodeNamespace(), [
-                doc,
-                doc.documentElement,
-                doc.querySelector( 'body' ),
-                doc.getElementById( 'StepAxisCase' ),
-                doc.getElementById( 'testStepAxisNodeNamespace' ),
+            helpers.checkNodeResult( "ancestor-or-self::node()", h.getNodeNamespace(), [
+                g.doc,
+                g.doc.documentElement,
+                g.doc.querySelector( 'body' ),
+                g.doc.getElementById( 'StepAxisCase' ),
+                g.doc.getElementById( 'testStepAxisNodeNamespace' ),
                 h.getNodeNamespace()
             ] );
         } );
@@ -492,35 +491,35 @@ describe( 'axes', () => {
     describe( 'following-sibling axis', () => {
 
         it( 'works for a document context', () => {
-            checkNodeResult( "following-sibling::node()", doc, [] );
+            helpers.checkNodeResult( "following-sibling::node()", g.doc, [] );
         } );
 
         it( 'works for a documentElement context', () => {
-            checkNodeResult( "following-sibling::node()", doc.documentElement, h.followingSiblingNodes( doc.documentElement ) );
+            helpers.checkNodeResult( "following-sibling::node()", g.doc.documentElement, h.followingSiblingNodes( g.doc.documentElement ) );
         } );
 
         it( 'works for an element: context', () => {
-            checkNodeResult( "following-sibling::node()", doc.getElementById( 'testStepAxisNodeElement' ), h.followingSiblingNodes( doc.getElementById( 'testStepAxisNodeElement' ) ) );
+            helpers.checkNodeResult( "following-sibling::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), h.followingSiblingNodes( g.doc.getElementById( 'testStepAxisNodeElement' ) ) );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResult( "following-sibling::node()", h.getNodeAttribute(), [] );
+            helpers.checkNodeResult( "following-sibling::node()", h.getNodeAttribute(), [] );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResult( "following-sibling::node()", h.getNodeCData(), h.followingSiblingNodes( h.getNodeCData() ) );
+            helpers.checkNodeResult( "following-sibling::node()", h.getNodeCData(), h.followingSiblingNodes( h.getNodeCData() ) );
         } );
 
         it( 'works for a comment context', () => {
-            checkNodeResult( "following-sibling::node()", h.getNodeComment(), h.followingSiblingNodes( h.getNodeComment() ) );
+            helpers.checkNodeResult( "following-sibling::node()", h.getNodeComment(), h.followingSiblingNodes( h.getNodeComment() ) );
         } );
 
         it( 'works for a processing instruction', () => {
-            checkNodeResult( "following-sibling::node()", h.getNodeProcessingInstruction(), h.followingSiblingNodes( h.getNodeProcessingInstruction() ) );
+            helpers.checkNodeResult( "following-sibling::node()", h.getNodeProcessingInstruction(), h.followingSiblingNodes( h.getNodeProcessingInstruction() ) );
         } );
 
         xit( 'works for a namespace context', () => {
-            checkNodeResult( "following-sibling::node()", h.getNodeNamespace(), [] );
+            helpers.checkNodeResult( "following-sibling::node()", h.getNodeNamespace(), [] );
         } );
 
     } );
@@ -529,35 +528,35 @@ describe( 'axes', () => {
     describe( 'preceding-sibling axis', () => {
 
         it( 'works for a document context', () => {
-            checkNodeResult( "preceding-sibling::node()", doc, [] );
+            helpers.checkNodeResult( "preceding-sibling::node()", g.doc, [] );
         } );
 
         it( 'works for a documentElement context', () => {
-            checkNodeResult( "preceding-sibling::node()", doc.documentElement, h.precedingSiblingNodes( doc.documentElement ) );
+            helpers.checkNodeResult( "preceding-sibling::node()", g.doc.documentElement, h.precedingSiblingNodes( g.doc.documentElement ) );
         } );
 
         it( 'works for a Element context', () => {
-            checkNodeResult( "preceding-sibling::node()", doc.getElementById( 'testStepAxisNodeElement' ), h.precedingSiblingNodes( doc.getElementById( 'testStepAxisNodeElement' ) ) );
+            helpers.checkNodeResult( "preceding-sibling::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), h.precedingSiblingNodes( g.doc.getElementById( 'testStepAxisNodeElement' ) ) );
         } );
 
         it( 'works for a Attribute context', () => {
-            checkNodeResult( "preceding-sibling::node()", h.getNodeAttribute(), [] );
+            helpers.checkNodeResult( "preceding-sibling::node()", h.getNodeAttribute(), [] );
         } );
 
         it( 'works for a CData context', () => {
-            checkNodeResult( "preceding-sibling::node()", h.getNodeCData(), h.precedingSiblingNodes( h.getNodeCData() ) );
+            helpers.checkNodeResult( "preceding-sibling::node()", h.getNodeCData(), h.precedingSiblingNodes( h.getNodeCData() ) );
         } );
 
         it( 'works for a Comment context', () => {
-            checkNodeResult( "preceding-sibling::node()", h.getNodeComment(), h.precedingSiblingNodes( h.getNodeComment() ) );
+            helpers.checkNodeResult( "preceding-sibling::node()", h.getNodeComment(), h.precedingSiblingNodes( h.getNodeComment() ) );
         } );
 
         it( 'works for a ProcessingInstruction context', () => {
-            checkNodeResult( "preceding-sibling::node()", h.getNodeProcessingInstruction(), h.precedingSiblingNodes( h.getNodeProcessingInstruction() ) );
+            helpers.checkNodeResult( "preceding-sibling::node()", h.getNodeProcessingInstruction(), h.precedingSiblingNodes( h.getNodeProcessingInstruction() ) );
         } );
 
         xit( 'works for a Namespace context', () => {
-            checkNodeResult( "preceding-sibling::node()", h.getNodeNamespace(), [] );
+            helpers.checkNodeResult( "preceding-sibling::node()", h.getNodeNamespace(), [] );
         } );
 
     } );
@@ -565,35 +564,35 @@ describe( 'axes', () => {
     describe( 'following axis', () => {
 
         it( 'works for a document context', () => {
-            checkNodeResult( "following::node()", doc, [] );
+            helpers.checkNodeResult( "following::node()", g.doc, [] );
         } );
 
         it( 'works for a documentElement context', () => {
-            checkNodeResult( "following::node()", doc.documentElement, h.followingNodes( doc.documentElement ) );
+            helpers.checkNodeResult( "following::node()", g.doc.documentElement, h.followingNodes( g.doc.documentElement ) );
         } );
 
         it( 'works for an element context', () => {
-            checkNodeResult( "following::node()", doc.getElementById( 'testStepAxisNodeElement' ), h.followingNodes( doc.getElementById( 'testStepAxisNodeElement' ) ) );
+            helpers.checkNodeResult( "following::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), h.followingNodes( g.doc.getElementById( 'testStepAxisNodeElement' ) ) );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResult( "following::node()", h.getNodeAttribute(), h.followingNodes( doc.getElementById( 'testStepAxisNodeAttribute' ) ) );
+            helpers.checkNodeResult( "following::node()", h.getNodeAttribute(), h.followingNodes( g.doc.getElementById( 'testStepAxisNodeAttribute' ) ) );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResult( "following::node()", h.getNodeCData(), h.followingNodes( h.getNodeCData() ) );
+            helpers.checkNodeResult( "following::node()", h.getNodeCData(), h.followingNodes( h.getNodeCData() ) );
         } );
 
         it( 'works for a comment context', () => {
-            checkNodeResult( "following::node()", h.getNodeComment(), h.followingNodes( h.getNodeComment() ) );
+            helpers.checkNodeResult( "following::node()", h.getNodeComment(), h.followingNodes( h.getNodeComment() ) );
         } );
 
         it( 'works for a processing instruction context', () => {
-            checkNodeResult( "following::node()", h.getNodeProcessingInstruction(), h.followingNodes( h.getNodeProcessingInstruction() ) );
+            helpers.checkNodeResult( "following::node()", h.getNodeProcessingInstruction(), h.followingNodes( h.getNodeProcessingInstruction() ) );
         } );
 
         xit( 'works for a namespace context', () => {
-            checkNodeResult( "following::node()", h.getNodeNamespace(), h.followingNodes( doc.getElementById( 'testStepAxisNodeNamespace' ) ) );
+            helpers.checkNodeResult( "following::node()", h.getNodeNamespace(), h.followingNodes( g.doc.getElementById( 'testStepAxisNodeNamespace' ) ) );
         } );
 
     } );
@@ -601,35 +600,35 @@ describe( 'axes', () => {
     describe( 'preceding axis', () => {
 
         it( 'works for a document context', () => {
-            checkNodeResult( "preceding::node()", doc, [] );
+            helpers.checkNodeResult( "preceding::node()", g.doc, [] );
         } );
 
         it( 'works for a documentElement context', () => {
-            checkNodeResult( "preceding::node()", doc.documentElement, h.precedingNodes( doc.documentElement ) );
+            helpers.checkNodeResult( "preceding::node()", g.doc.documentElement, h.precedingNodes( g.doc.documentElement ) );
         } );
 
         it( 'works for an element context', () => {
-            checkNodeResult( "preceding::node()", doc.getElementById( 'testStepAxisNodeElement' ), h.precedingNodes( doc.getElementById( 'testStepAxisNodeElement' ) ) );
+            helpers.checkNodeResult( "preceding::node()", g.doc.getElementById( 'testStepAxisNodeElement' ), h.precedingNodes( g.doc.getElementById( 'testStepAxisNodeElement' ) ) );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResult( "preceding::node()", h.getNodeAttribute(), h.precedingNodes( doc.getElementById( 'testStepAxisNodeAttribute' ) ) );
+            helpers.checkNodeResult( "preceding::node()", h.getNodeAttribute(), h.precedingNodes( g.doc.getElementById( 'testStepAxisNodeAttribute' ) ) );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResult( "preceding::node()", h.getNodeCData(), h.precedingNodes( h.getNodeCData() ) );
+            helpers.checkNodeResult( "preceding::node()", h.getNodeCData(), h.precedingNodes( h.getNodeCData() ) );
         } );
 
         it( 'works for a Comment context', () => {
-            checkNodeResult( "preceding::node()", h.getNodeComment(), h.precedingNodes( h.getNodeComment() ) );
+            helpers.checkNodeResult( "preceding::node()", h.getNodeComment(), h.precedingNodes( h.getNodeComment() ) );
         } );
 
         it( 'works for a processing instruction context', () => {
-            checkNodeResult( "preceding::node()", h.getNodeProcessingInstruction(), h.precedingNodes( h.getNodeProcessingInstruction() ) );
+            helpers.checkNodeResult( "preceding::node()", h.getNodeProcessingInstruction(), h.precedingNodes( h.getNodeProcessingInstruction() ) );
         } );
 
         xit( 'works for a Namespace context', () => {
-            checkNodeResult( "preceding::node()", h.getNodeNamespace(), h.precedingNodes( doc.getElementById( 'testStepAxisNodeNamespace' ) ) );
+            helpers.checkNodeResult( "preceding::node()", h.getNodeNamespace(), h.precedingNodes( g.doc.getElementById( 'testStepAxisNodeNamespace' ) ) );
         } );
 
     } );
@@ -637,43 +636,43 @@ describe( 'axes', () => {
     describe( 'attribute axis', () => {
 
         it( 'works for a document context', () => {
-            checkNodeResult( "attribute::node()", doc, [] );
+            helpers.checkNodeResult( "attribute::node()", g.doc, [] );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResult( "attribute::node()", h.getNodeAttribute(), [] );
+            helpers.checkNodeResult( "attribute::node()", h.getNodeAttribute(), [] );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResult( "attribute::node()", h.getNodeCData(), [] );
+            helpers.checkNodeResult( "attribute::node()", h.getNodeCData(), [] );
         } );
 
         it( 'works for a comment context', () => {
-            checkNodeResult( "attribute::node()", h.getNodeComment(), [] );
+            helpers.checkNodeResult( "attribute::node()", h.getNodeComment(), [] );
         } );
 
         it( 'works for a processing instruction context', () => {
-            checkNodeResult( "attribute::node()", h.getNodeProcessingInstruction(), [] );
+            helpers.checkNodeResult( "attribute::node()", h.getNodeProcessingInstruction(), [] );
         } );
 
         xit( 'works for a namespace context', () => {
-            checkNodeResult( "attribute::node()", h.getNodeNamespace(), [] );
+            helpers.checkNodeResult( "attribute::node()", h.getNodeNamespace(), [] );
         } );
 
         it( 'works for a 0 context', () => {
-            checkNodeResult( "attribute::node()", doc.getElementById( 'testStepAxisNodeAttribute0' ), filterAttributes( doc.getElementById( 'testStepAxisNodeAttribute0' ).attributes ) );
+            helpers.checkNodeResult( "attribute::node()", g.doc.getElementById( 'testStepAxisNodeAttribute0' ), helpers.filterAttributes( g.doc.getElementById( 'testStepAxisNodeAttribute0' ).attributes ) );
         } );
 
         it( 'works for a 1 context', () => {
-            checkNodeResult( "attribute::node()", doc.getElementById( 'testStepAxisNodeAttribute1' ), filterAttributes( doc.getElementById( 'testStepAxisNodeAttribute1' ).attributes ) );
+            helpers.checkNodeResult( "attribute::node()", g.doc.getElementById( 'testStepAxisNodeAttribute1' ), helpers.filterAttributes( g.doc.getElementById( 'testStepAxisNodeAttribute1' ).attributes ) );
         } );
 
         it( 'works for a 3: context', () => {
-            checkNodeResult( "attribute::node()", doc.getElementById( 'testStepAxisNodeAttribute3' ), filterAttributes( doc.getElementById( 'testStepAxisNodeAttribute3' ).attributes ) );
+            helpers.checkNodeResult( "attribute::node()", g.doc.getElementById( 'testStepAxisNodeAttribute3' ), helpers.filterAttributes( g.doc.getElementById( 'testStepAxisNodeAttribute3' ).attributes ) );
         } );
 
         it( 'works for a StartXml context', () => {
-            checkNodeResult( "attribute::node()", doc.getElementById( 'testStepAxisNodeAttributeStartXml' ), filterAttributes( doc.getElementById( 'testStepAxisNodeAttributeStartXml' ).attributes ) );
+            helpers.checkNodeResult( "attribute::node()", g.doc.getElementById( 'testStepAxisNodeAttributeStartXml' ), helpers.filterAttributes( g.doc.getElementById( 'testStepAxisNodeAttributeStartXml' ).attributes ) );
         } );
 
     } );
@@ -681,31 +680,31 @@ describe( 'axes', () => {
     describe( 'namespace axis', () => {
 
         it( 'works for a document context', () => {
-            checkNodeResultNamespace( "namespace::node()", doc, [] );
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc, [] );
         } );
 
         it( 'works for an attribute context', () => {
-            checkNodeResultNamespace( "namespace::node()", h.getNodeAttribute(), [] );
+            helpers.checkNodeResultNamespace( "namespace::node()", h.getNodeAttribute(), [] );
         } );
 
         it( 'works for a CDATA context', () => {
-            checkNodeResultNamespace( "namespace::node()", h.getNodeCData(), [] );
+            helpers.checkNodeResultNamespace( "namespace::node()", h.getNodeCData(), [] );
         } );
 
         it( 'works for a comment context', () => {
-            checkNodeResultNamespace( "namespace::node()", h.getNodeComment(), [] );
+            helpers.checkNodeResultNamespace( "namespace::node()", h.getNodeComment(), [] );
         } );
 
         it( 'works for a processing instruction context', () => {
-            checkNodeResultNamespace( "namespace::node()", h.getNodeProcessingInstruction(), [] );
+            helpers.checkNodeResultNamespace( "namespace::node()", h.getNodeProcessingInstruction(), [] );
         } );
 
         it( 'works for a namespace context', () => {
-            checkNodeResultNamespace( "namespace::node()", h.getNodeNamespace(), [] );
+            helpers.checkNodeResultNamespace( "namespace::node()", h.getNodeNamespace(), [] );
         } );
 
         it( 'works for a document element context', () => {
-            checkNodeResultNamespace( "namespace::node()", doc.documentElement, [
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc.documentElement, [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
@@ -713,7 +712,7 @@ describe( 'axes', () => {
         } );
 
         it( 'works for a 0 context', () => {
-            checkNodeResultNamespace( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace0' ), [
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace0' ), [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
@@ -721,7 +720,7 @@ describe( 'axes', () => {
         } );
 
         it( 'works for a 1 context', () => {
-            checkNodeResultNamespace( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1' ), [
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1' ), [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'a', 'asdf' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
@@ -730,7 +729,7 @@ describe( 'axes', () => {
         } );
 
         it( 'works for a 1 default context', () => {
-            checkNodeResultNamespace( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1defaultContainer' ).firstChild, [
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1defaultContainer' ).firstChild, [
                 [ '', 'asdf' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
@@ -738,7 +737,7 @@ describe( 'axes', () => {
         } );
 
         it( 'works for a 1 default 2 context', () => {
-            checkNodeResultNamespace( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1defaultContainer2' ).firstChild, [
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1defaultContainer2' ).firstChild, [
                 [ 'ev', 'http://some-namespace.com/nss' ],
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
             ] );
@@ -746,29 +745,29 @@ describe( 'axes', () => {
 
         it( 'works for a 3 context', () => {
             const namespaces = [],
-                contextNode = doc.getElementById( 'testStepAxisNodeNamespace3' );
+                contextNode = g.doc.getElementById( 'testStepAxisNodeNamespace3' );
 
             namespaces.push( [ '', 'http://www.w3.org/1999/xhtml' ] );
-            parseNamespacesFromAttributes( contextNode.attributes, namespaces );
+            helpers.parseNamespacesFromAttributes( contextNode.attributes, namespaces );
             namespaces.push( [ 'ev', 'http://some-namespace.com/nss' ] );
             namespaces.push( [ 'xml', 'http://www.w3.org/XML/1998/namespace' ] );
 
-            checkNodeResultNamespace( "namespace::node()", contextNode, namespaces );
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, namespaces );
         } );
 
         it( 'works for a 3 default context', () => {
             const namespaces = [],
-                contextNode = doc.getElementById( 'testStepAxisNodeNamespace3defaultContainer' ).firstChild;
+                contextNode = g.doc.getElementById( 'testStepAxisNodeNamespace3defaultContainer' ).firstChild;
 
-            parseNamespacesFromAttributes( contextNode.attributes, namespaces );
+            helpers.parseNamespacesFromAttributes( contextNode.attributes, namespaces );
             namespaces.push( [ 'ev', 'http://some-namespace.com/nss' ] );
             namespaces.push( [ 'xml', 'http://www.w3.org/XML/1998/namespace' ] );
 
-            checkNodeResultNamespace( "namespace::node()", contextNode, namespaces );
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, namespaces );
         } );
 
         it( 'works with an element context that overrides the namespace', () => {
-            checkNodeResultNamespace( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespaceXmlOverride' ), [
+            helpers.checkNodeResultNamespace( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespaceXmlOverride' ), [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'ev', 'http://some-other-namespace/' ],
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
@@ -785,8 +784,8 @@ describe( 'axes', () => {
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
             ];
 
-            result = documentEvaluate( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1' ), null, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
-            result2 = documentEvaluate( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1b' ), null, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null ); //
+            result = g.doc.evaluate( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1' ), null, g.win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
+            result2 = g.doc.evaluate( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1b' ), null, g.win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null ); //
             expect( result.snapshotLength ).to.equal( expectedResult.length );
             expect( result2.snapshotLength ).to.equal( expectedResult.length );
 
@@ -817,8 +816,8 @@ describe( 'axes', () => {
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
             ];
 
-            result = documentEvaluate( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1' ), null, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
-            result2 = documentEvaluate( "namespace::node()", doc.getElementById( 'testStepAxisNodeNamespace1' ), null, win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
+            result = g.doc.evaluate( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1' ), null, g.win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
+            result2 = g.doc.evaluate( "namespace::node()", g.doc.getElementById( 'testStepAxisNodeNamespace1' ), null, g.win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
 
             for ( j = 0; j < result.snapshotLength; j++ ) {
                 item = result.snapshotItem( j );
@@ -840,7 +839,7 @@ describe( 'axes', () => {
             let i;
             let contextNode;
 
-            contextNode = doc.getElementById( 'testStepAxisNodeAttrib1Ns1' );
+            contextNode = g.doc.getElementById( 'testStepAxisNodeAttrib1Ns1' );
 
             for ( i = 0; i < contextNode.attributes.length; i++ ) {
                 if ( !contextNode.attributes[ i ].specified ) {
@@ -851,9 +850,9 @@ describe( 'axes', () => {
                 }
             }
 
-            checkNodeResult( "attribute::node()", contextNode, attributes ); //
+            helpers.checkNodeResult( "attribute::node()", contextNode, attributes ); //
 
-            checkNodeResultNamespace( "namespace::node()", contextNode, [
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'a', 'asdf' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
@@ -866,7 +865,7 @@ describe( 'axes', () => {
             let i;
             let contextNode;
 
-            contextNode = doc.getElementById( 'testStepAxisNodeAttrib1Ns1reversed' );
+            contextNode = g.doc.getElementById( 'testStepAxisNodeAttrib1Ns1reversed' );
 
             for ( i = 0; i < contextNode.attributes.length; i++ ) {
                 if ( !contextNode.attributes[ i ].specified ) {
@@ -877,9 +876,9 @@ describe( 'axes', () => {
                 }
             }
 
-            checkNodeResult( "attribute::node()", contextNode, attributes );
+            helpers.checkNodeResult( "attribute::node()", contextNode, attributes );
 
-            checkNodeResultNamespace( "namespace::node()", contextNode, [
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'a', 'asdf' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
@@ -892,7 +891,7 @@ describe( 'axes', () => {
             let i;
             let contextNode;
 
-            contextNode = doc.getElementById( 'testStepAxisNodeAttrib2Ns1' );
+            contextNode = g.doc.getElementById( 'testStepAxisNodeAttrib2Ns1' );
 
             for ( i = 0; i < contextNode.attributes.length; i++ ) {
                 if ( !contextNode.attributes[ i ].specified ) {
@@ -903,8 +902,8 @@ describe( 'axes', () => {
                 }
             }
 
-            checkNodeResult( "attribute::node()", contextNode, attributes ); //
-            checkNodeResultNamespace( "namespace::node()", contextNode, [
+            helpers.checkNodeResult( "attribute::node()", contextNode, attributes ); //
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, [
                 [ '', 'http://www.w3.org/1999/xhtml' ],
                 [ 'c', 'asdf3' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
@@ -917,7 +916,7 @@ describe( 'axes', () => {
             let i;
             let contextNode;
 
-            contextNode = doc.getElementById( 'testStepAxisNodeAttrib2Ns1reversedContainer' ).firstChild;
+            contextNode = g.doc.getElementById( 'testStepAxisNodeAttrib2Ns1reversedContainer' ).firstChild;
 
             for ( i = 0; i < contextNode.attributes.length; i++ ) {
                 if ( !contextNode.attributes[ i ].specified ) {
@@ -928,9 +927,9 @@ describe( 'axes', () => {
                 }
             }
 
-            checkNodeResult( "attribute::node()", contextNode, attributes );
+            helpers.checkNodeResult( "attribute::node()", contextNode, attributes );
 
-            checkNodeResultNamespace( "namespace::node()", contextNode, [
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, [
                 [ '', 'asdf' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],
                 [ 'xml', 'http://www.w3.org/XML/1998/namespace' ]
@@ -942,7 +941,7 @@ describe( 'axes', () => {
             let i;
             let contextNode;
 
-            contextNode = doc.getElementById( 'testStepAxisNodeAttrib2Ns2Container' ).firstChild;
+            contextNode = g.doc.getElementById( 'testStepAxisNodeAttrib2Ns2Container' ).firstChild;
 
             for ( i = 0; i < contextNode.attributes.length; i++ ) {
                 if ( !contextNode.attributes[ i ].specified ) {
@@ -953,9 +952,9 @@ describe( 'axes', () => {
                 }
             }
 
-            checkNodeResult( "attribute::node()", contextNode, attributes );
+            helpers.checkNodeResult( "attribute::node()", contextNode, attributes );
 
-            checkNodeResultNamespace( "namespace::node()", contextNode, [
+            helpers.checkNodeResultNamespace( "namespace::node()", contextNode, [
                 [ '', 'asdf2' ],
                 [ 'a', 'asdf' ],
                 [ 'ev', 'http://some-namespace.com/nss' ],

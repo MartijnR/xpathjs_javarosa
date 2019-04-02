@@ -1,97 +1,100 @@
 // TODO: move these to nodeset-native.spec.js? Why are these separate?
 
+import { g } from '../docwin';
+import helpers from '../helpers';
+
 describe( 'nodeset id() function', () => {
 
     it( 'works for a simple case', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdCaseSimple' );
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdCaseSimple' );
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdCaseSimple')", doc, [
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseSimple')", g.doc, [
             node
         ] );
     } );
 
     it( 'works if ID is provided in duplicate', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdCaseSimple' );
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdCaseSimple' );
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdCaseSimple FunctionNodesetIdCaseSimple')", doc, [
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseSimple FunctionNodesetIdCaseSimple')", g.doc, [
             node
         ] );
     } );
 
     it( 'returns empty result for non-existing ID', () => {
-        checkNodeResult( "id('FunctionNodesetIdCaseSimpleDoesNotExist')", doc, [] );
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseSimpleDoesNotExist')", g.doc, [] );
     } );
 
     it( 'returns empty result if the default namespace for the node is empty', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdCaseNoDefaultNamespaceContainer' ).firstChild;
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdCaseNoDefaultNamespaceContainer' ).firstChild;
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdCaseNoDefaultNamespace')", doc, [] );
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseNoDefaultNamespace')", g.doc, [] );
     } );
 
     it( 'works if the default namespace for the node is the XHTML namespace', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdCaseXhtmlDefaultNamespaceContainer' ).firstChild;
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlDefaultNamespaceContainer' ).firstChild;
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdCaseXhtmlDefaultNamespace')", doc, [
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseXhtmlDefaultNamespace')", g.doc, [
             node
         ] );
     } );
 
     it( 'works if the namespace of the id attribute is the XHTML namespace', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceContainer' ).firstChild;
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceContainer' ).firstChild;
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdCaseXhtmlNamespace')", doc, [
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseXhtmlNamespace')", g.doc, [
             node
         ] );
     } );
 
     it( 'works if the namespace of the id attribute is defined in the parent container', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceParentContainer' ).firstChild;
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceParentContainer' ).firstChild;
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdCaseXhtmlNamespaceParent')", doc, [
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseXhtmlNamespaceParent')", g.doc, [
             node
         ] );
     } );
 
     it( 'works if the id attribute has the xml namespace alias', () => {
-        const node = doc.getElementById( 'FunctionNodesetIdXmlNamespaceContainer' ).firstChild;
-        expect( node ).to.be.an( 'object' );
+        const node = g.doc.getElementById( 'FunctionNodesetIdXmlNamespaceContainer' ).firstChild;
+        expect( typeof node ).to.equal( 'object' );
 
-        checkNodeResult( "id('FunctionNodesetIdXmlNamespace')", doc, [
+        helpers.checkNodeResult( "id('FunctionNodesetIdXmlNamespace')", g.doc, [
             node
         ] );
     } );
 
     it( 'works if multiple space-separated IDs are provided as the parameter', () => {
-        checkNodeResult( "id('FunctionNodesetIdCaseMultiple1 FunctionNodesetIdCaseMultiple2 FunctionNodesetIdCaseMultiple3')", doc, [
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple1' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple2' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple3' )
+        helpers.checkNodeResult( "id('FunctionNodesetIdCaseMultiple1 FunctionNodesetIdCaseMultiple2 FunctionNodesetIdCaseMultiple3')", g.doc, [
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple1' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple2' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple3' )
         ] );
     } );
 
     it( 'works if multiple space/newline/table-separated IDs are provided as the parameter', () => {
-        checkNodeResult( "id('  FunctionNodesetIdCaseMultiple1 sss FunctionNodesetIdCaseMultiple2\r\n\tFunctionNodesetIdCaseMultiple3\t')", doc, [
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple1' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple2' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple3' )
+        helpers.checkNodeResult( "id('  FunctionNodesetIdCaseMultiple1 sss FunctionNodesetIdCaseMultiple2\r\n\tFunctionNodesetIdCaseMultiple3\t')", g.doc, [
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple1' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple2' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple3' )
         ] );
     } );
 
     it( 'works if a nodeset is provided as the argument (by using the content of the nodeset)', () => {
-        checkNodeResult( "id(.)", doc.getElementById( 'FunctionNodesetIdCaseNodeset' ), [] );
+        helpers.checkNodeResult( "id(.)", g.doc.getElementById( 'FunctionNodesetIdCaseNodeset' ), [] );
 
         // this test is tricky, the argument is the CONTENT of the FunctionNodesetIdCaseNodeset element!
-        checkNodeResult( "id(child::*)", doc.getElementById( 'FunctionNodesetIdCaseNodeset' ), [
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple1' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple2' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple3' ),
-            doc.getElementById( 'FunctionNodesetIdCaseMultiple4' )
+        helpers.checkNodeResult( "id(child::*)", g.doc.getElementById( 'FunctionNodesetIdCaseNodeset' ), [
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple1' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple2' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple3' ),
+            g.doc.getElementById( 'FunctionNodesetIdCaseMultiple4' )
         ] );
     } );
 } );

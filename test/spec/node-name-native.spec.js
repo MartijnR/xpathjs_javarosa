@@ -1,7 +1,11 @@
+import { g } from '../docwin';
+import helpers from '../helpers';
+
 describe( 'node name for', () => {
     let h;
 
     before( () => {
+
 
         h = {
             filterElementNodes( nodes ) {
@@ -20,42 +24,42 @@ describe( 'node name for', () => {
     } );
 
     it( 'any attribute', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
-        checkNodeResult( "attribute::*", node, filterAttributes( node.attributes ) );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
+        helpers.checkNodeResult( "attribute::*", node, helpers.filterAttributes( node.attributes ) );
     } );
 
     it( 'any namespace', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestNamespace' ),
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestNamespace' ),
             namespaces = [];
 
         namespaces.push( [ '', 'http://www.w3.org/1999/xhtml' ] );
-        parseNamespacesFromAttributes( node.attributes, namespaces );
+        helpers.parseNamespacesFromAttributes( node.attributes, namespaces );
         namespaces.push( [ 'ev', 'http://some-namespace.com/nss' ] );
         namespaces.push( [ 'xml', 'http://www.w3.org/XML/1998/namespace' ] );
 
-        checkNodeResultNamespace( "namespace::*", node, namespaces );
+        helpers.checkNodeResultNamespace( "namespace::*", node, namespaces );
     } );
 
     it( 'any child', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestChild' );
-        checkNodeResult( "child::*", node, h.filterElementNodes( node.childNodes ) );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestChild' );
+        helpers.checkNodeResult( "child::*", node, h.filterElementNodes( node.childNodes ) );
     } );
 
     it( 'any ancestor-or-self', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestAttribute' ),
-            attributes = filterAttributes( node.attributes );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestAttribute' ),
+            attributes = helpers.filterAttributes( node.attributes );
 
-        checkNodeResult( "ancestor-or-self::*", attributes[ 0 ], [
-            doc.documentElement,
-            doc.querySelector( 'body' ),
-            doc.getElementById( 'StepNodeTestCaseNameTest' ),
-            doc.getElementById( 'StepNodeTestCaseNameTestAttribute' )
+        helpers.checkNodeResult( "ancestor-or-self::*", attributes[ 0 ], [
+            g.doc.documentElement,
+            g.doc.querySelector( 'body' ),
+            g.doc.getElementById( 'StepNodeTestCaseNameTest' ),
+            g.doc.getElementById( 'StepNodeTestCaseNameTestAttribute' )
         ] );
     } );
 
     it( 'any attribute with specific namespace', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
-        const attributes = filterAttributes( node.attributes );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
+        const attributes = helpers.filterAttributes( node.attributes );
         let i;
         let name;
 
@@ -69,16 +73,16 @@ describe( 'node name for', () => {
 
         expect( attributes ).to.have.length( 2 );
 
-        checkNodeResult( "attribute::ev:*", node, attributes, helpers.xhtmlResolver );
+        helpers.checkNodeResult( "attribute::ev:*", node, attributes, helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'any namespace with a specific namespace (?)', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
-        checkNodeResultNamespace( "namespace::ns2:*", node, [], helpers.xhtmlResolver );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
+        helpers.checkNodeResultNamespace( "namespace::ns2:*", node, [], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'any child with specific namespace', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestChild' );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestChild' );
         let nodesFinal = [];
 
         nodesFinal = [
@@ -87,12 +91,12 @@ describe( 'node name for', () => {
             node.childNodes[ 2 ]
         ];
 
-        checkNodeResult( "child::ns2:*", node, nodesFinal, helpers.xhtmlResolver );
+        helpers.checkNodeResult( "child::ns2:*", node, nodesFinal, helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'attribute with a specific name and namespace', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
-        const attributes = filterAttributes( node.attributes );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
+        const attributes = helpers.filterAttributes( node.attributes );
         let i;
         let name;
 
@@ -105,16 +109,16 @@ describe( 'node name for', () => {
 
         expect( attributes ).to.have.length( 1 );
 
-        checkNodeResult( "attribute::ev:attrib2", node, attributes, helpers.xhtmlResolver );
+        helpers.checkNodeResult( "attribute::ev:attrib2", node, attributes, helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'specific namespace with a specific namespace', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
-        checkNodeResultNamespace( "namespace::ns2:ns2", node, [], helpers.xhtmlResolver );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
+        helpers.checkNodeResultNamespace( "namespace::ns2:ns2", node, [], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'specific child name with a specific namespace', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestChild' );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestChild' );
         let nodesFinal = [];
 
         nodesFinal = [
@@ -122,12 +126,12 @@ describe( 'node name for', () => {
             node.childNodes[ 1 ]
         ];
 
-        checkNodeResult( "child::ns2:div", node, nodesFinal, helpers.xhtmlResolver );
+        helpers.checkNodeResult( "child::ns2:div", node, nodesFinal, helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'attribute with a specific name', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
-        const attributes = filterAttributes( node.attributes );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestAttribute' );
+        const attributes = helpers.filterAttributes( node.attributes );
         let i;
         let name;
 
@@ -141,38 +145,38 @@ describe( 'node name for', () => {
 
         expect( attributes ).to.have.length( 1 );
 
-        checkNodeResult( "attribute::attrib3", node, attributes, helpers.xhtmlResolver );
+        helpers.checkNodeResult( "attribute::attrib3", node, attributes, helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'namespace with specific name', () => {
-        const node = doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
+        const node = g.doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
 
-        checkNodeResultNamespace( "namespace::ns2", node, [
+        helpers.checkNodeResultNamespace( "namespace::ns2", node, [
             [
                 'ns2',
                 'http://asdf/'
             ]
-        ], helpers.xhtmlResolver );
+        ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'child with specific (namespaced) name', () => {
-        checkNodeResult( "child::html", doc, [], helpers.xhtmlResolver );
-        checkNodeResult( "child::xhtml:html", doc, [ doc.documentElement ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "child::html", g.doc, [], helpers.getXhtmlResolver( g.doc ) );
+        helpers.checkNodeResult( "child::xhtml:html", g.doc, [ g.doc.documentElement ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'ancestor with specific name and namespace', () => {
-        checkNodeResult( "ancestor::xhtml:div", doc.getElementById( 'StepNodeTestCaseNameTest3' ), [
-            doc.getElementById( 'StepNodeTestCaseNameTest' ),
-            doc.getElementById( 'StepNodeTestCaseNameTest1' ),
-            doc.getElementById( 'StepNodeTestCaseNameTest2' )
-        ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "ancestor::xhtml:div", g.doc.getElementById( 'StepNodeTestCaseNameTest3' ), [
+            g.doc.getElementById( 'StepNodeTestCaseNameTest' ),
+            g.doc.getElementById( 'StepNodeTestCaseNameTest1' ),
+            g.doc.getElementById( 'StepNodeTestCaseNameTest2' )
+        ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
     it( 'ancestor with specific name without a default namespace', () => {
-        checkNodeResult( "ancestor::div", doc.getElementById( 'StepNodeTestCaseNameTestNoNamespace' ).firstChild.firstChild.firstChild, [
-            doc.getElementById( 'StepNodeTestCaseNameTestNoNamespace' ).firstChild,
-            doc.getElementById( 'StepNodeTestCaseNameTestNoNamespace' ).firstChild.firstChild
-        ], helpers.xhtmlResolver );
+        helpers.checkNodeResult( "ancestor::div", g.doc.getElementById( 'StepNodeTestCaseNameTestNoNamespace' ).firstChild.firstChild.firstChild, [
+            g.doc.getElementById( 'StepNodeTestCaseNameTestNoNamespace' ).firstChild,
+            g.doc.getElementById( 'StepNodeTestCaseNameTestNoNamespace' ).firstChild.firstChild
+        ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
 } );

@@ -1,9 +1,12 @@
+import { g } from '../docwin';
+import helpers from '../helpers';
+
 describe( 'native number functions', () => {
 
     describe( 'number() conversion of convertible numbers, strings, booleans', () => {
         const test = t => {
             it( `works for ${t[0]}`, () => {
-                const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+                const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
                 expect( result.numberValue ).to.equal( t[ 1 ] );
             } );
         };
@@ -51,7 +54,7 @@ describe( 'native number functions', () => {
             [ "number('.1sd')", NaN ],
             [ "number(' . ')", NaN ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.be.a( 'number' );
             expect( result.numberValue ).to.deep.equal( NaN );
         } );
@@ -59,18 +62,18 @@ describe( 'native number functions', () => {
 
     it( 'number() conversion of nodesets', () => {
         [
-            [ "number(self::node())", doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ],
-            [ "number(*)", doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), -10 ],
-            [ "number()", doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ]
+            [ "number(self::node())", g.doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ],
+            [ "number(*)", g.doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), -10 ],
+            [ "number()", g.doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], t[ 1 ], null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.equal( t[ 2 ] );
         } );
 
         [
-            [ "number()", doc.getElementById( 'FunctionNumberCaseNotNumber' ) ]
+            [ "number()", g.doc.getElementById( 'FunctionNumberCaseNotNumber' ) ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], t[ 1 ], null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.be.a( 'number' );
             expect( result.numberValue ).to.deep.equal( NaN );
         } );
@@ -78,25 +81,25 @@ describe( 'native number functions', () => {
 
     it( 'number() conversion fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "number(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "number(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'sum()', () => {
         [
-            [ "sum(self::*)", doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ],
-            [ "sum(*)", doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), 100 ]
+            [ "sum(self::*)", g.doc.getElementById( 'FunctionNumberCaseNumber' ), 123 ],
+            [ "sum(*)", g.doc.getElementById( 'FunctionNumberCaseNumberMultiple' ), 100 ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], t[ 1 ], null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.equal( t[ 2 ] );
         } );
 
         [
-            [ "sum(node())", doc.getElementById( 'FunctionNumberCaseNotNumberMultiple' ) ],
-            [ "sum(*)", doc.getElementById( 'FunctionSumCaseJavarosa' ) ]
+            [ "sum(node())", g.doc.getElementById( 'FunctionNumberCaseNotNumberMultiple' ) ],
+            [ "sum(*)", g.doc.getElementById( 'FunctionSumCaseJavarosa' ) ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], t[ 1 ], null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], t[ 1 ], null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.be.a( 'number' );
             expect( result.numberValue ).to.deep.equal( NaN );
         } );
@@ -104,16 +107,16 @@ describe( 'native number functions', () => {
 
     it( 'sum() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "sum(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "sum(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'sum() fails when too few arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "sum()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "sum()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'floor()', () => {
@@ -126,23 +129,23 @@ describe( 'native number functions', () => {
             [ "floor(1.00)", 1 ],
             [ "floor(-1.05)", -2 ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'floor() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "floor(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "floor(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'floor fails when too few arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "floor()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "floor()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'ceiling()', () => {
@@ -155,23 +158,23 @@ describe( 'native number functions', () => {
             [ "ceiling(1.00)", 1 ],
             [ "ceiling(-1.05)", -1 ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.equal( t[ 1 ] );
         } );
     } );
 
     it( 'ceiling() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "ceiling(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "ceiling(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'ceiling() fails when not enough arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "ceiling()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "ceiling()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'round()', () => {
@@ -184,7 +187,7 @@ describe( 'native number functions', () => {
             [ "round(1.00)", 1 ],
             [ "round(-1.05)", -1 ]
         ].forEach( t => {
-            const result = documentEvaluate( t[ 0 ], doc, null, win.XPathResult.NUMBER_TYPE, null );
+            const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
             expect( result.numberValue ).to.equal( t[ 1 ] );
         } );
     } );
@@ -192,16 +195,16 @@ describe( 'native number functions', () => {
     // behaviour changed in OpenRosa
     xit( 'round() fails when too many arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "round(1, 2)", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "round(1, 2)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
     it( 'round() fails when too few arguments are provided', () => {
         const test = () => {
-            documentEvaluate( "round()", doc, helpers.xhtmlResolver, win.XPathResult.NUMBER_TYPE, null );
+            g.doc.evaluate( "round()", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };
-        expect( test ).to.throw( win.Error );
+        expect( test ).to.throw( g.win.Error );
     } );
 
 } );

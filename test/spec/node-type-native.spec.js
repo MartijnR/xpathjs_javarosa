@@ -1,12 +1,16 @@
+import { g } from '../docwin';
+import helpers from '../helpers';
+
 describe( 'node-type', () => {
 
+
     it( '"node" is supported', () => {
-        const node = doc.getElementById( 'StepNodeTestNodeTypeCase' );
-        checkNodeResult( "child::node()", node, node.childNodes );
+        const node = g.doc.getElementById( 'StepNodeTestNodeTypeCase' );
+        helpers.checkNodeResult( "child::node()", node, node.childNodes );
     } );
 
     it( '"text" is supported', () => {
-        const node = doc.getElementById( 'StepNodeTestNodeTypeCase' );
+        const node = g.doc.getElementById( 'StepNodeTestNodeTypeCase' );
         const nodes = [];
         let i;
 
@@ -19,11 +23,11 @@ describe( 'node-type', () => {
             }
         }
 
-        checkNodeResult( "child::text()", node, nodes );
+        helpers.checkNodeResult( "child::text()", node, nodes );
     } );
 
     it( '"comment" is supported', () => {
-        const node = doc.getElementById( 'StepNodeTestNodeTypeCase' );
+        const node = g.doc.getElementById( 'StepNodeTestNodeTypeCase' );
         const nodes = [];
         let i;
 
@@ -35,11 +39,11 @@ describe( 'node-type', () => {
             }
         }
 
-        checkNodeResult( "child::comment()", node, nodes );
+        helpers.checkNodeResult( "child::comment()", node, nodes );
     } );
 
     it( '"processing-instruction any" is supported', () => {
-        const node = doc.getElementById( 'StepNodeTestNodeTypeCase' );
+        const node = g.doc.getElementById( 'StepNodeTestNodeTypeCase' );
         const nodes = [];
         let i;
 
@@ -51,11 +55,11 @@ describe( 'node-type', () => {
             }
         }
 
-        checkNodeResult( "child::processing-instruction()", node, nodes );
+        helpers.checkNodeResult( "child::processing-instruction()", node, nodes );
     } );
 
     it( '"processing-instruction specific" is supported', () => {
-        const node = doc.getElementById( 'StepNodeTestNodeTypeCase' );
+        const node = g.doc.getElementById( 'StepNodeTestNodeTypeCase' );
         const nodes = [];
         let i;
 
@@ -69,7 +73,7 @@ describe( 'node-type', () => {
             }
         }
 
-        checkNodeResult( "child::processing-instruction('custom-process-instruct')", node, nodes );
+        helpers.checkNodeResult( "child::processing-instruction('custom-process-instruct')", node, nodes );
     } );
 
 } );
