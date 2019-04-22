@@ -2,7 +2,7 @@
 
 module.exports = function( config ) {
 
-    // Force timezone for tests, so that datetime conversion results are predictable
+    // Force timezone without DST for tests, so that datetime conversion results are predictable
     process.env.TZ = 'America/Phoenix'; //UTC-07:00
 
     config.set( {

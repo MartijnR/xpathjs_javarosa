@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.9.1] - 2019-04-24
+##### Changed
+- Tests refactored
+
+##### Fixed
+- Date strings without timezone component are not always converted correctly in timezones that have DST.
+
 [1.9.0] - 2018-12-13
 --------------------
 ##### Changed

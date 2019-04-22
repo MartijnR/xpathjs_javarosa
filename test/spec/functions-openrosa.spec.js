@@ -159,6 +159,7 @@ describe( 'Custom "OpenRosa" functions', () => {
         } );
     } );
 
+    // TODO: It would be useful to run these tests after setting the timezone to one that has DST (which America/Phoenix hasn't)
     it( 'dates as string', () => {
         [
             [ '"2018-01-01"', '2018-01-01' ],
