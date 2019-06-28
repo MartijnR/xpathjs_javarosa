@@ -44,6 +44,7 @@ describe( 'nodeset id() function', () => {
         ] );
     } );
 
+    // Not supported by browsers
     xit( 'works if the namespace of the id attribute is the XHTML namespace', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
@@ -53,6 +54,7 @@ describe( 'nodeset id() function', () => {
         ] );
     } );
 
+    // Not supported by browsers
     xit( 'works if the namespace of the id attribute is defined in the parent container', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceParentContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
@@ -62,6 +64,7 @@ describe( 'nodeset id() function', () => {
         ] );
     } );
 
+    // Not supported by browsers
     xit( 'works if the id attribute has the xml namespace alias', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdXmlNamespaceContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );

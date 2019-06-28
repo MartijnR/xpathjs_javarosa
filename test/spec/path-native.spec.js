@@ -22,7 +22,7 @@ describe( 'location path', () => {
         };
     } );
 
-    xit( 'root', () => {
+    it( 'root', () => {
         let i;
         let node;
 
@@ -32,9 +32,9 @@ describe( 'location path', () => {
             [ g.doc.getElementById( 'LocationPathCase' ), [ g.doc ] ], // Element
             [ g.doc.getElementById( 'LocationPathCaseText' ).firstChild, [ g.doc ] ], // Text
             [ g.doc.getElementById( 'LocationPathCaseComment' ).firstChild, [ g.doc ] ], // Comment
-            [ helpers.filterAttributes( g.doc.getElementById( 'LocationPathCaseAttribute' ).attributes )[ 0 ],
-                [ g.doc ]
-            ] // Attribute
+            //TODO [ helpers.filterAttributes( g.doc.getElementById( 'LocationPathCaseAttribute' ).attributes )[ 0 ],
+            //     [ g.doc ]
+            // ] // Attribute
         ];
 
         // ProcessingInstruction
@@ -76,7 +76,7 @@ describe( 'location path', () => {
         helpers.checkNodeResult( "xhtml:html/xhtml:body", g.doc, [ g.doc.querySelector( 'body' ) ], helpers.getXhtmlResolver( g.doc ) );
     } );
 
-    xit( 'node attribute', () => {
+    it( 'node attribute', () => {
         const node = g.doc.getElementById( 'LocationPathCaseAttributeParent' );
 
         helpers.checkNodeResult( "child::*/attribute::*", node, [

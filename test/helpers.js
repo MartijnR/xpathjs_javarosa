@@ -319,7 +319,7 @@ const helpers = {
 
 
     checkNodeResultNamespace: function( expression, contextNode, expectedResult, resolver ) {
-        var j, result, item, res, doc;
+        var j, result, item, res, doc, expectedMap = {};
 
         doc = contextNode.ownerDocument || contextNode;
 
@@ -329,11 +329,15 @@ const helpers = {
 
         expect( result.snapshotLength ).to.equal( expectedResult.length );
         expectedResult = sortedNamespaces(expectedResult);
+        expectedResult.forEach(r => {
+            expectedMap[r[0]] = r;
+        });
         for ( j = 0; j < result.snapshotLength; j++ ) {
             item = result.snapshotItem( j );
             expect( item.nodeName ).to.equal( '#namespace' );
-            expect( item.localName ).to.equal( expectedResult[ j ][ 0 ] );
-            expect( item.namespaceURI ).to.equal( expectedResult[ j ][ 1 ] );
+            var result = expectedMap[ item.localName ];
+            expect( item.localName ).to.equal( result[ 0 ] );
+            expect( item.namespaceURI ).to.equal( result[ 1 ] );
         }
     },
 

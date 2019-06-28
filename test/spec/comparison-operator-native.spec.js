@@ -77,6 +77,7 @@ describe( 'Comparison operator', () => {
                 [ "true()", "''" ],
                 [ false, true ], g.doc
             ],
+            // TODO does this make sense? 0 = false() different from false() = 0 ?
             [
                 [ "false()", "'0'" ],
                 [ false, true ], g.doc
