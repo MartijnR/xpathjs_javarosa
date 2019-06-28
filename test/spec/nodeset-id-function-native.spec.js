@@ -27,7 +27,8 @@ describe( 'nodeset id() function', () => {
         helpers.checkNodeResult( "id('FunctionNodesetIdCaseSimpleDoesNotExist')", g.doc, [] );
     } );
 
-    it( 'returns empty result if the default namespace for the node is empty', () => {
+    // Browsers still return the node for this scenario when the nodes namespace is empty (xmlns='')
+    xit( 'returns empty result if the default namespace for the node is empty', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdCaseNoDefaultNamespaceContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
 
@@ -43,7 +44,8 @@ describe( 'nodeset id() function', () => {
         ] );
     } );
 
-    it( 'works if the namespace of the id attribute is the XHTML namespace', () => {
+    // Not supported by browsers
+    xit( 'works if the namespace of the id attribute is the XHTML namespace', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
 
@@ -52,7 +54,8 @@ describe( 'nodeset id() function', () => {
         ] );
     } );
 
-    it( 'works if the namespace of the id attribute is defined in the parent container', () => {
+    // Not supported by browsers
+    xit( 'works if the namespace of the id attribute is defined in the parent container', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdCaseXhtmlNamespaceParentContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
 
@@ -61,7 +64,8 @@ describe( 'nodeset id() function', () => {
         ] );
     } );
 
-    it( 'works if the id attribute has the xml namespace alias', () => {
+    // Not supported by browsers
+    xit( 'works if the id attribute has the xml namespace alias', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdXmlNamespaceContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
 
