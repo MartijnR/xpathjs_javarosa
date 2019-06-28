@@ -28,7 +28,7 @@ describe( 'node name for', () => {
         helpers.checkNodeResult( "attribute::*", node, helpers.filterAttributes( node.attributes ) );
     } );
 
-    xit( 'any namespace', () => {
+    it( 'any namespace', () => {
         const node = g.doc.getElementById( 'StepNodeTestCaseNameTestNamespace' ),
             namespaces = [];
 
@@ -148,7 +148,7 @@ describe( 'node name for', () => {
         helpers.checkNodeResult( "attribute::attrib3", node, attributes, helpers.getXhtmlResolver( g.doc ) );
     } );
 
-    xit( 'namespace with specific name', () => {
+    it( 'namespace with specific name', () => {
         const node = g.doc.getElementById( 'StepNodeTestCaseNameTestNamespace' );
 
         helpers.checkNodeResultNamespace( "namespace::ns2", node, [

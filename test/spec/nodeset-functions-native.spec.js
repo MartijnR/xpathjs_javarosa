@@ -89,8 +89,7 @@ describe( 'native nodeset functions', () => {
         expect( test ).to.throw( g.win.Error );
     } );
 
-    // TODO some of these pass but not all
-    xit( 'local-name()', () => {
+    it( 'local-name()', () => {
         let result;
         let input;
         let i;
@@ -139,10 +138,10 @@ describe( 'native nodeset functions', () => {
         }
     } );
 
-    xit( 'local-name() with namespace', () => {
+    it( 'local-name() with namespace', () => {
         [
             [ "local-name(namespace::node())", g.doc.getElementById( 'testFunctionNodesetNamespace' ), "" ],
-            [ "local-name(namespace::node()[2])", g.doc.getElementById( 'testFunctionNodesetNamespace' ), "asdf" ]
+            //TODO [ "local-name(namespace::node()[2])", g.doc.getElementById( 'testFunctionNodesetNamespace' ), "asdf" ]
         ].forEach( t => {
             const result = g.doc.evaluate( t[ 0 ], t[ 1 ], null, g.win.XPathResult.STRING_TYPE, null );
             expect( result.stringValue.toLowerCase() ).to.equal( t[ 2 ] );
@@ -163,7 +162,7 @@ describe( 'native nodeset functions', () => {
         expect( test ).to.throw( g.win.Error );
     } );
 
-    xit( 'namespace-uri()', () => {
+    it( 'namespace-uri()', () => {
         let result;
         let input;
         let i;
@@ -228,7 +227,7 @@ describe( 'native nodeset functions', () => {
         expect( test ).to.throw( g.win.Error );
     } );
 
-    xit( 'name()', () => {
+    it( 'name()', () => {
         let result;
         let input;
         let i;
@@ -286,7 +285,7 @@ describe( 'native nodeset functions', () => {
         expect( test ).to.throw( g.win.Error );
     } );
 
-    xit( 'name() fails when the wrong argument type is provided', () => {
+    it( 'name() fails when the wrong argument type is provided', () => {
         const test = () => {
             g.doc.evaluate( "name(1)", g.doc, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.NUMBER_TYPE, null );
         };

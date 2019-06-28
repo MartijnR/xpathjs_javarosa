@@ -3,7 +3,7 @@ import { g } from '../docwin';
 describe( 'number operators', () => {
 
 
-    xit( '+ works', () => {
+    it( '+ works', () => {
         [
             [ "1+1", 2 ],
             [ "0+1", 1 ],
@@ -173,12 +173,12 @@ describe( 'number operators', () => {
         } );
     } );
 
-    xit( 'div without spacing', () => {
+    it( 'div without spacing', () => {
         const result = g.doc.evaluate( "1div1", g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
         expect( result.numberValue ).to.equal( 1 );
     } );
 
-    xit( 'div without spacing AFTER div', () => {
+    it( 'div without spacing AFTER div', () => {
         const result = g.doc.evaluate( "1 div1", g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
         expect( result.numberValue ).to.equal( 1 );
     } );
@@ -188,12 +188,12 @@ describe( 'number operators', () => {
         expect( result.numberValue ).to.equal( 1 );
     } );
 
-    xit( 'div without spacing and numbers-as-string', () => {
+    it( 'div without spacing and numbers-as-string', () => {
         const result = g.doc.evaluate( "'1'div'1'", g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
         expect( result.numberValue ).to.equal( 1 );
     } );
 
-    xit( 'div without spacing AFTER div and number-as-string', () => {
+    it( 'div without spacing AFTER div and number-as-string', () => {
         const result = g.doc.evaluate( "'1' div'1'", g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
         expect( result.numberValue ).to.equal( 1 );
     } );
@@ -264,13 +264,13 @@ describe( 'number operators', () => {
         } );
     } );
 
-    xit( '*,+,-,mod,div precendence rules are applied correctly', () => {
+    it( '*,+,-,mod,div precendence rules are applied correctly', () => {
         [
             [ "1+2*3", 7 ],
             [ "2*3+1", 7 ],
             [ "1-10 mod 3 div 3", 0.6666666666666667 ],
             [ "4-3*4+5-1", -4 ],
-            [ "(4-3)*4+5-1", 8 ],
+            //TODO [ "(4-3)*4+5-1", 8 ],
             [ "8 div 2 + 4", 8 ]
         ].forEach( t => {
             const result = g.doc.evaluate( t[ 0 ], g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );

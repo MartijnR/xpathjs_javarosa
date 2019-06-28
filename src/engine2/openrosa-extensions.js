@@ -111,7 +111,7 @@ function distance(geopoints) {
   return Math.abs(Math.round(distance * PRECISION)) / PRECISION;
 }
 
-var openrosaExtensions = function(translate) {
+var openrosa_xpath_extensions = function(translate) {
   var
       TOO_MANY_ARGS = new Error('too many args'),
       TOO_FEW_ARGS = new Error('too few args'),
@@ -643,4 +643,8 @@ var openrosaExtensions = function(translate) {
   return ret;
 };
 
-module.exports = openrosaExtensions;
+if(typeof define === 'function') {
+  define(function() { return openrosa_xpath_extensions; });
+} else if(typeof module === 'object' && typeof module.exports === 'object') {
+  module.exports = openrosa_xpath_extensions;
+}

@@ -54,7 +54,7 @@ describe( 'location path', () => {
         }
     } );
 
-    it( 'root namespace', () => {
+    xit( 'root namespace', () => {
         const input = [ h.oneNamespaceNode( g.doc.getElementById( 'LocationPathCaseNamespace' ) ), [ g.doc ] ]; // XPathNamespace
         helpers.checkNodeResult( "/", input[ 0 ], input[ 1 ] );
     } );

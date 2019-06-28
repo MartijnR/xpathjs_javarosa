@@ -25,7 +25,7 @@ import XPathJS from '../src/XPathJS';
 
 const load = fetch( '/base/test/doc.xml')
     .then( response => response.text())
-    .then( txt => new DOMParser().parseFromString( txt,'application/xhtml+xml' )); 
+    .then( txt => new DOMParser().parseFromString( txt,'application/xhtml+xml' ));
 
 const docwin = () => {
     return load.then( doc => {

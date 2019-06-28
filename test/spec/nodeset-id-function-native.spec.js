@@ -27,6 +27,7 @@ describe( 'nodeset id() function', () => {
         helpers.checkNodeResult( "id('FunctionNodesetIdCaseSimpleDoesNotExist')", g.doc, [] );
     } );
 
+    // Browsers still return the node for this scenario when the nodes namespace is empty (xmlns='')
     xit( 'returns empty result if the default namespace for the node is empty', () => {
         const node = g.doc.getElementById( 'FunctionNodesetIdCaseNoDefaultNamespaceContainer' ).firstChild;
         expect( typeof node ).to.equal( 'object' );
