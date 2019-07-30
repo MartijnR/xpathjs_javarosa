@@ -3,7 +3,7 @@ import helpers from '../helpers';
 
 describe( 'namespace resolver', () => {
 
-    it( 'looks up the namespaceURIElement', () => {
+    xit( 'looks up the namespaceURIElement', () => {
         const node = g.doc.getElementById( "testXPathNSResolverNode" );
         let resolver = g.doc.createNSResolver( node );
 
@@ -25,7 +25,7 @@ describe( 'namespace resolver', () => {
         //Y.Assert.areSame('http://www.w3.org/TR/REC-html40', resolver.lookupNamespaceURI(''));
     } );
 
-    it( 'looks up the namespaceURIDocument', () => {
+    xit( 'looks up the namespaceURIDocument', () => {
         const resolver = g.doc.createNSResolver( g.doc );
 
         expect( resolver ).to.be.an.instanceof( g.win.XPathNSResolver );
@@ -35,7 +35,7 @@ describe( 'namespace resolver', () => {
         expect( resolver.lookupNamespaceURI( 'ev' ) ).to.equal( 'http://some-namespace.com/nss' );
     } );
 
-    it( 'looks up the namespaceURIDocumentElement', () => {
+    xit( 'looks up the namespaceURIDocumentElement', () => {
         const node = g.doc.documentElement;
         const resolver = g.doc.createNSResolver( node );
 
@@ -91,7 +91,7 @@ describe( 'namespace resolver', () => {
         expect( resolver.lookupNamespaceURI( 'xforms' ) ).to.equal( 'http://www.w3.org/2002/xforms' );
     } );
 
-    it( 'looks up namespaceURIs that have changed', () => {
+    xit( 'looks up namespaceURIs that have changed', () => {
         const node = helpers.getNextChildElementNode( g.doc.getElementById( "testXPathNSResolverNode" ) );
         const resolver = g.doc.createNSResolver( node );
 

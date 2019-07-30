@@ -1,3 +1,20 @@
+const sortedNamespaces = (namespaces) => {
+    return namespaces.sort((ns1, ns2) => {
+        if(ns1[0] > ns2[0]) {return 1;}
+        if(ns1[0] < ns2[0]) {return -1;}
+        return 0;
+    });
+};
+
+const sortedNodes = (nodes) => {
+    return nodes.sort((a, b) => {
+        if(a.name < b.name) return -1;
+        if(a.name > b.name) return 1;
+        return 0;
+    });
+};
+
+
 const helpers = {
     getNextChildElementNode: function( parentNode ) {
         var childNode = parentNode.firstChild;
@@ -308,8 +325,9 @@ const helpers = {
         return specifiedAttributes;
     },
 
+
     checkNodeResultNamespace: function( expression, contextNode, expectedResult, resolver ) {
-        var j, result, item, res, doc;
+        var j, result, item, res, doc, expectedMap = {};
 
         doc = contextNode.ownerDocument || contextNode;
 
@@ -318,12 +336,16 @@ const helpers = {
         result = doc.evaluate( expression, contextNode, res, 7, null );
 
         expect( result.snapshotLength ).to.equal( expectedResult.length );
-
+        expectedResult = sortedNamespaces(expectedResult);
+        expectedResult.forEach(r => {
+            expectedMap[r[0]] = r;
+        });
         for ( j = 0; j < result.snapshotLength; j++ ) {
             item = result.snapshotItem( j );
             expect( item.nodeName ).to.equal( '#namespace' );
-            expect( item.localName ).to.equal( expectedResult[ j ][ 0 ] );
-            expect( item.namespaceURI ).to.equal( expectedResult[ j ][ 1 ] );
+            var xresult = expectedMap[ item.localName ];
+            expect( item.localName ).to.equal( xresult[ 0 ] );
+            expect( item.namespaceURI ).to.equal( xresult[ 1 ] );
         }
     },
 
@@ -341,6 +363,24 @@ const helpers = {
         for ( j = 0; j < result.snapshotLength; j++ ) {
             item = result.snapshotItem( j );
             expect( item ).to.deep.equal( expectedResult[ j ] );
+        }
+    },
+
+    checkUnorderedNodeResult: function( expression, contextNode, expectedResult, resolver ) {
+        var result, j, res, doc;
+
+        doc = contextNode.ownerDocument || contextNode;
+
+        res = ( !resolver ) ? null : resolver;
+
+        result = doc.evaluate( expression, contextNode, res, 7, null );
+
+        expect( result.snapshotLength ).to.equal( expectedResult.length );
+        expectedResult = sortedNodes(expectedResult);
+        var sortedResult = sortedNodes(this.snapshotToArray(result));
+
+        for ( j = 0; j < sortedResult; j++ ) {
+            expect( sortedResult[j] ).to.deep.equal( expectedResult[ j ] );
         }
     },
 

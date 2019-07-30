@@ -71,7 +71,8 @@ describe( 'Union operator', () => {
     } );
 
     it( 'combines different attributes on the same element', () => {
-        helpers.checkNodeResult( "id('eee40')/attribute::*[2] | id('eee40')/attribute::*[1]", g.doc, [
+        //Chrome/firefox return different attribute order
+        helpers.checkUnorderedNodeResult( "id('eee40')/attribute::*[2] | id('eee40')/attribute::*[1]", g.doc, [
             helpers.filterAttributes( g.doc.getElementById( 'eee40' ).attributes )[ 0 ],
             helpers.filterAttributes( g.doc.getElementById( 'eee40' ).attributes )[ 1 ]
         ] );
@@ -98,7 +99,8 @@ describe( 'Union operator', () => {
     it( 'combines a namespace and attribute', () => {
         const result = g.doc.evaluate( "id('nss40')/namespace::*", g.doc, null, g.win.XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null ); //
 
-        helpers.checkNodeResult( "id('nss40')/namespace::* | id('nss25')/attribute::* | id('nss25')", g.doc, [
+        // Need to check unordered. id('nss25')/attribute::* -- browsers return atts in different order
+        helpers.checkUnorderedNodeResult( "id('nss40')/namespace::* | id('nss25')/attribute::* | id('nss25')", g.doc, [
             g.doc.getElementById( 'nss25' )
         ].concat(
             helpers.filterAttributes( g.doc.getElementById( 'nss25' ).attributes )
