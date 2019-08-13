@@ -30,10 +30,9 @@ describe( 'location path', () => {
             [ g.doc.getElementById( 'LocationPathCase' ), [ g.doc ] ], // Element
             [ g.doc.getElementById( 'LocationPathCaseText' ).firstChild, [ g.doc ] ], // Text
             [ g.doc.getElementById( 'LocationPathCaseComment' ).firstChild, [ g.doc ] ], // Comment
-            // TODO vimago
-            // [ helpers.filterAttributes( g.doc.getElementById( 'LocationPathCaseAttribute' ).attributes )[ 0 ],
-            //     [ g.doc ]
-            // ] // Attribute
+            [ helpers.filterAttributes( g.doc.getElementById( 'LocationPathCaseAttribute' ).attributes )[ 0 ],
+                [ g.doc ]
+            ] // Attribute
         ];
 
         // ProcessingInstruction
