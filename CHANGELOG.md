@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.9.3] - 2019-08-14
+--------------------
+##### Fixed
+- Timezone offset sdetermination fails with negative half hour offset (IST).
+
 [1.9.2] - 2019-04-24
 --------------------
 ##### Fixed
