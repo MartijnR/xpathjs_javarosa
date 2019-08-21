@@ -40,7 +40,7 @@
     "karma-rollup-preprocessor": "^7.0.0",
     "karma-safari-launcher": "1.0.x",
     "mocha": "6.0.x",
-    "odk-xpath": "0.0.1-beta.2",
+    "odk-xpath": "0.0.1-beta.4",
     "rollup": "^1.8.0"
   }
 }
