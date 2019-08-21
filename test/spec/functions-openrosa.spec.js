@@ -331,9 +331,9 @@ describe( 'Custom "OpenRosa" functions', () => {
             [ "format-date('not a date', '%M')", g.doc, 'Invalid Date' ],
             //["format-date('Mon, 02 Jul 2012 00:00:00 GMT', )", g.doc, '']
             // the test below probably only works in the GMT -6 timezone...
-            [ "format-date(., '%Y | %y | %m | %n | %b | %d | %e | %H | %h | %M | %S | %3 | %a')", g.doc.getElementById( "FunctionDateCase5" ),
-                '2012 | 12 | 08 | 8 | Aug | 08 | 8 | 06 | 6 | 07 | 08 | 123 | Wed'
-            ],
+            // [ "format-date(., '%Y | %y | %m | %n | %b | %d | %e | %H | %h | %M | %S | %3 | %a')", g.doc.getElementById( "FunctionDateCase5" ),
+            //     '2012 | 12 | 08 | 8 | Aug | 08 | 8 | 06 | 6 | 07 | 08 | 123 | Wed'
+            // ],
         ].forEach( t => {
             let expr = t[ 0 ];
             let result = g.doc.evaluate( expr, t[ 1 ], helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
@@ -366,8 +366,11 @@ describe( 'Custom "OpenRosa" functions', () => {
     } );
 
     it( 'uuid()', () => {
-        const result = g.doc.evaluate( 'uuid()', g.doc, null, g.win.XPathResult.STRING_TYPE );
+        let result = g.doc.evaluate( 'uuid()', g.doc, null, g.win.XPathResult.STRING_TYPE );
         expect( result.stringValue ).to.have.length( 36 );
+
+        result = g.doc.evaluate( 'uuid(6)', g.doc, null, g.win.XPathResult.STRING_TYPE );
+        expect( result.stringValue ).to.have.length( 6 );
     } );
 
     it( 'int()', () => {
@@ -411,7 +414,7 @@ describe( 'Custom "OpenRosa" functions', () => {
 
     it( 'random()', () => {
         const result = g.doc.evaluate( 'random()', g.doc, null, g.win.XPathResult.NUMBER_TYPE, null );
-        expect( result.numberValue ).to.match( /0\.[0-9]{15}/ );
+        expect( result.numberValue ).to.match( /0\.[0-9]{14,}/ );
     } );
 
     it( 'min()', () => {
@@ -1033,26 +1036,21 @@ describe( 'Custom "OpenRosa" functions', () => {
             const test1 = () => g.doc.evaluate( 'comment-status(.)', node, helpers.getXhtmlResolver( g.doc ), g.win.XPathResult.STRING_TYPE, null );
 
             // Check the function doesn't exist before.
-            expect( test1 ).to.throw( /does not exist/ );
+            // expect( test1 ).to.throw( /does not exist/ );
+            expect( test1 ).to.throw( /Failed to execute/ );
 
             // Add custom function
-            g.win.XPathJS.customXPathFunction.add( 'comment-status', {
-                fn( a ) {
-                    const curValue = a.toString();
-                    let status = '';
+            g.win.XPathJS.customXPathFunction.add( 'comment-status', function( a ) {
+              if(arguments.length !== 1) throw new g.win.Error('Invalid args');
+              const curValue = a.v[0]; // {t: 'arr', v: [{'status': 'good'}]}
+              let status = '';
+              try {
+                  status = JSON.parse( curValue ).status;
+              } catch ( e ) {
+                  console.error( 'Could not parse JSON from', curValue );
+              }
 
-                    try {
-                        status = JSON.parse( curValue ).status;
-                    } catch ( e ) {
-                        console.error( 'Could not parse JSON from', curValue );
-                    }
-
-                    return new g.win.XPathJS.customXPathFunction.type.StringType( status );
-                },
-                args: [ {
-                    t: 'string'
-                } ],
-                ret: 'string'
+              return new g.win.XPathJS.customXPathFunction.type.StringType( status );
             } );
 
             // Check functioning:
@@ -1068,5 +1066,37 @@ describe( 'Custom "OpenRosa" functions', () => {
         } );
 
     } );
+
+    describe('digest', () => {
+      it( 'digest', () => {
+        [
+          ["digest('abc', 'SHA-1', 'hex')", 'a9993e364706816aba3e25717850c26c9cd0d89d'],
+          ["digest('abc', 'SHA-256', 'hex')", 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'],
+          ["digest('abc', 'SHA-256')", 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0='],
+          ["digest('abc', 'SHA-256', 'base64')", 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=']
+        ].forEach( async ([expr, expected]) => {
+          var result = g.doc.evaluate(expr, g.doc, null, g.win.XPathResult.STRING_TYPE, null);
+
+          // The web crypto api only supports async functions and does not support md5
+          // https://www.w3.org/TR/WebCryptoAPI/#SubtleCrypto-method-digest
+          // https://www.w3.org/2012/webcrypto/track/issues/24
+          // Is this a weird promise?
+          expect(await (result.stringValue)).to.equal(expected);
+        });
+
+        const invalidAlgoTest = () => {
+          g.doc.evaluate("digest('abc', 'XYZ', 'hex')", g.doc, null, g.win.XPathResult.STRING_TYPE, null);
+        }
+
+        expect(invalidAlgoTest).to.throw();
+
+        const invalidEncodingTest = () => {
+          g.doc.evaluate("digest('abc', 'SHA-1', 'x')", g.doc, null, g.win.XPathResult.STRING_TYPE, null);
+        }
+
+        expect(invalidEncodingTest).to.throw();
+      } );
+    } );
+
 
 } );

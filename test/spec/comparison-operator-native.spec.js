@@ -133,7 +133,6 @@ describe( 'Comparison operator', () => {
                 [ "''", "*" ],
                 [ false, false ], g.doc.getElementById( 'ComparisonOperatorCaseNodesetEmpty' )
             ],
-
             [
                 [ "id('ComparisonOperatorCaseNodesetNegative5to5')/*", "id('ComparisonOperatorCaseNodesetEmpty')/*" ],
                 [ false, false ], g.doc

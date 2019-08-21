@@ -13,6 +13,14 @@ module.exports = function(grunt) {
             }
         },
 
+        copy: {
+          openrosa: {
+            cwd: '.',
+            src: 'node_modules/odk-xpath/dist/openrosa-xpath-bundle.js',
+            dest: 'dist/enketo-xpathjs-bundle.js'
+          }
+        },
+
         peg: {
             dist: {
                 src: 'src/parser.pegjs',
@@ -50,14 +58,14 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-peg');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-browserify');
 
     grunt.registerTask('dist', [
         'clean:dist',
-        'peg:dist',
-        'browserify:dist'
+        'copy:openrosa'
     ]);
 
     grunt.registerTask('test-dev', ['dist', 'karma:headless']);
