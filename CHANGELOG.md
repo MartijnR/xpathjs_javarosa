@@ -2,10 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.9.4] - 2019-09-09
+--------------------
+##### Changed
+- decimal-time and decimal-date-time now use maximum precision instead of rounding to 3 decimals.
+
 [1.9.3] - 2019-08-14
 --------------------
 ##### Fixed
-- Timezone offset sdetermination fails with negative half hour offset (IST).
+- Timezone offset determination fails with negative half hour offset (IST).
 
 [1.9.2] - 2019-04-24
 --------------------
