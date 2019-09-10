@@ -16,8 +16,8 @@ module.exports = function(grunt) {
         copy: {
           openrosa: {
             cwd: '.',
-            src: 'node_modules/odk-xpath/dist/openrosa-xpath-bundle.js',
-            dest: 'dist/enketo-xpathjs-bundle.js'
+            src: 'node_modules/openrosa-xpath-evaluator/dist/orxe.min.js',
+            dest: 'dist/orxe.min.js'
           }
         },
 

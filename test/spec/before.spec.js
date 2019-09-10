@@ -7,10 +7,10 @@ before( done => {
     iframe.onload = () => {
         const script = document.createElement( 'script' );
         // TODO: should load parser and engine separately to facilitate development
-        script.setAttribute( 'src', '/base/dist/enketo-xpathjs-bundle.js' );
+        script.setAttribute( 'src', '/base/dist/orxe.min.js' );
 
         script.onload = () => {
-            iframe.contentWindow.XPathJS.bindDomLevel3XPath();
+            iframe.contentWindow.orxe.bindDomLevel3XPath();
             done();
         };
 
@@ -25,7 +25,7 @@ import XPathJS from '../src/XPathJS';
 
 const load = fetch( '/base/test/doc.xml')
     .then( response => response.text())
-    .then( txt => new DOMParser().parseFromString( txt,'application/xhtml+xml' )); 
+    .then( txt => new DOMParser().parseFromString( txt,'application/xhtml+xml' ));
 
 const docwin = () => {
     return load.then( doc => {
