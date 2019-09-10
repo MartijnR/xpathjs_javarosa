@@ -1066,8 +1066,9 @@ describe( 'Custom "OpenRosa" functions', () => {
     } );
 
     // I thought this would work but it does not.
-    // Is there a way to build the xpath library without including this external
-    // dependency but add the dependency at run time?
+    // Something with webpack and node-forge.
+    // Could be related to this:
+    // https://github.com/node-apn/node-apn/issues/561
     describe.skip('digest', () => {
       it( 'digest', () => {
         [

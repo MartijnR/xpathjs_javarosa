@@ -18,6 +18,12 @@ module.exports = function(grunt) {
             cwd: '.',
             src: 'node_modules/openrosa-xpath-evaluator/dist/orxe.min.js',
             dest: 'dist/orxe.min.js'
+          },
+          forge: {
+            cwd: '.',
+            src: 'node_modules/node-forge/dist/prime.worker.min.js',
+            // src: 'node_modules/node-forge/dist/forge.all.min.js',
+            dest: 'dist/forge.min.js'
           }
         },
 
@@ -65,7 +71,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('dist', [
         'clean:dist',
-        'copy:openrosa'
+        'copy:openrosa',
+        'copy:forge'
     ]);
 
     grunt.registerTask('test-dev', ['dist', 'karma:headless']);
